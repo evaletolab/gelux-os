@@ -2,7 +2,7 @@
 This project was a private initative to develop a simple and fully customisable GNU/Linux distribution that have the hability to boot from an external USB flash and also from a [Windows NTFS parition](/win32-setup/gelux.iss). I did this work in 2004 with the great and strong support of Marc Kalberer, Bjorn Arvidsson and Stephane Hernandez. Here the usual screenshots,
 
 ## Booting
-This is the result of these files [linuxrc](/gelux-live/linuxrc) [includes](/gelux-live/etc). By studying thos files you can have a good idea on what is doing an OS on boot.
+Booting is mainly the result of these files [linuxrc](/gelux-live/linuxrc) and [includes](/gelux-live/etc). By studying those files you can have a good idea on what is going on.
 ![BOOT](https://farm9.staticflickr.com/8569/16317649155_0e60725fb0_b.jpg)
 ![BOOT](https://farm8.staticflickr.com/7551/16316770692_87fd5152a4_b.jpg)
 
