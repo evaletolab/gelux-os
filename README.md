@@ -1,5 +1,5 @@
 # gelux-os
-This project was a private initative to develop a simple and fully customisable GNU/Linux distribution that have the hability to boot from an external USB flash or from a [Windows NTFS parition](/win32-setup/). By customisable we mean that you can build a complete bootable OS with your complete suite of [software, drivers and config](/gelux-meta-packages). I did this work in 2004 with the great and strong support of Marc Kalberer, Bjorn Arvidsson and Stephane Hernandez. Here is the usual screenshots,
+This project was a private initative to develop a simple and fully customisable GNU/Linux distribution that have the hability to boot from an external USB flash or from a [Windows NTFS parition](/win32-setup/). By customisable I mean that you can build a complete and bootable OS with inside, your suite of [softwares, drivers and configs](/gelux-meta-packages). I did this work in 2004 with the great and strong support of Marc Kalberer, Bjorn Arvidsson and Stephane Hernandez. Here is the usual screenshots,
 
 ## Booting
 Booting Linux is mainly the result of these files [linuxrc](/gelux-live/linuxrc) and [includes](/gelux-live/etc). By studying those files you can have a good idea on what is going on.
