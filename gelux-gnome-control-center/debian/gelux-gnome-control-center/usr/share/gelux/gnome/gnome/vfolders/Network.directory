@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Réseau et Internet
+Name[fr]=Réseau et Internet
+Comment=Preferences that affect the network
+Comment[fr]=Configuration du réseau
+Icon=network.png
+Type=Directory
+

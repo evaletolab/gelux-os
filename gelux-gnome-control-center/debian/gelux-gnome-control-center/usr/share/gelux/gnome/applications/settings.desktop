@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=Control Panel
+Exec=gnome-control-center --use-shell
+Terminal=false
+Icon=control-center
+Type=Application
+Categories=Application;Core;
+Name[fr_FR]=Control Panel

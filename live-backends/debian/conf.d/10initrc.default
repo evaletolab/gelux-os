@@ -1,0 +1,39 @@
+#!/bin/sh
+
+# Set up default config
+
+. /etc/gelux.d/functions.sh
+
+LOCALCONF=/usr/share/gelux/geluxmainconf
+
+if ! grep -q -e "^initrc$" $LOCALCONF ;then
+  einfo "config main module : setup sysinit "
+
+  RUNLEVEL=$(getbootparam runlevel "5")
+  sed -i -e "s/id:.:initdefault/id:$RUNLEVEL:initdefault/g" /etc/inittab
+
+  sed_variable "UTC" "yes"    /etc/default/rcS
+  sed_variable "VERBOSE" "no" /etc/default/rcS
+  
+  [ -e /etc/default/hal ]         && sed_variable "DAEMON_OPTS"  " " /etc/default/hal
+
+#BOOT    
+  update-rc.d -f glibc.sh remove 1>/dev/null 2>>/etc/sysconfig/stderr
+  update-rc.d -f hdparm remove 1>/dev/null 2>>/etc/sysconfig/stderr
+  update-rc.d -f checkroot.sh remove 1>/dev/null 2>>/etc/sysconfig/stderr
+  update-rc.d -f hwclockfirst.sh remove 1>/dev/null 2>>/etc/sysconfig/stderr
+  update-rc.d -f hostname.sh remove 1>/dev/null 2>>/etc/sysconfig/stderr
+  update-rc.d -f mountall.sh remove 1>/dev/null 2>>/etc/sysconfig/stderr
+  update-rc.d -f ifupdown-clean remove 1>/dev/null 2>>/etc/sysconfig/stderr
+  update-rc.d -f checkfs.sh  remove   1>/dev/null 2>>/etc/sysconfig/stderr
+  update-rc.d -f nviboot remove   1>/dev/null 2>>/etc/sysconfig/stderr
+  
+#INIT > 2  
+  update-rc.d -f exim4 remove   1>/dev/null 2>>/etc/sysconfig/stderr
+  update-rc.d -f apmd remove    1>/dev/null 2>>/etc/sysconfig/stderr
+  update-rc.d -f winbind remove 1>/dev/null 2>>/etc/sysconfig/stderr
+  update-rc.d -f samba remove   1>/dev/null 2>>/etc/sysconfig/stderr
+  
+  echo "initrc" >>$LOCALCONF
+fi
+

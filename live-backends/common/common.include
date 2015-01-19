@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# Set up common environment 
+
+G_BACKEND_FIRMWARE="/usr/lib/hotplug/firmware/"
+G_BACKEND_MODUTILS="/etc/modutils"
+
+export G_BACKEND_FIRMWARE G_BACKEND_MODUTILS

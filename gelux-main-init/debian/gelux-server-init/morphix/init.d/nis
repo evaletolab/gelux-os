@@ -1,0 +1,14 @@
+# ssh
+
+. /morphix/include.sh
+
+/etc/init.d/portmap start
+(
+  while ! `rpcinfo -p $(grep -o -e "[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*" /etc/yp.conf) |grep -q ypserv`
+  do
+    sleep 5
+  done
+  /etc/init.d/nis start 
+) &
+
+

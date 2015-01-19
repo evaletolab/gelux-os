@@ -1,0 +1,38 @@
+#!/bin/sh
+
+# Set up default config
+
+. /etc/gelux.d/functions.sh
+. /etc/sysconfig/desktop
+
+LOCALCONF=/usr/share/gelux/geluxmainconf
+
+if ! grep -q -e "^user$" $LOCALCONF ;then
+  einfo "config main module : create default user $USERNAME"
+  if ! test -d /home/$USERNAME ;then
+      useradd -u 10101 -m $USERNAME -s /bin/bash -d /home/$USERNAME
+      # FIXME in some distrib after useradd home directory id == root?
+      chown $USERNAME.users /home/$USERNAME
+  else
+      MUID=$(stat -c "%u" /home/$USERNAME)
+      [ -n "$MUID" ] && MUID="-u $MUID" || eerror "Could not determine current uid for /home/$USERNAME"
+      useradd $MUID -s /bin/bash $USERNAME -d /home/$USERNAME
+      [ -z "$MUID" ] && chown -R $USERNAME.users /home/$USERNAME
+  fi
+  
+  rm -f /etc/ssh/sshd_not_to_be_run 2>/dev/null
+  
+  # wish this could be neater, but if one group fails they otherwise all would
+  addgroup --system --quiet scanner 2>/dev/null
+  addgroup --system --quiet sudo 2>/dev/null
+  ALLGRP=""
+  SELGROUPS="cdrom,video"
+  for add in scanner sudo audio games users tty dialout dip plugdev lpadmin floppy netdev wheel ftp usb cdrw;do
+    grep -q -e "^$add" /etc/group && SELGROUPS="$SELGROUPS,$add"
+  done
+  usermod -G $SELGROUPS $USERNAME 
+  # unlock the users password
+  usermod -U $USERNAME
+  echo "user" >>$LOCALCONF
+fi
+

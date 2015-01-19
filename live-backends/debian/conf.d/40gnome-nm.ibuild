@@ -1,0 +1,28 @@
+#!/bin/sh
+
+# Set up default config
+
+. /etc/gelux.d/functions.sh
+
+LOCALCONF=/usr/share/gelux/geluxmainconf
+
+if ! grep -q -e "^gnome-network$" $LOCALCONF && test -x /usr/bin/nm-applet;then
+  einfo "config main module : setup network-manager "
+  if test -e /usr/share/gnome/default.session;then
+    eval $(egrep -o "^num_clients=.*" /usr/share/gnome/default.session )
+    echo "
+    $num_clients,id=default${num_clients}
+    $num_clients,Priority=50
+    $num_clients,RestartCommand=nm-applet --sm-client-id ${num_clients}">>/usr/share/gnome/default.session
+    sed_variable "num_clients" "$(($num_clients + 1))" /usr/share/gnome/default.session
+  else
+    echo "
+    if [ -x "/usr/bin/nm-applet" ] ; then
+      /usr/bin/nm-applet
+    fi
+    ">/etc/X11/Xsession.d/98network-manager-applet.sh
+  fi
+
+  echo "gnome-network" >>$LOCALCONF
+fi
+

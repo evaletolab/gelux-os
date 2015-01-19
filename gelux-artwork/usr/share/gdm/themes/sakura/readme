@@ -1,0 +1,7 @@
+README - SVG Cherry Blossom Theme
+
+This GDM theme is the product of my wanting a completely SVG based login theme, because it could be done, because it would be cool (right?).  So, here it is.  One good reason that there aren't many themes may be the fact that SVG implementations are growing, and as such at this time are incomplete.  This may cause some problems for you.  I've tried to keep fancy (and incompletely implemented) features to a minimum, but I still there may be some things that don't work for you.
+
+I've had success using GDM 2.4.4.7-r1, with librsvg 2.6.5 (which GDM relies on to draw SVG graphics).  Although I don't know specifically which version of librsvg implemented gradients, I know it wasn't many versions before this... therefore you may want to upgrade librsvg and GDM to at least the above versions if the background does not show up as a gradient.
+
+As a side note, all SVGs were created with Inkscape 0.37.

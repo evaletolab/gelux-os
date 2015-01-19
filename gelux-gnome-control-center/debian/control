@@ -1,0 +1,12 @@
+Source: gelux-gnome-control-center
+Section: misc
+Priority: optional
+Maintainer: Olivier Evalet <evaleto@programmers.ch>
+Build-Depends: debhelper (>= 4.0.0)
+Standards-Version: 3.6.1.0
+
+Package: gelux-gnome-control-center
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: new gnome contro center menu
+ gelux vision of the gnome contro center.

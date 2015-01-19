@@ -1,0 +1,30 @@
+Source: gelux-main-conf
+Section: misc
+Priority: optional
+Maintainer: Olivier Evalet <evaleto@programmers.ch>
+Build-Depends: debhelper (>= 4.0.0)
+Standards-Version: 3.6.1.0
+
+Package: gelux-main-conf
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: mainmodule configuration
+ set and update files after mmaker. This configuration is done once by subject
+
+Package: gelux-server-conf
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, nis
+Description: mainmodule configuration
+ set and update files after mmaker. This configuration is done once by subject
+
+Package: gelux-samba-conf
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, gelux-main-conf
+Description: samba configuration
+ This configuration is done once 
+
+Package: gelux-nis-conf
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, gelux-main-conf, gelux-nis-init, nis, dhcp3-client
+Description: samba configuration
+ This configuration is done once 

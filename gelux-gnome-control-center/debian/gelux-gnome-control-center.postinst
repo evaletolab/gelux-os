@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# Set up the icons categories for gnome control center "a la gelux"
+
+# This probably violates every debian policy in existance, but we don't care right now...
+
+echo "gnome-control-center, a la gelux"
+#cp /usr/share/gelux/gnome/applications/* /usr/share/applications/
+#cp /usr/share/gelux/gnome/control-center-2.0/capplets/* /usr/share/control-center-2.0/capplets/
+cp /usr/share/gelux/gnome/gnome/vfolders/* /usr/share/gnome/vfolders/
+#cp /usr/share/gelux/gnome/vfolders/* /etc/gnome-vfs-2.0/vfolders/
+

@@ -1,0 +1,46 @@
+#!/bin/sh
+
+# Set up default config
+
+. /etc/gelux.d/functions.sh
+
+LOCALCONF=/usr/share/gelux/geluxmainconf
+
+if ! grep -q -e "^gdmkb$" $LOCALCONF && test -e /etc/gdm/Init/Default ;then
+einfo "config main module : setup gdm keyboard"
+echo "#!/bin/sh
+# Stolen from the debian kdm setup, aren't I sneaky
+# Plus a lot of fun stuff added
+#  -George
+
+PATH=/usr/bin/X11:/usr/X11R6/bin:/opt/X11R6/bin:\$PATH
+
+gdmwhich () {
+  COMMAND=\"\$1\"
+  OUTPUT=
+  IFS=:
+  for dir in \$PATH
+  do
+    if test -x \"\$dir/\$COMMAND\" ; then
+      if test \"x\$OUTPUT\" = \"x\" ; then
+        OUTPUT=\"\$dir/\$COMMAND\"
+      fi
+    fi
+  done
+  unset IFS
+  echo \"\$OUTPUT\"
+}
+if [ -x /usr/X11R6/bin/xmodmap ];then
+    if grep -q -i -e \"^[^#].*XkbL.*fr_CH\" /etc/X11/XF86Config-4;then KBD=sf;fi
+    if grep -q -i -e \"^[^#].*XkbL.*de_CH\" /etc/X11/XF86Config-4;then KBD=sg;fi
+    if grep -q -i -e \"^[^#].*XkbL.*it_CH\" /etc/X11/XF86Config-4;then KBD=it;fi
+    if grep -q -i -e \"^[^#].*XkbL.*uk\" /etc/X11/XF86Config-4;then KBD=uk;fi
+    if grep -q -i -e \"^[^#].*XkbL.*us\" /etc/X11/XF86Config-4;then KBD=\"us-intl\";fi
+
+    xmodmap /usr/share/xmodmap/xmodmap.\$KBD
+fi
+
+">/etc/gdm/Init/Default
+  echo "gdmkb" >>$LOCALCONF
+fi
+

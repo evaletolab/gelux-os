@@ -1,0 +1,7 @@
+#!/bin/sh
+# load udev
+
+
+if [ -x /etc/init.d/udev ];then
+  /etc/init.d/udev restart &>dev/null
+fi

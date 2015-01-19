@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# Set up default environment for gentoo
+
+
+#cp /usr/share/gelux-backend/gentoo/rc $G_ROOTFS_RW/sbin/rc

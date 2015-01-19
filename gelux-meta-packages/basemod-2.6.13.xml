@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html><head><!-- ViewCVS -- http://viewcvs.sourceforge.net/
+by Greg Stein -- mailto:gstein@lyra.org -->
+
+<title>SourceForge.net CVS Repository - markup - cvs: morphix/mmaker/templates/basemod-2.6.13.xml</title><link rel="stylesheet" href="basemod-2.6.13_files/styles" type="text/css"></head>
+
+
+
+
+
+
+
+<body>
+<center>
+<iframe src="basemod-2.6.13_files/a." border="0" marginwidth="0" marginheight="0" frameborder="0" height="90" scrolling="no" width="728"></iframe>
+<!-- image audit code -->
+<script language="JAVASCRIPT">
+<!--
+now = new Date();
+tail = now.getTime();
+document.write("<IMG SRC='http://images-aud.sourceforge.net/pc.gif?l,");
+document.write(tail);
+document.write("' WIDTH=1 HEIGHT=1 BORDER=0>");
+//-->
+</script><img src="basemod-2.6.13_files/pc" border="0" height="1" width="1">
+<noscript>
+<img src="http://images-aud.sourceforge.net/pc.gif?l,81677"
+WIDTH=1 HEIGHT=1 BORDER=0>
+</noscript>
+<!-- end audit code -->
+</center>
+<div class="vc_navheader">
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td align="left"><a href="http://cvs.sourceforge.net/viewcvs.py/#dirlist">[cvs]</a> / <a href="http://cvs.sourceforge.net/viewcvs.py/morphix/#dirlist">morphix</a> / <a href="http://cvs.sourceforge.net/viewcvs.py/morphix/mmaker/#dirlist">mmaker</a> / <a href="http://cvs.sourceforge.net/viewcvs.py/morphix/mmaker/templates/#dirlist">templates</a> / basemod-2.6.13.xml</td>
+<td align="right">
+
+&nbsp;
+
+</td>
+</tr>
+</tbody></table>
+</div>
+<table width="100%">
+<tbody><tr><td><h1>cvs: morphix/mmaker/templates/basemod-2.6.13.xml</h1></td>
+<td align="right"><a href="http://sourceforge.net/"><img src="basemod-2.6.13_files/sourceforge_whitebg" alt="(logo)" border="0" height="79" width="136"></a></td></tr>
+</tbody></table>
+
+<div class="vc_summary">
+File: <a href="http://cvs.sourceforge.net/viewcvs.py/#dirlist">[cvs]</a> / <a href="http://cvs.sourceforge.net/viewcvs.py/morphix/#dirlist">morphix</a> / <a href="http://cvs.sourceforge.net/viewcvs.py/morphix/mmaker/#dirlist">mmaker</a> / <a href="http://cvs.sourceforge.net/viewcvs.py/morphix/mmaker/templates/#dirlist">templates</a> / basemod-2.6.13.xml
+(<a href="http://cvs.sourceforge.net/viewcvs.py/*checkout*/morphix/mmaker/templates/basemod-2.6.13.xml?rev=1.1"><b>download</b></a>)
+(<a href="http://cvs.sourceforge.net/viewcvs.py/*checkout*/morphix/mmaker/templates/basemod-2.6.13.xml?content-type=text%2Fplain&amp;rev=1.1"><b>as text</b></a>)
+<br>
+
+Revision: <b>1.1</b>,
+<i>Mon Sep  5 17:02:39 2005 UTC</i> (6 weeks, 4 days ago) by <i>alextreme</i>
+
+<br>Branch: <b>MAIN</b>
+
+
+<br>CVS Tags: <b>HEAD</b>
+
+
+
+
+
+
+
+<pre>  * adding templates for 2.6.[12|13]
+</pre>
+
+</div>
+<pre>&lt;comps&gt;
+ &lt;group&gt;
+  &lt;id&gt;default&lt;/id&gt;
+  &lt;version&gt;0.5&lt;/version&gt;
+  &lt;name&gt;Morphix Base Default&lt;/name&gt;
+  &lt;repositorylist&gt;
+   &lt;repository type="debian"&gt;<a href="ftp://ftp.debian.org/debian">ftp://ftp.debian.org/debian</a>&lt;/repository&gt;
+&lt;!--   &lt;repository type="debian"&gt;<a href="ftp://127.0.0.1/debian">ftp://127.0.0.1/debian</a>&lt;/repository&gt;--&gt;
+   &lt;repository type="plain"&gt;<a href="http://www.morphix.org/debian">http://www.morphix.org/debian</a>&lt;/repository&gt;
+   &lt;repository type="plain"&gt;<a href="http://developer.linuxtag.net/knoppix">http://developer.linuxtag.net/knoppix</a>&lt;/repository&gt;
+  &lt;/repositorylist&gt;
+  &lt;description&gt;Morphix Basemodule&lt;/description&gt;
+  &lt;type&gt;basemod&lt;/type&gt;
+  &lt;suite&gt;sarge&lt;/suite&gt;
+  &lt;packagelist&gt;
+   &lt;packagereq&gt;aumix&lt;/packagereq&gt;
+   &lt;packagereq&gt;usbutils&lt;/packagereq&gt;
+   &lt;packagereq&gt;hwsetup-morphix&lt;/packagereq&gt;
+   &lt;packagereq&gt;libpci1&lt;/packagereq&gt; &lt;!-- hwsetup needs this, should be a depend... --&gt;
+   &lt;packagereq&gt;hwdata-morphix&lt;/packagereq&gt;
+   &lt;packagereq&gt;read-edid&lt;/packagereq&gt;
+   &lt;packagereq&gt;ddcxinfo-morphix&lt;/packagereq&gt;
+   &lt;packagereq&gt;eject&lt;/packagereq&gt;
+   &lt;packagereq&gt;netbase&lt;/packagereq&gt;
+   &lt;packagereq&gt;pump&lt;/packagereq&gt;
+   &lt;packagereq&gt;dhcp3-client&lt;/packagereq&gt;
+   &lt;packagereq&gt;usleep-knoppix&lt;/packagereq&gt;
+   &lt;packagereq&gt;sysvinit-morphix&lt;/packagereq&gt; &lt;!-- for knoppix-style init --&gt;
+   
+   &lt;packagereq&gt;dialog&lt;/packagereq&gt; &lt;!-- necessary for lowmem prompt, could be used for mainmodule selection --&gt;
+   &lt;packagereq&gt;file&lt;/packagereq&gt; &lt;!-- need this for mount_module --&gt;
+   &lt;packagereq&gt;module-init-tools&lt;/packagereq&gt; &lt;!-- necessary for kernels 2.5+ --&gt;
+   &lt;packagereq&gt;mountmodule&lt;/packagereq&gt; &lt;!-- generic morphix modulemounter script --&gt;
+   &lt;packagereq&gt;ddcxinfo-knoppix&lt;/packagereq&gt; &lt;!-- necessary for X/monitor detection --&gt;
+   &lt;packagereq&gt;morphix-base-scripts&lt;/packagereq&gt; &lt;!-- sets up number of knop/morph /usr/sbin scripts --&gt;
+
+   &lt;packagereq&gt;morphix-base-splash&lt;/packagereq&gt; &lt;!-- bootsplash, you need the kernel patched for this one --&gt;
+   &lt;packagereq&gt;morphix-base-grub&lt;/packagereq&gt; &lt;!--not sure if this is necessary, grub is on boot.img after all... --&gt;
+   &lt;packagereq savestatus="true"&gt;kernel-image-2.6.13&lt;/packagereq&gt;
+
+   &lt;!-- other lkm's we want in our base--&gt;
+   &lt;packagereq&gt;cloop-module&lt;/packagereq&gt;
+   &lt;packagereq&gt;linux-wlan-ng-modules-2.6.13&lt;/packagereq&gt;
+   &lt;packagereq&gt;ndiswrapper-modules-2.6.13&lt;/packagereq&gt;
+   &lt;packagereq&gt;unionfs-modules-2.6.13&lt;/packagereq&gt;
+   &lt;packagereq&gt;unionfs-utils&lt;/packagereq&gt;
+
+   &lt;packagereq&gt;morphix-base-conf&lt;/packagereq&gt; &lt;!-- /etc and morphix base init scripts, put this in as last --&gt;
+
+   &lt;!-- packages that are removed --&gt;
+   &lt;packagedel&gt;aptitude&lt;/packagedel&gt;
+   &lt;packagedel&gt;exim4&lt;/packagedel&gt;
+   &lt;packagedel&gt;exim4-base&lt;/packagedel&gt;
+   &lt;packagedel&gt;exim4-config&lt;/packagedel&gt;
+   &lt;packagedel&gt;manpages&lt;/packagedel&gt;
+   &lt;packagedel&gt;tasksel&lt;/packagedel&gt;
+   &lt;packagedel&gt;telnet&lt;/packagedel&gt;
+   &lt;packagedel&gt;pppoeconf&lt;/packagedel&gt;
+   &lt;packagedel&gt;pppconfig&lt;/packagedel&gt;
+   &lt;packagedel&gt;ppp&lt;/packagedel&gt;
+   &lt;packagedel&gt;man-db&lt;/packagedel&gt;
+  &lt;/packagelist&gt;
+ &lt;/group&gt;
+&lt;/comps&gt;
+
+</pre>
+
+<hr noshade="noshade">
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr>
+<td align="left">
+<address><a href="http://sourceforge.net/">Back to SourceForge.net</a></address><br>
+Powered by <a href="http://viewcvs.sourceforge.net/">ViewCVS 1.0-dev</a>
+</td>
+<td align="right">
+<h3><a target="_blank" href="http://cvs.sourceforge.net/viewcvs.py/*docroot*/help_rootview.html">ViewCVS and CVS Help</a></h3>
+</td>
+</tr>
+</tbody></table>
+</body></html>

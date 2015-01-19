@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<!-- Created by Andrew Fitzsimon (http://andy.fitzsimon.com.au/) -->
+<!-- Created using Inkscape (http://www.inkscape.org/) -->
+<svg
+   id="ubuntuicon"
+   sodipodi:version="0.32"
+   inkscape:version="0.39cvs"
+   width="160.00000"
+   height="160.00000"
+   sodipodi:docname="ooo-printer.svg"
+   version="1.0"
+   x="0.00000000"
+   y="0.00000000"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   sodipodi:docbase="C:\Documents and Settings\n4429206\Desktop\mm\ubuntu\apps">
+  <defs
+     id="definitions">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient2541">
+      <stop
+         style="stop-color:#000000;stop-opacity:0.0000000;"
+         offset="0.0000000"
+         id="stop2542" />
+      <stop
+         style="stop-color:#000000;stop-opacity:1.0000000;"
+         offset="1.0000000"
+         id="stop2543" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2541"
+       id="linearGradient7975"
+       x1="0.55294120"
+       y1="1.0000000"
+       x2="0.56418282"
+       y2="-0.19441730" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#MaterialSoftShadow"
+       id="radialGradient2044" />
+    <linearGradient
+       id="MaterialSoftShadow">
+      <stop
+         style="stop-color:#000000;stop-opacity:0.21472393;"
+         offset="0.0000000"
+         id="stop2619" />
+      <stop
+         style="stop-color:#000000;stop-opacity:0.098159507;"
+         offset="0.50000000"
+         id="stop2621" />
+      <stop
+         style="stop-color:#000000;stop-opacity:0.0000000;"
+         offset="1.0000000"
+         id="stop2620" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient1693">
+      <stop
+         style="stop-color:#000;stop-opacity:1;"
+         offset="0"
+         id="stop1694" />
+      <stop
+         style="stop-color:#fff;stop-opacity:1;"
+         offset="1"
+         id="stop1695" />
+    </linearGradient>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.4142136"
+     inkscape:cx="99.205260"
+     inkscape:cy="41.053927"
+     inkscape:window-width="640"
+     inkscape:window-height="524"
+     inkscape:window-x="365"
+     inkscape:window-y="189"
+     showgrid="true"
+     gridempspacing="5"
+     gridtolerance="5.0000000mm"
+     inkscape:grid-points="true"
+     gridspacingx="1.2500000mm"
+     gridspacingy="1.2500000mm"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:grid-bbox="false" />
+  <metadata
+     id="metadata1293">
+    <rdf:RDF
+       id="RDF1294">
+      <cc:Work
+         rdf:about=""
+         id="Work1295">
+        <dc:format
+           id="imageformat">image/svg+xml</dc:format>
+        <dc:type
+           id="type1298"
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:creator
+           id="creator1299">
+          <cc:Agent
+             id="Agent1300">
+            <dc:title
+               id="title1301">Ubuntu Icon</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights
+           id="rights1303">
+          <cc:Agent
+             id="Agent1304">
+            <dc:title
+               id="creator">Andrew Fitzsimon</dc:title>
+          </cc:Agent>
+          <cc:Agent
+             id="Agent1332">
+            <dc:title
+               id="company">Canonical Software</dc:title>
+          </cc:Agent>
+          <cc:Agent
+             id="Agent1335">
+            <dc:title
+               id="owner">Mark Shuttleworth</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:date
+           id="date1307">2004-09-01</dc:date>
+        <dc:description
+           id="description1309">Icon for the Ubuntu Icon Set</dc:description>
+        <dc:contributor
+           id="contributor1311">
+          <cc:Agent
+             id="Agent1312">
+            <dc:title
+               id="title1313">Andrew Fitzsimon</dc:title>
+          </cc:Agent>
+        </dc:contributor>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="g4387"
+     transform="matrix(0.992087,0.000000,0.000000,0.992087,-310.6518,-739.6318)">
+    <path
+       sodipodi:type="arc"
+       style="fill:url(#radialGradient2044);fill-opacity:1.0000000;fill-rule:evenodd;stroke:none;stroke-width:1.0000000pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;"
+       id="path4383"
+       sodipodi:cx="-289.09140"
+       sodipodi:cy="598.36652"
+       sodipodi:rx="125.20509"
+       sodipodi:ry="125.20509"
+       d="M -163.88631 598.36652 A 125.20509 125.20509 0 1 0 -414.29649,598.36652 A 125.20509 125.20509 0 1 0 -163.88631 598.36652 z"
+       transform="matrix(0.405818,0.000000,0.000000,0.106244,509.1788,817.5393)" />
+    <path
+       sodipodi:type="arc"
+       style="fill:url(#radialGradient2044);fill-opacity:1.0000000;fill-rule:evenodd;stroke:none;stroke-width:1.0000000pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;"
+       id="path4384"
+       sodipodi:cx="-289.09140"
+       sodipodi:cy="598.36652"
+       sodipodi:rx="125.20509"
+       sodipodi:ry="125.20509"
+       d="M -163.88631 598.36652 A 125.20509 125.20509 0 1 0 -414.29649,598.36652 A 125.20509 125.20509 0 1 0 -163.88631 598.36652 z"
+       transform="matrix(0.582262,0.000000,0.000000,7.080940e-2,559.5771,824.4288)" />
+    <path
+       style="fill:#eeeeee;fill-opacity:1.0000000;fill-rule:evenodd;stroke:#000000;stroke-width:1.9726855;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4.0000000;stroke-opacity:1.0000000;"
+       d="M 322.62429,834.72536 L 322.62429,849.95988 C 322.62429,857.68614 332.36697,865.19442 340.09322,865.19442 L 357.56214,865.19442 L 375.03107,865.19442 L 392.50000,865.19442 L 409.96893,865.19442 L 427.43786,865.19442 L 444.90678,865.19442 C 452.63303,865.19442 462.37571,857.68614 462.37571,849.95988 L 462.37571,834.72536 C 462.37571,819.27287 442.89035,804.25631 427.43786,804.25631 L 409.96893,804.25631 L 392.50000,804.25631 L 375.03107,804.25631 L 357.56214,804.25631 C 342.10965,804.25631 322.62429,819.27287 322.62429,834.72536 z "
+       id="rect7969"
+       sodipodi:nodetypes="czzccccczzzzccczz" />
+    <path
+       style="fill:#000000;fill-opacity:0.52201259;fill-rule:evenodd;stroke:none;stroke-width:0.96216879pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;"
+       d="M 336.58690,821.09739 C 336.58690,828.05900 340.28251,828.03661 348.34803,828.03661 L 438.63800,828.03661 C 446.30079,828.03661 452.07965,829.06722 450.11898,821.74990 C 447.96790,813.72192 435.35954,806.78544 426.12380,806.78544 L 359.99279,806.78544 C 351.02751,806.78544 336.58690,813.75791 336.58690,821.09739 z "
+       id="path7972"
+       sodipodi:nodetypes="czzzzzz" />
+    <rect
+       style="fill:url(#linearGradient7975);fill-opacity:0.75000000;fill-rule:evenodd;stroke:none;stroke-width:1.0000000pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;"
+       id="rect7973"
+       width="100.34477"
+       height="12.593878"
+       x="343.34326"
+       y="848.94427"
+       rx="4.9139390"
+       ry="4.9139390" />
+    <path
+       style="fill:none;fill-opacity:0.75000000;fill-rule:evenodd;stroke:#000000;stroke-width:3.7500000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4.0000000;stroke-opacity:1.0000000;"
+       d="M 352.37127,812.38140 L 433.44124,812.38140"
+       id="path7971" />
+    <rect
+       style="fill:#eeeeee;fill-opacity:1.0000000;fill-rule:evenodd;stroke:#000000;stroke-width:1.9726855;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4.0000000;stroke-opacity:1.0000000;"
+       id="rect7979"
+       width="72.017281"
+       height="45.081188"
+       x="357.91324"
+       y="767.69995"
+       rx="0.00000000"
+       ry="0.00000000" />
+    <path
+       style="fill:#000000;fill-opacity:1.0000000;fill-rule:evenodd;stroke:#000000;stroke-width:2.6241927;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4.0000000;stroke-opacity:1.0000000;"
+       d="M 348.15247,853.23410 L 342.12176,878.24115 L 445.14750,878.24115 L 439.71986,853.23410 L 348.15247,853.23410 z "
+       id="rect7981"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       style="fill:#cccccc;fill-opacity:1.0000000;fill-rule:evenodd;stroke:none;stroke-width:2.5625000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4.0000000;stroke-opacity:1.0000000;"
+       d="M 355.63774,850.29053 L 351.42515,873.58162 L 435.50756,873.58162 L 432.54011,850.29053 L 355.63774,850.29053 z "
+       id="rect7989"
+       sodipodi:nodetypes="ccccc" />
+    <rect
+       style="fill:#000000;fill-opacity:0.58823532;fill-rule:evenodd;stroke:none;stroke-width:1.0000000pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;"
+       id="rect7982"
+       width="100.34477"
+       height="12.593878"
+       x="343.34326"
+       y="848.94427"
+       rx="4.9139390"
+       ry="4.9139390" />
+  </g>
+</svg>

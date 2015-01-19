@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<!-- Created by Andrew Fitzsimon (http://andy.fitzsimon.com.au/) -->
+<!-- Created using Inkscape (http://www.inkscape.org/) -->
+<svg
+   id="ubuntuicon"
+   sodipodi:version="0.32"
+   inkscape:version="0.39cvs"
+   width="160.00000"
+   height="160.00000"
+   sodipodi:docname="help.svg"
+   version="1.0"
+   x="0.00000000"
+   y="0.00000000"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   sodipodi:docbase="C:\Documents and Settings\n4429206\Desktop\mm\ubuntu\apps">
+  <defs
+     id="definitions">
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#MaterialSoftShadow"
+       id="radialGradient2044" />
+    <linearGradient
+       id="BlackTransparent">
+      <stop
+         style="stop-color:#000000;stop-opacity:1.0000000;"
+         offset="0.0000000"
+         id="stopBlackFull" />
+      <stop
+         style="stop-color:#000000;stop-opacity:0.0000000;"
+         offset="1.0000000"
+         id="stopBlackTransparent" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient1726">
+      <stop
+         style="stop-color:#000000;stop-opacity:0.40689656;"
+         offset="0.0000000"
+         id="stop1727" />
+      <stop
+         style="stop-color:#000000;stop-opacity:0.00000000;"
+         offset="1.0000000"
+         id="stop1728" />
+    </linearGradient>
+    <radialGradient
+       xlink:href="#linearGradient1726"
+       id="radialGradient1505" />
+    <linearGradient
+       id="MaterialSoftShadow">
+      <stop
+         style="stop-color:#000000;stop-opacity:0.21472393;"
+         offset="0.0000000"
+         id="stop2619" />
+      <stop
+         style="stop-color:#000000;stop-opacity:0.098159507;"
+         offset="0.50000000"
+         id="stop2621" />
+      <stop
+         style="stop-color:#000000;stop-opacity:0.0000000;"
+         offset="1.0000000"
+         id="stop2620" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient1693">
+      <stop
+         style="stop-color:#000;stop-opacity:1;"
+         offset="0"
+         id="stop1694" />
+      <stop
+         style="stop-color:#fff;stop-opacity:1;"
+         offset="1"
+         id="stop1695" />
+    </linearGradient>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="2.0000000"
+     inkscape:cx="94.982548"
+     inkscape:cy="56.749634"
+     inkscape:window-width="640"
+     inkscape:window-height="524"
+     inkscape:window-x="365"
+     inkscape:window-y="189"
+     showgrid="false"
+     gridempspacing="5"
+     gridtolerance="5.0000000mm"
+     inkscape:grid-points="true"
+     gridspacingx="1.2500000mm"
+     gridspacingy="1.2500000mm"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:grid-bbox="false" />
+  <metadata
+     id="metadata1293">
+    <rdf:RDF
+       id="RDF1294">
+      <cc:Work
+         rdf:about=""
+         id="Work1295">
+        <dc:format
+           id="imageformat">image/svg+xml</dc:format>
+        <dc:type
+           id="type1298"
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:creator
+           id="creator1299">
+          <cc:Agent
+             id="Agent1300">
+            <dc:title
+               id="title1301">Ubuntu Icon</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights
+           id="rights1303">
+          <cc:Agent
+             id="Agent1304">
+            <dc:title
+               id="creator">Andrew Fitzsimon</dc:title>
+          </cc:Agent>
+          <cc:Agent
+             id="Agent1332">
+            <dc:title
+               id="company">Canonical Software</dc:title>
+          </cc:Agent>
+          <cc:Agent
+             id="Agent1335">
+            <dc:title
+               id="owner">Mark Shuttleworth</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:date
+           id="date1307">2004-09-01</dc:date>
+        <dc:description
+           id="description1309">Icon for the Ubuntu Icon Set</dc:description>
+        <dc:contributor
+           id="contributor1311">
+          <cc:Agent
+             id="Agent1312">
+            <dc:title
+               id="title1313">Andrew Fitzsimon</dc:title>
+          </cc:Agent>
+        </dc:contributor>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="g1981"
+     transform="matrix(0.945687,0.000000,0.000000,0.945687,-542.1905,-315.5358)">
+    <path
+       sodipodi:type="arc"
+       style="fill:url(#radialGradient2044);fill-opacity:1.0000000;fill-rule:evenodd;stroke:none;stroke-width:1.0000000pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;"
+       id="path1982"
+       sodipodi:cx="-289.09140"
+       sodipodi:cy="598.36652"
+       sodipodi:rx="125.20509"
+       sodipodi:ry="125.20509"
+       d="M -163.88631 598.36652 A 125.20509 125.20509 0 1 0 -414.29649,598.36652 A 125.20509 125.20509 0 1 0 -163.88631 598.36652 z"
+       transform="matrix(-0.634183,0.000000,0.000000,9.423741e-2,475.4130,427.2236)" />
+    <path
+       sodipodi:type="arc"
+       style="fill:url(#radialGradient2044);fill-opacity:1.0000000;fill-rule:evenodd;stroke:none;stroke-width:1.0000000pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;"
+       id="path1983"
+       sodipodi:cx="-289.09140"
+       sodipodi:cy="598.36652"
+       sodipodi:rx="125.20509"
+       sodipodi:ry="125.20509"
+       d="M -163.88631 598.36652 A 125.20509 125.20509 0 1 0 -414.29649,598.36652 A 125.20509 125.20509 0 1 0 -163.88631 598.36652 z"
+       transform="matrix(-0.634183,0.000000,0.000000,0.248984,472.9130,321.5037)" />
+    <path
+       style="fill:#eeeeee;fill-opacity:1.0000000;fill-rule:evenodd;stroke:none;stroke-width:1.2541564;stroke-miterlimit:4.0000000;stroke-opacity:1.0000000;"
+       d="M 658.74670,339.26559 C 617.88003,339.26559 584.38429,372.72969 584.38429,413.59636 C 584.38429,454.46302 617.88005,487.95873 658.74670,487.95877 C 699.61336,487.95877 733.10910,454.46302 733.10910,413.59636 C 733.10910,372.72969 699.61334,339.26563 658.74670,339.26559 z M 658.74670,371.30253 C 682.27938,371.30254 701.07217,390.06369 701.07217,413.59636 C 701.07217,437.12903 682.27937,455.92184 658.74670,455.92184 C 635.21401,455.92182 616.42122,437.12903 616.42122,413.59636 C 616.42122,390.06369 635.21403,371.30253 658.74670,371.30253 z "
+       id="path1984" />
+    <path
+       style="fill:#666666;fill-opacity:1.0000000;fill-rule:evenodd;stroke:none;stroke-width:1.2500000;stroke-miterlimit:4.0000000;stroke-dashoffset:0.00000000;stroke-opacity:1.0000000;"
+       d="M 661.78989,340.01207 C 645.55379,339.44927 629.06165,344.20944 615.13364,354.57457 L 629.03989,374.51207 C 645.60384,361.78989 667.41004,361.11244 684.32114,371.01207 L 684.63364,370.73082 L 696.97739,350.26207 C 686.21712,343.93707 674.09014,340.43844 661.78989,340.01207 z M 718.13364,368.94957 L 698.50864,383.41832 C 698.56809,383.49470 698.63704,383.56026 698.69614,383.63707 C 711.34723,400.07946 712.17400,421.70665 702.50864,438.57457 L 723.25864,451.19957 C 737.85738,426.02343 736.83630,393.39392 718.13364,368.94957 z M 595.72739,376.19957 C 580.99572,401.17163 581.74765,433.56537 599.97739,458.07457 L 620.16489,444.48082 C 620.09596,444.39243 620.01460,444.31980 619.94614,444.23082 C 607.18881,427.65035 606.48511,405.81526 616.41489,388.88707 L 595.72739,376.19957 z M 689.82114,453.16832 C 689.75609,453.21887 689.69901,453.27427 689.63364,453.32457 C 672.97091,466.14519 651.00240,466.75722 634.03989,456.66832 L 621.82114,477.69957 C 646.74287,492.25931 679.02838,491.45919 703.44614,473.32457 L 689.82114,453.16832 z "
+       id="path1985" />
+    <path
+       style="fill:none;fill-opacity:1.0000000;fill-rule:evenodd;stroke:#000000;stroke-width:1.6000000;stroke-miterlimit:4.0000000;stroke-opacity:1.0000000;"
+       d="M 658.74670,339.26559 C 617.88003,339.26559 584.38429,372.72969 584.38429,413.59636 C 584.38429,454.46302 617.88005,487.95873 658.74670,487.95877 C 699.61336,487.95877 733.10910,454.46302 733.10910,413.59636 C 733.10910,372.72969 699.61334,339.26563 658.74670,339.26559 z M 658.74670,371.30253 C 682.27938,371.30254 701.07217,390.06369 701.07217,413.59636 C 701.07217,437.12903 682.27937,455.92184 658.74670,455.92184 C 635.21401,455.92182 616.42122,437.12903 616.42122,413.59636 C 616.42122,390.06369 635.21403,371.30253 658.74670,371.30253 z "
+       id="path1986" />
+  </g>
+</svg>

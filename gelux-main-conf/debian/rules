@@ -1,0 +1,109 @@
+#!/usr/bin/make -f
+# Uncomment this to turn on verbose mode.
+
+
+#dpkg-buildpackage -d -rfakeroot
+#sed -i "s/THEDATE/`date -R`/g" debian/changelog
+#export DH_VERBOSE=1
+
+CFLAGS = -Wall -g
+
+ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+	CFLAGS += -O0
+else
+	CFLAGS += -O2
+endif
+
+configure: configure-stamp
+configure-stamp:
+	dh_testdir
+	# Add here commands to configure the package.
+
+build: build-stamp
+
+build-stamp: configure-stamp 
+	dh_testdir
+
+clean:
+	dh_testdir
+	dh_testroot
+
+	dh_clean 
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k 
+	dh_installdirs
+
+
+	# Add here commands to install the package into debian/init.d.
+##
+## Default files for worstation init (gelux-server-conf)
+##
+	mkdir -p debian/gelux-main-conf/etc/gelux.d
+	cp  	etc/gelux.d/00locales.default\
+		etc/gelux.d/01shadow.default\
+		etc/gelux.d/02passwd.default\
+		etc/gelux.d/03gdm.default\
+		etc/gelux.d/04gdm-key.default\
+		etc/gelux.d/05pam_nullok.default\
+		etc/gelux.d/05pam_nis.default\
+		etc/gelux.d/06javajni.default\
+		etc/gelux.d/07splashrc.default $(CURDIR)/debian/gelux-main-conf/etc/gelux.d
+	mkdir -p $(CURDIR)/debian/gelux-main-conf/usr/share/gelux
+	cp -vR etc/kde* $(CURDIR)/debian/gelux-main-conf/etc/
+	cp -vR etc/qt* $(CURDIR)/debian/gelux-main-conf/etc/
+	cd $(CURDIR)/debian/gelux-main-conf && find -name 'CVS' -print0 | xargs -0r rm -rf
+	cd $(CURDIR)
+##
+## Default files for server init (gelux-server-conf)
+##
+	mkdir -p debian/gelux-server-conf/etc/gelux.d
+#		etc/gelux.d/20nis_serveur.default\
+	cp  	etc/gelux.d/00locales.default\
+		etc/gelux.d/01shadow.default\
+		etc/gelux.d/02passwd.default\
+		etc/gelux.d/05aptsources.default\
+		etc/gelux.d/05pam_nullok.default\
+		etc/gelux.d/06javajni.default\
+		etc/gelux.d/07splashrc.default\
+ 	$(CURDIR)/debian/gelux-server-conf/etc/gelux.d
+	mkdir -p $(CURDIR)/debian/gelux-server-conf/usr/share/gelux
+	cd $(CURDIR)/debian/gelux-server-conf && find -name 'CVS' -print0 | xargs -0r rm -rf
+	cd $(CURDIR)
+
+##
+## Default files for nis init (gelux-nis-conf)
+##
+	mkdir -p debian/gelux-nis-conf/etc/gelux.d
+	cp etc/gelux.d/20nis.default $(CURDIR)/debian/gelux-nis-conf/etc/gelux.d
+	cd $(CURDIR)/debian/gelux-nis-conf && find -name 'CVS' -print0 | xargs -0r rm -rf
+	cd $(CURDIR)
+
+
+# Build architecture-independent files here.
+binary-indep: build install
+# We have nothing to do by default.
+
+# Build architecture-dependent files here.
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs 
+	dh_installdocs
+	dh_installexamples
+	dh_installman
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install configure
+

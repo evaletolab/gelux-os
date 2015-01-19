@@ -1,0 +1,42 @@
+gelux-gnome-control-center (0.1-7) unstable; urgency=low
+
+  * remove hack
+
+ -- root <root@evaleto>  Wed, 18 Jan 2006 18:23:37 +0000
+
+gelux-gnome-control-center (0.1-6) unstable; urgency=low
+
+  * FIX postinst
+
+ -- root <root@evaleto>  Fri, 26 Aug 2005 16:38:45 +0000
+
+gelux-gnome-control-center (0.1-5) unstable; urgency=low
+
+  * ADD kde menu
+
+ -- root <root@evaleto>  Fri, 26 Aug 2005 16:20:49 +0000
+
+gelux-gnome-control-center (0.1-4) unstable; urgency=low
+
+  * remove installer.desktop 
+
+ -- Olivier Evalet <evaleto@programmers.ch>  Wed, 06 Apr 2005 16:06:33 +0200
+
+gelux-gnome-control-center (0.1-3) unstable; urgency=low
+
+  * fix control panel in FR
+
+ -- Olivier Evalet <evaleto@programmers.ch>  Mon, 2 Feb 2005 17:10:19 +0200
+
+gelux-gnome-control-center (0.1-2) unstable; urgency=low
+
+  * Add vino pref, display, network in control-panel
+
+ -- Olivier Evalet <evaleto@programmers.ch>  Mon, 20 Jan 2005 17:10:19 +0200
+
+gelux-gnome-control-center (0.1-1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Olivier Evalet <evaleto@programmers.ch>  Mon, 1 Jan 2005 17:10:19 +0200
+

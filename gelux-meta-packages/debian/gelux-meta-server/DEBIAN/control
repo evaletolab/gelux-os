@@ -1,0 +1,10 @@
+Package: gelux-meta-server
+Version: 0.1-29
+Section: misc
+Priority: optional
+Architecture: all
+Installed-Size: 20
+Maintainer: Olivier Evalet <evaleto@programmers.ch>
+Source: gelux-meta-module
+Description: gelux meta module
+ XML description of the gelux server content

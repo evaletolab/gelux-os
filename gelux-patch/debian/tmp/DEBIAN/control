@@ -1,0 +1,9 @@
+Package: gelux-patch
+Version: 0.1-1
+Section: misc
+Priority: optional
+Architecture: all
+Installed-Size: 8
+Maintainer: Olivier Evalet <evaleto@programmers.ch>
+Description: Gelux mainmod livecd patch
+ This package correct Gelux installation

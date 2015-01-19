@@ -1,0 +1,14 @@
+#!/bin/sh
+# wait until X is locked
+# $Id: X11-wait,v 1.1.1.1 2004/09/24 15:27:16 mkalbere Exp $
+
+. /morphix/include.sh
+
+for i in 1 2 3 4 5 6 7 8 9 10
+do
+  if [ -f /tmp/.X0-lock ]; then
+    break
+    sleep 1
+  fi
+done
+    

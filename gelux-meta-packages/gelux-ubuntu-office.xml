@@ -1,0 +1,238 @@
+<comps>
+ <group>
+  <version>0.7</version>
+  <id>ubuntu-office</id>
+  <name>gelux-ubuntu office meta-packages</name>
+  <repositorylist> 
+   <repository type="debian" suite="dapper main restricted universe multiverse">http://ch.archive.ubuntu.com/ubuntu</repository>
+   <repository type="debian" suite="dapper-updates main restricted universe multiverse">http://archive.ubuntu.com/ubuntu</repository>
+   <repository type="plain">http://www.morphix.org/debian</repository>
+   <repository type="plain">http://debian.gelux.ch</repository>
+   <repository type="debian" suite="etch">ftp://ftp.nerim.net/debian-marillat/</repository>
+  </repositorylist>
+  <description>GeluX mainmodule</description>
+  <type>mainmod</type>
+  <suite>dapper</suite>
+  <packagelist>
+<!-- remove exim4 exim4-base exim4-config mailx ? -->
+<packagereq>strace</packagereq>
+<packagereq>alsa-base</packagereq>
+<packagereq>alsa-utils</packagereq>
+<packagereq>aspell</packagereq>
+<packagereq>bzip2</packagereq>
+<packagereq>cdrecord</packagereq>
+<packagereq>dvd+rw-tools</packagereq>
+<packagereq>cloop-utils</packagereq>
+<packagereq>jfsutils</packagereq>
+<packagereq>dosfstools</packagereq>
+<packagereq>hfsutils</packagereq>
+<packagereq>squashfs-tools</packagereq>
+<!--<packagereq>scite</packagereq>-->
+<packagereq>dialog</packagereq>
+<packagereq>euro-support</packagereq>
+<packagereq>gnupg</packagereq> 
+<packagereq>eject</packagereq> 
+<packagereq>grub</packagereq>
+<!--<packagereq>gs</packagereq>-->
+<packagereq>hdparm</packagereq>
+<packagereq>hostname</packagereq>
+<packagereq>hotplug</packagereq>
+<packagereq>less</packagereq>
+<packagereq>menu</packagereq>
+<packagereq>menu-xdg</packagereq>
+<packagereq>mkisofs</packagereq>
+<packagereq>mutt</packagereq>
+<packagereq>module-init-tools</packagereq> <!-- necessary for kernels 2.5+ -->
+<packagereq>most</packagereq> 
+<packagereq>less</packagereq> 
+<packagereq>zip</packagereq> 
+<packagereq>unzip</packagereq> 
+<packagereq>unace</packagereq> 
+<packagereq>unrar-free</packagereq> 
+<packagereq>exim4-daemon-light</packagereq>
+<!--<packagereq>mail-transport-agent</packagereq>-->
+<packagereq>mtools</packagereq>
+<packagereq>pcmcia-cs</packagereq>
+<packagereq>pump</packagereq>
+<packagereq>reiserfsprogs</packagereq>
+<packagereq>ntfsprogs</packagereq>
+<packagereq>libntfs-gnomevfs</packagereq>
+<packagereq>sudo</packagereq>
+<packagereq>parted</packagereq>
+<packagereq>cdrdao</packagereq>
+<!-- network -->
+<packagereq>libpam-mount</packagereq>
+<packagereq>libpam-smbpass</packagereq>
+<packagereq>ftp</packagereq>
+<packagereq>ssh</packagereq>
+<packagereq>rsync</packagereq>
+<packagereq>smbclient</packagereq>
+<packagereq>ntp</packagereq>
+<packagereq>smbfs</packagereq>
+<packagereq>iproute</packagereq>
+<packagereq>bridge-utils</packagereq> 
+<packagereq>winbind</packagereq>
+<packagereq>samba</packagereq>
+<packagereq>samba-common</packagereq>
+<packagereq>synaptic</packagereq>
+<packagereq>wget</packagereq>
+<packagereq>vnc-common</packagereq>
+<!--<packagereq>vim-gtk</packagereq>-->
+<packagereq>wireless-tools</packagereq>
+<packagereq>xfsprogs</packagereq>
+<packagereq>xpdf</packagereq>
+<packagereq>xbase-clients</packagereq>
+<packagereq>x-window-system-core</packagereq>
+<packagereq>xloadimage</packagereq> <!-- necessary for xsetbg at boot -->
+<packagereq>xserver-xorg</packagereq>
+<packagereq>xterm</packagereq>
+<packagereq>locales</packagereq>
+<packagereq>lsof</packagereq>
+<packagereq>apmd</packagereq> 
+<packagereq>avifile-win32-plugin</packagereq>
+<packagereq>libdvdcss2</packagereq>
+<packagereq>w32codecs</packagereq>
+<packagereq>libdvdread3</packagereq>
+<!-- gdm -->
+<packagereq>gdm</packagereq>
+<packagereq>libcroco3</packagereq>
+<packagereq>libgsf-1</packagereq>
+<packagereq>librsvg2-2</packagereq>
+<packagereq>librsvg2-common</packagereq>
+<packagereq>libselinux1</packagereq>
+<!-- fonts -->
+<packagereq>xfonts-base</packagereq>
+<packagereq>xfonts-100dpi</packagereq>
+<packagereq>xfonts-artwiz</packagereq>
+<!--<packagereq>xfonts-base-transcoded</packagereq> -->
+<packagereq>msttcorefonts</packagereq>
+<packagereq>gsfonts-x11</packagereq>
+<packagereq>t1-xfree86-nonfree</packagereq>
+<packagereq>ttf-xfree86-nonfree</packagereq>
+<packagereq>ttf-alee</packagereq>
+<packagereq>ttf-bitstream-vera</packagereq>
+<packagereq>ttf-dustin</packagereq>
+<packagereq>ttf-freefont</packagereq>
+<packagereq>ttf-opensymbol</packagereq>
+<packagereq>xfonts-scalable</packagereq>
+<packagereq>xfonts-knickers</packagereq>
+<!-- <packagereq>xfs</packagereq> -->
+<packagereq>xfonts-base</packagereq> 
+<packagereq>xfonts-scalable</packagereq> 
+<packagereq>auto-apt</packagereq>
+<!-- printer -->
+<packagereq>cupsys</packagereq>
+<packagereq>foomatic-db-hpijs</packagereq>
+<packagereq>cups-pdf</packagereq>
+<packagereq>cupsys-bsd</packagereq>
+<packagereq>foomatic-db-gimp-print</packagereq>
+<packagereq>hpoj</packagereq>
+<packagereq>bluez-cups</packagereq>
+<packagereq>bluez-utils</packagereq>
+<packagereq>libmultisync-plugin-evolution</packagereq>
+<packagereq>libmultisync-plugin-backup</packagereq>
+<packagereq>libmultisync-plugin-irmc</packagereq>
+<packagereq>libmultisync-plugin-irmc-bluetooth</packagereq>
+<packagereq>libmultisync-plugin-syncml</packagereq>
+<!-- web -->
+<packagereq>mozilla-firefox</packagereq>
+<packagereq>mozilla-firefox-locale-fr-fr</packagereq>
+<packagereq>mozilla-firefox-gnome-support</packagereq>
+<packagereq>flashplugin-nonfree flashplayer-mozilla</packagereq> 
+<!--<packagereq>mozilla-thunderbird</packagereq>-->
+<!-- scanner -->
+<!-- gelux gnome -->
+
+
+<packagereq>eclipse  ant-doc libbsf-java liboro-java libxalan2-java  antlr libjdepend-java libgnumail-java libxml-commons-resolver1.1-java libcommons-net-java junit-doc libbcel-java-doc libcommons-beanutils-java-doc libcommons-collections3-java-doc tomcat5 tomcat5-admin tomcat5-webapps bsh</packagereq>
+<packagereq>gnome</packagereq>
+<packagereq>beagle beagle-backend-evolution f-spot banshee</packagereq>
+<packagereq>gaim</packagereq>
+<packagereq>gimp</packagereq>
+<packagereq>inkscape</packagereq>
+<packagereq>gksu</packagereq>
+<packagereq>celestia-gnome</packagereq>
+<packagereq>hal-device-manager</packagereq>
+<packagereq>aspell-fr</packagereq>
+<packagereq>gthumb</packagereq>
+<packagereq>configure-debian</packagereq> 
+<packagereq>contact-lookup-applet</packagereq> 
+<packagereq>nautilus-sendto</packagereq> 
+<packagereq>myspell-en-us</packagereq>
+<packagereq>myspell-fr</packagereq>
+<packagereq>abiword</packagereq>
+<packagereq>abiword-gnome</packagereq>
+<packagereq>gtk2-engines-clearlooks</packagereq>
+<packagereq>abiword-plugins-gnome</packagereq>
+<packagereq>abiword-plugins</packagereq>
+<packagereq>rss-glx</packagereq>
+<packagereq>easytag</packagereq>
+<packagereq>beep-media-player</packagereq>
+<packagereq>zapping</packagereq>
+<packagereq>streamtuner</packagereq>
+<packagereq>gnome-pilot-conduits</packagereq>
+<packagereq>network-manager</packagereq>
+<packagereq>deskbar-applet</packagereq>
+<packagereq>eiciel</packagereq>
+<packagereq>evolution-exchange</packagereq>
+<packagereq>gnome-blog</packagereq>
+<packagereq>gnome-power-manager</packagereq>
+<packagereq>nautilus-open-terminal</packagereq>
+<packagereq>rhythmbox-applet</packagereq>
+<packagereq>totem-xine-firefox-plugin</packagereq>
+<packagereq>realplayer</packagereq>
+
+<!--<packagereq>update-manager</packagereq>-->
+<packagereq>sclilab scilab-doc</packagereq>
+<packagereq>gnome-bluetooth</packagereq>
+<packagereq>stardict</packagereq>
+<packagereq>multi-gnome-terminal</packagereq>
+<packagereq>ontv</packagereq>
+<packagereq>nautilus-open-terminal</packagereq>
+<packagereq>eiciel</packagereq>
+<packagereq>vino</packagereq>
+<packagereq>totem-xine</packagereq>
+<packagereq>language-pack-gnome-fr</packagereq>
+<packagereq>multisync</packagereq>
+<packagereq>avahi-daemon</packagereq>
+<packagereq>avahi-dnsconfd</packagereq>
+<!-- gelux super media -->
+<!--<packagereq>rezound</packagereq>-->
+<!--<packagereq>jackd</packagereq>-->
+<!--<packagereq>specimen</packagereq>-->
+<!--<packagereq>seq24</packagereq>-->
+<!--<packagereq>jamin</packagereq>-->
+<!--<packagereq>qjackctl</packagereq>-->
+<packagereq>sound-juicer</packagereq>
+
+<!-- KDE -->
+<!--MONO  <packagereq>gtvlistings</packagereq> -->
+<!-- <packagereq>kino<packagereq> -->
+<packagereq>ladspa-sdk</packagereq>
+<packagereq>liferea</packagereq>
+<!--<packagereq>lame</packagereq>-->
+<packagereq>xsane</packagereq>
+<!--<packagereq>hardware-monitor</packagereq>-->
+<packagereq>hpoj</packagereq>
+<!-- EXTRA please do not remove this line -->
+
+<!-- programmers at the end -->
+<packagereq>gelux-ubuntu-meta-office</packagereq>
+<packagereq>gparted</packagereq>
+<packagereq>gengrubmenu2</packagereq>
+<packagereq>java-common</packagereq>
+<packagereq>libgcj-dev</packagereq>
+<packagereq>gelux-main-conf</packagereq>
+<packagereq>gelux-main-init</packagereq>
+<packagereq>gelux-artwork</packagereq>
+<packagereq>gelux-daemon</packagereq>
+<packagereq>gelux-node</packagereq>
+<packagereq>libgtk-java</packagereq>
+<packagereq>libgnome-java</packagereq>
+<packagereq>libglade-java</packagereq>
+<packagereq>parted-java</packagereq>
+<!--<packagereq>gelux-node-installer</packagereq>-->
+<!--<packagereq>gelux-nis-conf</packagereq>-->
+</packagelist>
+</group>
+</comps>

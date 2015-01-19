@@ -1,0 +1,42 @@
+Source: gelux-meta-module
+Section: misc
+Priority: optional
+Maintainer: Olivier Evalet <evaleto@programmers.ch>
+Build-Depends: debhelper (>= 4.0.0)
+Standards-Version: 3.6.1.0
+
+Package: gelux-meta-gnome
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: gelux meta module
+ XML description of the gelux gnome content
+
+Package: gelux-meta-devel
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: gelux meta devel
+ XML description of the gelux devel content
+
+Package: gelux-meta-office
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: gelux meta office
+ XML description of the gelux office content
+
+Package: gelux-ubuntu-meta-office
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: gelux meta office
+ XML description of the gelux-ubuntu office content
+
+Package: gelux-meta-server
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: gelux meta module
+ XML description of the gelux server content
+
+Package: gelux-meta-base
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: gelux meta module
+ XML description of the gelux basemodule content

@@ -1,0 +1,172 @@
+#!/bin/sh
+# 
+# havily based on
+# KNOPPIX Terminalserver Client Startup Script
+# (C) Aug 2002 Klaus Knopper <knoppix@knopper.net>
+# Modified for Morphix by Chris Liechti <cliechti@gmx.net>
+# Modified in 2004 by Olivier Evalet for Gelux and Morphix
+#
+# must add /etc/resolv.conf 
+#          /etc/export
+#          /static/dhclient or pump (busybox)
+#          /static/portmap (uclibc static)
+#          /modules/net af_packet.ko nfsd.ko unix.ko
+#
+# This script needs some commands that are not yet builtins
+# to ash.static (nfs-capable mount, pump, portmap).
+# insmod/rmmod are builtin commands.
+#
+
+FOUND_SCSI=""
+FOUND_MORPHIX=""
+INTERACTIVE=""
+
+
+# Be verbose
+echo "${WHITE}Starting the ${YELLOW}MORPHIX${WHITE} Terminal Client!${NORMAL}"
+
+
+# Check if we are in interactive startup mode
+cmdline="$(cat /proc/cmdline 2>/dev/null)"
+
+# Split cmdline, find NFSDIR variable
+for i in $cmdline; do case "$i" in fromnfs=*|nm=*|gw=*|nfsdir=*) eval $i;; esac; done
+[ -n "$fromnfs" ] && IP="$fromnfs"
+[ -n "$nm" ] && NM="$nm"
+[ -n "$gw" ] && GW="$gw"
+[ -n "$nfsdir" ] && NFSDIR="$nfsdir"
+[ -z "$nfsdir" ] && NFSDIR="10.0.0.111:/gelux"
+
+# Check for "secure" option
+SECURE=""
+case "$cmdline" in *secure*) SECURE="yes";; esac
+
+# Disable kernel messages while probing modules in autodetect mode
+echo "0" > /proc/sys/kernel/printk
+
+
+# Load nfs modules
+NFSMODULES="unix.o af_packet.o sunrpc.o lockd.o nfs.o"
+for i in $NFSMODULES; do insmod /modules/net/$i 2>/dev/null; done
+
+
+# All interactively requested modules should be loaded now.
+
+
+# Disable kernel messages again
+#echo "0" > /proc/sys/kernel/printk
+
+FOUND_NETWORK=""
+echo "Loading network device module(s)"
+for i in $(cd /modules/net; echo *.o); do
+case "$NFSMODULES" in
+*$i*) ;;
+*) insmod /modules/net/$i >/dev/null 2>&1 && \
+echo "${CRE} ${GREEN}Found network device(s) handled by ${MAGENTA}$i${GREEN}.${NORMAL}" && \
+FOUND_NETWORK="$i"
+;;
+esac
+done
+
+# Enable kernel messages again
+echo "6" > /proc/sys/kernel/printk
+/static/ifconfig lo 127.0.0.1 up
+
+[ -n "FOUND_NETWORK" ] || exit
+
+DHCP=""
+for i in 1 2 3; do
+echo -n "${CRE}${BLUE}DHCP Broadcasting for IP address ($i)... ${NORMAL}"
+[ -x /static/pump ] && /static/pump -v && DHCP="true"
+[ -n "$DHCP" ] && break
+echo "${RED}No answer from network.${NORMAL}"
+done
+[ -n "$DHCP" ] && echo "${GREEN}OK.${NORMAL}" 
+
+echo "${CRE} ${GREEN}Network card configuration: ${NORMAL}"
+
+if test -z "$DHCP" -a -n "$IP" -a -n "$NM"; then
+ ifconfig eth0 $IP  netmask $NM && ETH="true"
+else
+ ifconfig eth0
+fi
+portmap && echo "${CRE} ${GREEN}Portmapper started.${NORMAL}"
+
+
+# for the upcoming NFS mount
+MOUNTED=""
+SECUREOPTIONS=""
+[ -n "$SECURE" ] && SECUREOPTIONS=",nosuid"
+
+# if we have an NFSDIR, try mounting it
+if [ -n "$NFSDIR" ]; then
+    echo -n "${CRE}${BLUE}Trying to mount CD on" \
+	"${MAGENTA}$NFSDIR${BLUE}...${NORMAL}"
+    /static/mount -t nfs -o \
+	ro,rsize=8192,wsize=8192,hard,intr$SECUREOPTIONS \
+        "${NFSDIR}" /cdrom > /dev/null 2>&1  && MOUNTED="yes"
+
+	# unsuccessful? Blank out NFSDIR and see if pump does better
+	[ -z "$MOUNTED" ] && echo "${RED}Failed.${NORMAL}" && NFSDIR=
+fi
+
+# no NFSDIR? ask pump for the second server
+if [ -z "$NFSDIR" ]; then
+[ -x /static/pump ] &&  PUMP="$(/static/pump -s)"
+ while read next server nfsroot; do
+ case "$next $server" in [Nn]ext\ [Ss]erver) NFSROOT="$nfsroot"; break; ;; esac
+ done <<EOT
+$PUMP
+EOT
+
+ # if that doesn't exist, use the dhcp server
+ if [ -z "$NFSROOT" -o "$NFSROOT" = "0.0.0.0" ];then
+ while read next server nfsroot; do
+ case "$next $server" in [Bb]oot\ [Ss]erver) NFSROOT="$nfsroot"; break; ;; esac
+ done <<EOT
+$PUMP
+EOT
+ fi
+
+ # still nothing? try the default
+ [ -z "$NFSROOT" ] && NFSROOT=192.168.0.1
+
+ # try mounting it, first with "/morhpix"
+ echo -n "${CRE}${BLUE}Trying to mount CD on ${MAGENTA}$NFSROOT${BLUE}...${NORMAL}"
+ /static/mount -t nfs -o ro,rsize=8192,wsize=8192,hard,intr$SECUREOPTIONS \
+  "${NFSROOT}:/morphix" /cdrom > /dev/null 2>&1  && NFSDIR="${NFSROOT}:/morphix"
+
+# then with "/cdrom"
+ [ -z "$NFSDIR" ] && /static/mount -t nfs -o \
+  ro,rsize=8192,wsize=8192,hard,intr$SECUREOPTIONS \
+  "${NFSROOT}:/cdrom" /cdrom > /dev/null 2>&1  && NFSDIR="${NFSROOT}:/cdrom"
+
+ [ -n "$NFSDIR" ] && MOUNTED="yes"
+fi
+
+# STILL nothing? ask the user
+[ -z "$MOUNTED" ] && {
+    for i in 2 1 0; do
+	echo "${RED}Failed.${NORMAL}"
+	echo -n "${CYAN}Please enter NFS directory path" \
+	    "(aka \"192.168.0.1:/cdrom\"): ${NORMAL}"
+	read NFSDIR
+	/static/mount -t nfs -o ro,rsize=8192,wsize=8192,hard,intr$SECUREOPTIONS \
+	    "$NFSDIR" /cdrom > /dev/null 2>&1  && MOUNTED="true"
+	[ -n "$MOUNTED" ] && break
+    done
+}
+
+[ -n "$MOUNTED" ] && echo "${GREEN}OK.${NORMAL}"
+[ -z "$MOUNTED" ] && exit
+
+FOUND_MORPHIX=""
+
+if test -f /cdrom/base/morphix
+then
+echo -n "${CRE} ${GREEN}Accessing MORPHIX CDROM image at ${MAGENTA}$NFSDIR${GREEN}...${NORMAL}"
+FOUND_MORPHIX="true"
+export FOUND_MORPHIX
+else
+echo -n "${CRE} ${RED}NO MORPHIX CDROM image detected at ${MAGENTA}$NFSDIR${RED}...${NORMAL}"
+fi

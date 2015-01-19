@@ -1,0 +1,48 @@
+#!/bin/sh
+
+# Set up gnome "a la gelux"
+
+echo "Configuring Gnome"
+#Metacity
+gconftool-2 --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.defaults --type string --set /apps/metacity/general/theme Gelux &>/dev/null
+#gtk
+gconftool-2 --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.defaults --type string --set /desktop/gnome/interface/gtk_theme Gelux &>/dev/null
+#icons
+gconftool-2 --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.defaults --type string --set /desktop/gnome/interface/icon_theme dlg-neu &>/dev/null
+#toolbar style
+gconftool-2 --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.defaults --type string --set /desktop/gnome/interface/toolbar_style icons &>/dev/null
+#Default navigator
+gconftool-2 --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.defaults --type string --set /desktop/gnome/applications/browser/exec mozilla-firefox &>/dev/null
+#Default Splash
+gconftool-2 --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.defaults --type string --set /apps/gnome-session/options/splash_image /usr/share/pixmaps/splash/gelux-splash.png &>/dev/null
+gconftool-2 --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.defaults --type boolean --set /apps/gnome-session/options/allow_tcp_connections true &>/dev/null
+
+#Default sound events
+gconftool-2 --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.defaults --type boolean --set /desktop/gnome/sound/event_sounds false &>/dev/null
+
+#Default background
+gconftool-2 --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.defaults --type string --set /desktop/gnome/background/picture_filename /usr/share/backgrounds/gelux-gnome.jpg &>/dev/null
+
+#Default gnome-panel
+gconftool-2 --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.defaults --load /usr/share/gelux-artwork/gnome-panel/gelux-panel.entries
+
+#Default gnome-terminal
+gconftool-2 --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.defaults --type string --set /apps/gnome-terminal/profiles/Default/font "Monospace 9" &>/dev/null
+gconftool-2 --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.defaults --type boolean --set /apps/gnome-terminal/profiles/Default/use_theme_colors false &>/dev/null
+gconftool-2 --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.defaults --type string --set /apps/gnome-terminal/profiles/Default/foreground_color "#55FF55" &>/dev/null
+gconftool-2 --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.defaults --type string --set /apps/gnome-terminal/profiles/Default/background_color "#000000" &>/dev/null
+gconftool-2 --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.defaults --type boolean --set /apps/gnome-terminal/profiles/Default/silent_bell true &>/dev/null
+gconftool-2 --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.defaults --type boolean --set /apps/gnome-terminal/profiles/Default/use_system_font false &>/dev/null
+
+#Default gedit
+gconftool-2 --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.defaults --type string --set /apps/gedit-2/preferences/editor/font/editor_font "Monospace 9" &>/dev/null
+gconftool-2 --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.defaults --type boolean --set /apps/gedit-2/preferences/editor/line_numbers/display_line_numbers true &>/dev/null
+
+#Nautilus
+gconftool-2 --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.defaults --type boolean --set /apps/nautilus/preferences/always_use_browser true &>/dev/null
+gconftool-2 --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.defaults --type string --set /apps/nautilus/preferences/default_folder_viewer list_view &>/dev/null
+#since gnome (>=2.12)
+gconftool-2 --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.defaults --type boolean --set /apps/nautilus/preferences/start_with_location_bar true &>/dev/null
+gconftool-2 --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.defaults --type boolean --set /apps/nautilus/preferences/start_with_sidebar false &>/dev/null
+gconftool-2 --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.defaults --type boolean --set /apps/nautilus/desktop/computer_icon_visible true &>/dev/null
+gconftool-2 --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.defaults --type boolean --set /apps/nautilus/desktop/trash_icon_visible true &>/dev/null

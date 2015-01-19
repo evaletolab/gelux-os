@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Phone Manager
+Name[fr]=Phone Manager
+Comment=Receive and send text messages from your mobile phone
+Icon=../gnome-phone-manager/cellphone.png
+Exec=gnome-phone-manager
+Terminal=0
+Type=Application
+Categories=Application;Hardware;System;Settings;
+X-GNOME-Bugzilla-Bugzilla=GNOME
+X-GNOME-Bugzilla-Product=phonemgr
+X-GNOME-Bugzilla-Component=phonemgr

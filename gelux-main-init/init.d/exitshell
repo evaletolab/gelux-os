@@ -1,0 +1,19 @@
+#!/bin/sh
+#
+# Open a shell if X hasn't been started
+#
+# $Id: exitshell,v 1.1.1.1 2005/01/19 16:56:15 evaleto Exp $
+
+. /morphix/include.sh >/dev/null 2>&1
+
+CMDLINE="$(cat /proc/cmdline)"
+case "$CMDLINE" in *debugmorphix*) DEBUGMORPHIX="yes"; ;; esac
+
+if [ -n "$WINDOWMANAGER" ] && [ -z $DEBUGMORPHIX ]; then
+    echo "Rebooting..."
+    /sbin/reboot
+else
+    echo "Starting shell as no windowmanager was specified..."
+    /bin/bash
+fi
+

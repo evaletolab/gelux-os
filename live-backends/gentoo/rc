@@ -1,0 +1,793 @@
+#!/bin/bash
+# Copyright 1999-2005 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /cvsroot/gelux/live-backends/gentoo/rc,v 1.1.1.1 2006/05/13 10:50:11 evaleto Exp $
+
+trap ":" INT QUIT TSTP
+source /sbin/functions.sh
+# Only source this when this is a livecd booting ...
+[ -f /sbin/livecd-functions.sh ] && source /sbin/livecd-functions.sh
+umask 022
+
+try() {
+	local errstr
+	local retval=0
+	
+	if [ -c /dev/null ]; then
+		errstr="$((eval $*) 2>&1 >/dev/null)"
+	else
+		errstr="$((eval $*) 2>&1)"
+	fi
+	retval=$?
+	if [ "${retval}" -ne 0 ]
+	then
+		splash "critical" &
+
+		echo -e "${ENDCOL}${NORMAL}[${BAD} oops ${NORMAL}]"
+		echo
+		eerror "The \"${1}\" command failed with error:"
+		echo
+		echo "${errstr#*: }"
+		echo
+		eerror "Since this is a critical task, startup cannot continue."
+		echo
+		/sbin/sulogin ${CONSOLE}
+		einfo "Unmounting filesystems"
+		if [ -c /dev/null ]; then
+			/bin/mount -a -o remount,ro &>/dev/null
+		else
+			/bin/mount -a -o remount,ro
+		fi
+		einfo "Rebooting"
+		/sbin/reboot -f
+	fi
+	
+	return ${retval}
+}
+
+# Check that $1 exists ...
+check_statedir() {
+	[ -z "$1" ] && return 0
+
+	if [ ! -d "$1" ] ; then
+		if ! mkdir -p "$1" &>/dev/null ; then
+			splash "critical" &
+			echo
+			eerror "For Gentoo to function properly, \"$1\" needs to exist."
+			if [[ ${RC_FORCE_AUTO} == "yes" ]] ; then
+				eerror "Attempting to create \"$1\" for you ..."
+				mount -o remount,rw /
+				mkdir -p "$1"
+			else
+				eerror "Please mount your root partition read/write, and execute:"
+				echo
+				eerror "  # mkdir -p $1"
+				echo; echo
+				/sbin/sulogin ${CONSOLE}
+			fi
+			einfo "Unmounting filesystems"
+			/bin/mount -a -o remount,ro &>/dev/null
+			einfo "Rebooting"
+			/sbin/reboot -f
+		fi
+	fi
+
+	return 0
+}
+
+get_critical_services() {
+	local x=
+	CRITICAL_SERVICES=
+	
+	if [ -f "/etc/runlevels/${BOOTLEVEL}/.critical" ]
+	then
+		for x in $(< /etc/runlevels/${BOOTLEVEL}/.critical)
+		do
+			CRITICAL_SERVICES="${CRITICAL_SERVICES} ${x##*/}"
+		done
+	else
+		CRITICAL_SERVICES="checkroot hostname modules checkfs localmount clock bootmisc"
+	fi
+
+	export CRITICAL_SERVICES
+
+	return 0
+}
+
+# Save $1
+argv1="$1"
+
+# First time boot stuff goes here.  Note that 'sysinit' is an internal runlevel
+# used to bring up local filesystems, and should not be started with /sbin/rc
+# directly ...
+if [ "${RUNLEVEL}" = "S" -a "${argv1}" = "sysinit" ]
+then
+	# Setup initial $PATH just in case
+	PATH="/bin:/sbin:/usr/bin:/usr/sbin:${PATH}"
+
+	# Help users recover their systems incase these go missing
+	[ -c /dev/null ] && dev_null=1 || dev_null=0
+	[ -c /dev/console ] && dev_console=1 || dev_console=0
+
+	echo
+	echo -e "${GOOD}Gentoo Linux${GENTOO_VERS}; ${BRACKET}http://www.gentoo.org/${NORMAL}"
+	echo -e " Copyright 1999-2005 Gentoo Foundation; Distributed under the GPLv2"
+	echo
+
+	check_statedir /proc
+
+	ebegin "Mounting proc at /proc"
+	if [[ ${RC_USE_FSTAB} = "yes" ]] ; then
+		mntcmd=$(get_mount_fstab /proc)
+	else
+		unset mntcmd
+	fi
+	try mount -n ${mntcmd:--t proc proc /proc}
+	eend $?
+
+	# Read off the kernel commandline to see if there's any special settings
+	# especially check to see if we need to set the  CDBOOT environment variable
+	# Note: /proc MUST be mounted
+	[ -f /sbin/livecd-functions.sh ] && livecd_read_commandline
+
+	if [ "$(get_KV)" -ge "$(KV_to_int '2.6.0')" ] ; then
+		if [[ -d /sys ]] ; then
+			ebegin "Mounting sysfs at /sys"
+			if [[ ${RC_USE_FSTAB} = "yes" ]] ; then
+				mntcmd=$(get_mount_fstab /sys)
+			else
+				unset mntcmd
+			fi
+			try mount -n ${mntcmd:--t sysfs sysfs /sys}
+			eend $?
+		else
+			ewarn "No /sys to mount sysfs needed in 2.6 and later kernels!"
+		fi
+	fi
+
+	check_statedir /dev
+
+	# Fix weird bug where there is a /dev/.devfsd in a unmounted /dev
+	devfs_automounted="no"
+	if [ -e "/dev/.devfsd" ]
+	then
+		mymounts="$(awk '($3 == "devfs") { print "yes"; exit 0 }' /proc/mounts)"
+		if [ "${mymounts}" != "yes" ]
+		then
+			rm -f /dev/.devfsd
+		else
+			devfs_automounted="yes"
+		fi
+	fi
+
+	# Try to figure out how the user wants /dev handled
+	#  - check $RC_DEVICES from /etc/conf.d/rc
+	#  - check boot parameters
+	#  - make sure the required binaries exist
+	#  - make sure the kernel has support
+	if [ "${RC_DEVICES}" = "static" ]
+	then
+		ebegin "Using existing device nodes in /dev"
+		eend 0
+	else
+		fellback_to_devfs="no"
+		case "${RC_DEVICES}" in
+			devfs)	devfs="yes"
+					udev="no"
+					;;
+			udev)	devfs="yes"
+					udev="yes"
+					fellback_to_devfs="yes"
+					;;
+			auto|*)	devfs="yes"
+					udev="yes"
+					;;
+		esac
+
+		# Check udev prerequisites and kernel params
+		if [ "${udev}" = "yes" ]
+		then
+			if get_bootparam "noudev" || \
+			   [ ! -x /sbin/udev -o ${devfs_automounted} = "yes" ] || \
+			   [ "$(get_KV)" -lt "$(KV_to_int '2.6.0')" ]
+			then
+				udev="no"
+			fi
+		fi
+
+		# Check devfs prerequisites and kernel params
+		if [ "${devfs}" = "yes" ]
+		then
+			if get_bootparam "nodevfs" || [ "${udev}" = "yes" ]
+			then
+				devfs="no"
+			fi
+		fi
+
+		# Actually start setting up /dev now
+		if [[ ${udev} == "yes" ]] ; then
+			start_addon udev
+
+		# With devfs, /dev can be mounted by the kernel ...
+		elif [[ ${devfs} == "yes" ]] ; then
+			start_addon devfs
+
+			# Did the user want udev in the config file but for 
+			# some reason, udev support didnt work out ?
+			if [[ ${fellback_to_devfs} == "yes" ]] ; then
+				ewarn "You wanted udev but support for it was not available!"
+				ewarn "Please review your system after it's booted!"
+			fi
+		fi
+
+		# OK, if we got here, things are probably not right :)
+		if [[ ${devfs} == "no" && ${udev} == "no" ]] ; then
+			clear
+			echo
+			einfo "The Gentoo Linux system initialization scripts have detected that"
+			einfo "your system does not support UDEV.  Since Gentoo Linux has been"
+			einfo "designed with dynamic /dev in mind, it is highly suggested that you"
+			einfo "emerge sys-fs/udev and configure your system to use it."
+			einfo "Please read the Gentoo Handbook for more information!"
+			echo
+			einfo "    http://www.gentoo.org/doc/en/handbook/"
+			echo
+			einfo "Thanks for using Gentoo! :)"
+			echo
+			read -t 15 -p "(hit Enter to continue or wait 15 seconds ...)"
+		fi
+	fi
+
+	# From linux-2.5.68 we need to mount /dev/pts again ...
+	if [ "$(get_KV)" -ge "$(KV_to_int '2.5.68')" ]
+	then
+		have_devpts="$(awk '($2 == "devpts") { print "yes"; exit 0 }' /proc/filesystems)"
+
+		if [ "${have_devpts}" = "yes" ]
+		then
+			# Only try to create /dev/pts if we have /dev mounted dynamically,
+			# else it might fail as / might be still mounted readonly.
+			if [ ! -d /dev/pts ] && \
+			   [ "${devfs}" = "yes" -o "${udev}" = "yes" ]
+			then
+				# Make sure we have /dev/pts
+				mkdir -p /dev/pts &>/dev/null || \
+					ewarn "Could not create /dev/pts!"
+			fi
+
+			if [[ -d /dev/pts ]] ; then
+				ebegin "Mounting devpts at /dev/pts"
+				if [[ ${RC_USE_FSTAB} = "yes" ]] ; then
+					mntcmd=$(get_mount_fstab /dev/pts)
+				else
+					unset mntcmd
+				fi
+				try mount -n ${mntcmd:--t devpts -o gid=5,mode=0620 devpts /dev/pts}
+				eend $?
+			fi
+		fi
+	fi
+
+	# Start logging console output since we have all /dev stuff setup
+	bootlog start
+
+	# Swap needs to be activated *after* /dev has been fully setup so that
+	# the fstab can be properly parsed.  This first pass we send to /dev/null
+	# in case the user has swap points setup on different partitions.  We 
+	# will run swapon again in localmount and that one will report errors.
+	ebegin "Activating (possible) swap"
+	/sbin/swapon -a >& /dev/null
+	eend 0
+
+	# Set the console loglevel to 1 for a cleaner boot
+	# the logger should anyhow dump the ring-0 buffer at start to the
+	# logs, and that with dmesg can be used to check for problems
+	/bin/dmesg -n 1
+
+	# We set the forced softlevel from the kernel command line
+	# It needs to be run right after proc is mounted for the
+	# boot runlevel
+	setup_defaultlevels
+
+	# $BOOT can be used by rc-scripts to test if it is the first time
+	# the 'boot' runlevel is executed.  Now also needed by some stuff in
+	# the 'sysinit' runlevel ...
+	export BOOT="yes"
+
+	start_critical_service() {
+		(
+		local retval=
+		local service=$1
+		# Needed for some addons like dm-crypt that starts in critical services
+		local myservice=$1
+
+		source "/etc/init.d/${service}" || eerror "Failed to source /etc/init.d/${service}"
+		retval=$?
+		[ "${retval}" -ne 0 ] && return "${retval}"
+		[ -e "/etc/conf.d/${service}" ] && source "/etc/conf.d/${service}"
+		source /etc/rc.conf
+
+		start || eerror "Failed to start /etc/init.d/${service}"
+		retval=$?
+
+		return "${retval}"
+		)
+	}
+
+	# We first try to find a locally defined list of critical services
+	# for a particular runlevel.  If we cannot find it, we use the
+	# defaults.
+	get_critical_services
+	echo  "BOOTLEVEL=$BOOTLEVEL"
+	echo  "DEFAULTLEVEL=$DEFAULTLEVEL"
+	echo  "CRITICAL_SERVICES=$CRITICAL_SERVICES"
+	echo
+	echo
+	
+
+	splash "rc_init" "${argv1}"
+
+	# We do not want to break compatibility, so we do not fully integrate
+	# these into /sbin/rc, but rather start them by hand ...
+	for x in ${CRITICAL_SERVICES}
+	do
+		splash "svc_start" "${x}"
+
+		if ! start_critical_service "${x}"
+		then
+			splash "critical" &>/dev/null &
+			
+			echo
+			eerror "One of more critical startup scripts failed to start!"
+			eerror "Please correct this, and reboot ..."
+			echo; echo
+			/sbin/sulogin ${CONSOLE}
+			einfo "Unmounting filesystems"
+			/bin/mount -a -o remount,ro &>/dev/null
+			einfo "Rebooting"
+			/sbin/reboot -f
+		fi
+
+		splash "svc_started" "${x}" "0"
+	done
+
+	# /var/log should be writable now, so starting saving the boot output
+	bootlog sync
+
+	# have to run this after /var/run is mounted rw #85304
+	if [ -x /sbin/irqbalance -a "$(get_KV)" -ge "$(KV_to_int '2.5.0')" ]
+	then
+		ebegin "Starting irqbalance"
+		/sbin/irqbalance
+		eend $?
+	fi
+
+	# Check that $svcdir exists ...
+	check_statedir "${svcdir}"
+
+	# Should we use tmpfs/ramfs/ramdisk for caching dependency and 
+	# general initscript data?  Note that the 'gentoo=<fs>' kernel 
+	# option should override any other setting ...
+	for fs in tmpfs ramfs ramdisk
+	do
+		if get_bootparam "${fs}"
+		then
+			svcmount="yes"
+			svcfstype="${fs}"
+			break
+		fi
+	done
+	if [ "${svcmount}" = "yes" ]
+	then
+		ebegin "Mounting ${svcfstype} at ${svcdir}"
+		case "${svcfstype}" in
+		ramfs)
+			try mount -t ramfs svcdir "${svcdir}" \
+				-o rw,mode=0755,size="${svcsize}"k
+			;;
+		ramdisk)
+			try dd if=/dev/zero of=/dev/ram0 bs=1k count="${svcsize}"
+			try /sbin/mke2fs -i 1024 -vm0 /dev/ram0 "${svcsize}"
+			try mount -t ext2 /dev/ram0 "${svcdir}" -o rw
+			;;
+		tmpfs|*)
+			try mount -t tmpfs svcdir "${svcdir}" \
+				-o rw,mode=0755,size="${svcsize}"k
+			;;
+		esac
+		eend 0
+	fi
+
+	# If booting off CD, we want to update inittab before setting the runlevel
+	if [ -f "/sbin/livecd-functions.sh" -a -n "${CDBOOT}" ]
+	then
+		ebegin "Updating inittab"
+		livecd_fix_inittab
+		eend $?
+		/sbin/telinit q &>/dev/null
+	fi
+
+	# Clear $svcdir from stale entries, but leave the caches around, as it
+	# should help speed things up a bit
+	rm -rf $(ls -d1 "${svcdir}/"* 2>/dev/null | \
+	         grep -ve '\(depcache\|deptree\|envcache\)')
+
+	# Update the dependency cache
+	/sbin/depscan.sh -u
+
+	# Now that the dependency cache are up to date, make sure these
+	# are marked as started ...
+	(
+		# Needed for mark_service_started()
+		source "${svclib}/sh/rc-services.sh"
+		
+		for x in ${CRITICAL_SERVICES}
+		do
+			mark_service_started "${x}"
+		done
+	)
+
+	# If the user's /dev/null or /dev/console are missing, we 
+	# should help them out and explain how to rectify the situation
+	if [ ${dev_null} -eq 0 -o ${dev_console} -eq 0 ] \
+	    && [ -e /usr/share/baselayout/issue.devfix ]
+	then
+		# Backup current /etc/issue
+		if [ -e /etc/issue -a ! -e /etc/issue.devfix ]
+		then
+			mv /etc/issue /etc/issue.devfix
+		fi
+
+		cp /usr/share/baselayout/issue.devfix /etc/issue
+	fi
+
+	# Setup login records ... this has to be done here because when 
+	# we exit this runlevel, init will write a boot record to utmp
+	# If /var/run is readonly, then print a warning, not errors
+	if touch /var/run/utmp 2>/dev/null
+	then
+		> /var/run/utmp
+		touch /var/log/wtmp
+		chgrp utmp /var/run/utmp /var/log/wtmp
+		chmod 0664 /var/run/utmp /var/log/wtmp
+		# Remove /var/run/utmpx (bug from the past)
+		rm -f /var/run/utmpx
+	else
+		ewarn "Skipping /var/run/utmp initialization (ro root?)"
+	fi
+
+	# sysinit is now done, so allow init scripts to run normally
+	[[ -e /dev/.rcsysinit ]] && rm -f /dev/.rcsysinit
+
+	# All done logging
+	bootlog quit
+
+	exit 0
+fi # Sysinit ends here
+
+if [ "${RUNLEVEL}" = "S" -a "${argv1}" = "boot" ]
+then
+	setup_defaultlevels
+
+	if [ -n "${DEFAULTLEVEL}" -a "${DEFAULTLEVEL}" != "default" ]
+	then
+		# Setup our default runlevel runlevel that will be run
+		# the first time /sbin/rc is called with argv1 != sysinit|boot
+		echo "${DEFAULTLEVEL}" > "${svcdir}/ksoftlevel"
+	fi
+	
+	# $BOOT can be used by rc-scripts to test if it is the first time
+	# the 'boot' runlevel is executed
+	export BOOT="yes"
+
+	# We reset argv1 to the bootlevel given on the kernel command line
+	# if there is one
+	argv1="${BOOTLEVEL}"
+	
+elif [ "${RUNLEVEL}" != "S" -a -e "${svcdir}/ksoftlevel" ]
+then
+	argv1="$(< ${svcdir}/ksoftlevel)"
+	rm -f "${svcdir}/ksoftlevel"
+fi
+
+source "${svclib}/sh/rc-services.sh"
+source "${svclib}/sh/rc-daemon.sh"
+
+if [ -f "${svcdir}/softlevel" ]
+then
+	# Set OLDSOFTLEVEL if we had a valid SOFTLEVEL
+	export OLDSOFTLEVEL="$(< ${svcdir}/softlevel)"
+else
+	export OLDSOFTLEVEL=
+fi
+	
+if [ -z "${argv1}" ]
+then
+	if [ -f "${svcdir}/softlevel" ]
+	then
+		export SOFTLEVEL="$(< ${svcdir}/softlevel)"
+	else
+		export SOFTLEVEL="${BOOTLEVEL}"
+	fi
+else
+	export SOFTLEVEL="${argv1}"
+fi
+
+if [ ! -f "${svcdir}/softlevel" ]
+then
+	echo "${SOFTLEVEL}" > "${svcdir}/softlevel"
+fi
+
+# For keeping a list of services that fails during boot/halt
+if [ ! -d "${svcdir}/failed" ]
+then
+	mkdir -p -m 0755 "${svcdir}/failed"
+else
+	rm -rf "${svcdir}"/failed/*
+fi
+
+splash "rc_init" "${argv1}"
+
+if [ "${SOFTLEVEL}" = "reboot" -o "${SOFTLEVEL}" = "shutdown" ]
+then
+	myscripts=
+
+elif [ "${SOFTLEVEL}" = "single" ]
+then
+	get_critical_services
+
+	myscripts="${CRITICAL_SERVICES}"
+	
+elif [ ! -d "/etc/runlevels/${SOFTLEVEL}" ]
+then
+	eerror "ERROR:  runlevel ${SOFTLEVEL} does not exist; exiting ..."
+	exit 1
+else
+	myscripts=
+	if [ "${SOFTLEVEL}" != "${BOOTLEVEL}" ]
+	then
+		# Normal runlevels *include* boot scripts
+		mylevels="$(dolisting "/etc/runlevels/${SOFTLEVEL}/")"
+		mylevels="${mylevels} $(dolisting /etc/runlevels/${BOOTLEVEL}/)"
+	else
+		# Non-normal runlevels don't include boot scripts as default
+		mylevels="$(dolisting "/etc/runlevels/${SOFTLEVEL}/")"
+	fi
+	
+	[ "${OLDSOFTLEVEL}" = "${BOOTLEVEL}" -o "${OLDSOFTLEVEL}" = "single" ] \
+		&& /bin/dmesg -n 1
+	
+	for x in ${mylevels}
+	do
+		[ -L "${x}" ] && myscripts="${myscripts} ${x##*/}"
+	done
+fi
+
+# The softscripts dir contains all scripts that belong to the
+# runlevel specified in ${svcdir}/softlevel
+# It needs to be a new directory, else when stopping the services
+# and the old directory is not intact, things get broken
+
+mkdir -p -m 0755 "${svcdir}/softscripts.new"
+
+for x in ${myscripts} ; do
+	if [[ ! -e /etc/init.d/${x} ]] ; then
+		ewarn "WARNING:  /etc/init.d/${x} missing; skipping ..."
+		continue
+	fi
+	# The -f eliminates a warning if the symlink already exists,
+	# which can happen if a service is in both the boot level and
+	# the current "normal" runlevel
+	ln -snf "/etc/init.d/${x}" "${svcdir}/softscripts.new/${x}"
+done
+
+dep_stop() {
+	local x=
+	local dep=
+	local needsme=
+	local myservice="${1##*/}"
+	local depservice=
+
+	if ! service_started "${myservice}"
+	then
+		return 0
+	fi
+	
+	# Candidate for zapping
+	if [ ! -L "${svcdir}/softscripts.new/${myservice}" ]
+	then
+		# If this is a 'net' service, we do not want to stop it if it was
+		# not in the previous runlevel, and we are not shutting down,
+		# rebooting or going to single runlevel.  This is because the user
+		# might have started it (net.ppp?), or possibly hotplug ...
+		if net_service "${myservice}" && \
+		   [ "${SOFTLEVEL}" != "reboot" -a \
+		     "${SOFTLEVEL}" != "shutdown" -a \
+		     "${SOFTLEVEL}" != "single" ]
+		then
+			if [ -n "${OLDSOFTLEVEL}" ] && \
+			   ! in_runlevel "${myservice}" "${OLDSOFTLEVEL}"
+			then
+				# This service is not in the previous runlevel, so
+				# do not stop it ...
+				return 0
+			fi
+		fi
+
+		# Should not work for 'use'
+		if [ -z "$(needsme "${myservice}")" ]
+		then
+			# Nothing depends on me
+			stop_service "${myservice}"
+		else
+			# Something may depend on me
+			needsme=0
+			
+			for dep in $(needsme "${myservice}")
+			do
+				if service_started "${dep}" && \
+				   [ -L "${svcdir}/softscripts.new/${dep}" ]
+				then
+					# This dep is valid
+					needsme=1
+					
+					break
+				fi
+			done
+			
+			if [ "${needsme}" -eq 0 ]
+			then
+				stop_service "${myservice}"
+			fi
+		fi
+	fi
+}
+
+# Stop services
+if [[ ${SOFTLEVEL} != "single" && \
+      ${SOFTLEVEL} != "reboot" && \
+      ${SOFTLEVEL} != "shutdown" ]]
+then
+	for i in $(dolisting "${svcdir}/started/") ; do
+		dep_stop "${i}"
+	done
+else
+	get_critical_services
+
+	is_critical_service() {
+		local x
+		local myservice=${1##*/}
+
+		for x in ${CRITICAL_SERVICES} ; do
+			[[ ${myservice} == "${x}" ]] && return 0
+		done
+
+		return 1
+	}
+	
+	# First stop non critical services
+	for i in $(dolisting "${svcdir}/started/")
+	do
+		if [ -n "${LOGGER_SERVICE}" ]
+		then
+			# Only stop it if the logger do not depends on it
+			if ! query_before "${i##*/}" "${LOGGER_SERVICE}"
+			then
+				continue
+			fi
+		fi
+
+		# Do not stop critical services just yet
+		is_critical_service "${i}" || dep_stop "${i}"
+	done
+
+	# Now stop the logger if running
+	if [ -n "${LOGGER_SERVICE}" ]
+	then
+		dep_stop "${LOGGER_SERVICE}"
+	fi
+
+	# Now stop the rest
+	for i in $(dolisting "${svcdir}/started/")
+	do
+		dep_stop "${i}"
+	done
+fi
+
+# Only change softlevel AFTER all the services have been stopped,
+# else they will not get the depend's right (wrong SOFTLEVEL)
+
+echo "${SOFTLEVEL}" > "${svcdir}/softlevel"
+
+if [[ ${SOFTLEVEL} == "reboot" || ${SOFTLEVEL} == "shutdown" ]] ; then
+	source /sbin/functions.sh
+	
+	# Clear $svcdir from stale entries, but leave the caches around, as it
+	# should help speed things up a bit
+	rm -rf $(ls -d1 "${svcdir}/"* 2>/dev/null | \
+	         grep -ve '\(depcache\|deptree\|envcache\)')
+	
+	source /etc/init.d/halt.sh
+	
+	if [[ ${SOFTLEVEL} == "reboot" ]] ; then
+		source /etc/init.d/reboot.sh
+	else
+		source /etc/init.d/shutdown.sh
+	fi
+	
+	# Should never get here
+	exit 0
+fi
+
+# Move the old softscritps directory to a different one
+# and make the new softscripts directory the current
+
+mv -f "${svcdir}/softscripts" "${svcdir}/softscripts.old"
+mv -f "${svcdir}/softscripts.new" "${svcdir}/softscripts"
+
+dep_start() {
+	local myservice="${1##*/}"
+
+	[ ! -L "${svcdir}/softscripts/${myservice}" ] && continue
+
+	# Only start a script if it isn't already running
+	service_started "${myservice}" || schedule_service_startup "${myservice}"
+}
+
+get_critical_services
+
+EXTRA_SOFTSCRIPTS="${CRITICAL_SERVICES}"
+
+if [ -n "${LOGGER_SERVICE}" -a -L "${svcdir}/softscripts/${LOGGER_SERVICE}" ]
+then
+	service_started "${LOGGER_SERVICE}" || \
+		EXTRA_SOFTSCRIPTS="${EXTRA_SOFTSCRIPTS} ${LOGGER_SERVICE}"
+fi
+
+if [ "${SOFTLEVEL}" != "${BOOTLEVEL}" ]
+then
+	for i in $(dolisting "/etc/runlevels/${BOOTLEVEL}/")
+	do
+		[ -L "${svcdir}/softscripts/${i##*/}" ] && \
+			EXTRA_SOFTSCRIPTS="${EXTRA_SOFTSCRIPTS} ${i##*/}"
+	done
+fi
+
+# Start scripts
+for i in ${EXTRA_SOFTSCRIPTS} $(dolisting "${svcdir}/softscripts/")
+do
+	dep_start "${i##*/}"
+done
+
+# Wait for any services that may still be running ...
+[ "${RC_PARALLEL_STARTUP}" = "yes" ] && wait
+
+# Clean the old runlevel
+rm -rf "${svcdir}/softscripts.old" &>/dev/null
+
+# Depends gets nuked, so update them
+# (this problem should be solved now, but i think it will be a good idea
+#  to recreate the deps after a change in runlevel)
+
+#/sbin/depscan.sh &>/dev/null
+
+# We want devfsd running after a change of runlevel (this is mostly if we return
+# from runlevel 'single')
+if [ -z "`ps --no-heading -C 'devfsd'`" -a \
+     -n "`gawk '/\/dev devfs/ { print }' /proc/mounts 2>/dev/null`" ]
+then
+	if [ "${RC_DEVFSD_STARTUP}" != "no" ]
+	then
+		/sbin/devfsd /dev &>/dev/null
+	fi
+fi
+
+# Runlevel end, so clear stale fail list
+rm -rf "${svcdir}/failed" &>/dev/null
+
+# If we were in the boot runlevel, it is done now ...
+[ -n "${BOOT}" ] && unset BOOT
+
+splash "rc_exit"
+
+# vim:ts=4

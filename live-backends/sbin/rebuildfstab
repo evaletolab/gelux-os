@@ -1,0 +1,117 @@
+#!/bin/bash
+# (C) Klaus Knopper Nov 2002
+# Calls scanpartitions as root and adds entries to /etc/fstab
+# slightly editted for morphix usage
+#
+# $Id: rebuildfstab,v 1.1.1.1 2006/05/13 10:50:10 evaleto Exp $
+#
+
+PATH="/bin:/sbin:/usr/bin:/usr/sbin:/usr/share/gelux-backend/sbin"
+export PATH
+umask 022
+
+[ ! -e /proc/partitions ] && { echo "$0: /proc not mounted, exiting" >&2; exit 1; }
+
+if [ -e /var/run/rebuildfstab.pid ]; then
+ ps "$(</var/run/rebuildfstab.pid)" >/dev/null 2>&1 && exit 0
+ rm -f /var/run/rebuildfstab.pid
+fi
+
+echo "$$" >/var/run/rebuildfstab.pid
+
+XSH=""
+[ -n "$DISPLAY" ] && XSH="rxvt -bg black -fg green -cr red -T $0 -e"
+
+[ "`id -u`" != "0" ] && { exec $XSH sudo $0 "$@"; }
+
+
+TMP="/tmp/fstab.$$.tmp"
+ADDEDBYKNOPPIX="# added by the livecd"
+
+# Simple shell grep, searches for lines STARTING with string
+stringinfile(){
+while read line; do
+case "$line" in $1*) return 0;; esac
+done <"$2"
+return 1
+}
+
+stringinstring(){
+    case "$2" in *$1*) return 0;; esac
+    return 1
+}
+
+removeentries(){
+# Remove comment line $1 and the following line from file $2
+# sed '/^# Added by KNOPPIX/{N;d;}'
+while read line; do
+case "$line" in $1) read line; continue ;; esac
+echo "$line"
+done <"$2"
+}
+
+verbose=""
+remove=""
+user=""
+group=""
+devpass=""
+arg="$1"
+while [ -n "$arg" ]; do
+ case "$arg" in
+  -p*) shift;devpass="$1";;
+  -v*) verbose="yes" ;;
+  -r*) remove="yes" ;;
+  -u*) shift; user="$1" ;;
+  -g*) shift; group="$1" ;;
+  *) echo "Usage: $0 [-v[erbose]] [-r[emove_old]] [-u[ser] uid] [ -g[roup] gid]" ;;
+ esac
+ shift
+ arg="$1"
+done
+
+[ -n "$verbose" ] && echo "Scanning for new harddisks/partitions..." >&2
+rm -f "$TMP"
+
+if [ -n "$remove" ]; then
+ removeentries "$ADDEDBYKNOPPIX" /etc/fstab >"$TMP"
+else
+ cat /etc/fstab >"$TMP"
+fi
+
+count=0
+while read device mountpoint fstype relax; do
+ stringinfile "$device " "$TMP" || \
+ { 
+   [ -z "$device" ] && continue;
+   stringinstring "$device" "$devpass" && continue; 
+   count="$((count + 1))"
+   [ -d "$mountpoint" ] || mkdir -p "$G_ROOTFS_RW/$mountpoint" 2>/dev/null
+   options="noauto,users,exec"
+   case "$fstype" in
+    ntfs) options="${options},ro,umask=000" ;;
+    vfat|msdos) options="${options},umask=000" ;;
+    swap) options="defaults"  ;;
+    *) options="$options,acl" ;;
+   esac
+   case "$fstype" in
+   ntfs|vfat|msdos)
+   [ -n "$user" ] && options="$options,uid=$user"
+   [ -n "$group" ] && options="$options,gid=$group"
+   ;;
+   esac
+   echo "$ADDEDBYKNOPPIX"
+   echo "$device $mountpoint $fstype $options 0 0"; 
+   ADDEDBYKNOPPIX=""
+ }
+done >>"$TMP" <<EOT
+$(scanpartitions)
+EOT
+
+[ -n "$verbose" ] && { [ "$count" -gt 0 ] && echo "Adding $count new partitions to /etc/fstab." >&2 || echo "No new partitions found." >&2; }
+mv -f "$TMP" /etc/fstab
+
+rm -f /var/run/rebuildfstab.pid
+
+[ -n "$DISPLAY" ] && sleep 2
+
+exit 0

@@ -1,0 +1,33 @@
+#!/bin/sh
+
+#
+# Small script to auto-reboot after 5 seconds
+#
+# $Id: exitshell,v 1.1.1.1 2004/09/24 15:27:16 mkalbere Exp $
+
+TMOUT=5
+select item in "Reboot" "Halt" "Restart X" "Commandline"
+do
+case "$item" in
+"Reboot" )
+	echo "Rebooting..."
+	reboot
+	;;
+"Halt" )
+	echo "Halting..."
+	halt
+	;;
+"Restart X" )
+	echo "Restarting XFree86..."
+	/morphix/init.d/X11-startx &
+	exit 1
+	;;
+"Commandline" )
+	exit 1
+	;;
+* )
+	exit 1
+esac
+done
+echo "Rebooting..."
+reboot

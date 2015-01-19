@@ -1,0 +1,47 @@
+#!/bin/sh
+
+# Set up default config
+
+. /etc/gelux.d/functions.sh
+
+LOCALCONF=/usr/share/gelux/geluxmainconf
+
+if ! grep -q -e "^cleanunmount$" $LOCALCONF ;then
+  einfo "config main module : create init service to clean unmount on halt"
+
+echo "#!/bin/bash
+#
+PATH=/sbin:/bin
+
+do_stop () {
+        umount /mnt/mini/mod4 		2>/dev/null
+        umount /mnt/mini/mod3 		2>/dev/null
+        umount /mnt/mini/mod2 		2>/dev/null
+        umount /mnt/mini/mod1 		2>/dev/null
+        umount /root			2>/dev/null
+        umount /cdrom 			2>/dev/null
+        umount /home			2>/dev/null
+        umount /mnt/.hidden_base/home 	2>/dev/null
+        losetup -d /dev/loop5 		2>/dev/null
+        losetup -d /dev/loop4 		2>/dev/null
+        losetup -d /dev/loop3 		2>/dev/null
+        losetup -d /dev/loop2 		2>/dev/null
+        losetup -d /dev/loop1 		2>/dev/null
+        umount /tmp			2>/dev/null
+        umount /mnt/.hidden_base/localrw 	2>/dev/null
+        umount -r /mnt/.hidden_base/cdrom 	2>/dev/null
+}
+
+case \"\$1\" in
+    stop)
+        do_stop
+        ;;
+    *)
+        ;;
+esac
+">/etc/init.d/gelux-unmount
+  chmod +x /etc/init.d/gelux-unmount
+  update-rc.d -f gelux-unmount stop 90 0 . &>/dev/null
+  echo "cleanunmount" >>$LOCALCONF
+fi
+

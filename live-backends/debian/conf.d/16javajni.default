@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# Set up default config
+
+. /etc/gelux.d/functions.sh
+
+LOCALCONF=/usr/share/gelux/geluxmainconf
+
+if ! grep -q -e "^jni_path$" $LOCALCONF ;then
+  if ! grep -q -e "^/usr/lib/jni$" /etc/ld.so.conf ;then
+    einfo "config main module : setup jni patch "
+    echo "/usr/lib/jni" >> /etc/ld.so.conf
+    ldconfig &
+  fi
+  echo "jni_path" >>$LOCALCONF
+fi

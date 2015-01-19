@@ -1,0 +1,9 @@
+# ssh
+
+if [ -e /etc/init.d/ssh ]; then
+	/etc/init.d/ssh start 
+fi
+exit $?
+
+
+

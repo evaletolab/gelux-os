@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# Set up correction on gelux system 
+# This probably violates every debian policy in existance, but we don't care right now...
+
+echo "set up gelux patch "
+

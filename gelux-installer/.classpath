@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="parted-java/src/java"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/usr/share/java-gnome/lib/gconf2.8.jar"/>
+	<classpathentry kind="lib" path="/usr/share/java-gnome/lib/glade2.8.jar"/>
+	<classpathentry kind="lib" path="/usr/share/java-gnome/lib/gnome2.8.jar"/>
+	<classpathentry kind="lib" path="/usr/share/java-gnome/lib/gtk2.4.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

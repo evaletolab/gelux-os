@@ -1,0 +1,11 @@
+# This is not really a .desktop file like the rest, but it's useful to treat
+# it as such
+
+[GdmGreeterTheme]
+Encoding=UTF-8
+Greeter=gelux-etiquette.xml
+Name=GeluX - Etiquette - No text
+Description=Professional geLuX login screen based off the Ubuntu GDM
+Author=Olivier Evalet
+Copyright=Andrew Fitzsimon <andrew@fitzsimon.com.au>, Michael Flaig <mflaig@pro-linux.de>, Morgan Collins, Tuomas Kuosmanen <tigert@novell.com>
+Screenshot=screenshot.png

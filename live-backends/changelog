@@ -1,0 +1,5 @@
+ initrd-backends (0.1-1) unstable;
+
+  *  initial version with debian backend
+
+ -- evaleto@gelux.ch  Tue, 13 Dec 2005 17:22:24 +0100

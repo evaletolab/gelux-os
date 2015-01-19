@@ -1,0 +1,57 @@
+INSTALL=""
+INSERT=""
+FILE=`ls /usr/share/gelux/gelux-*.xml`
+
+if [ "$1" = "-h" -o  "$1" = "--help" ];then
+  echo "Use gelux-verify-packages to check the mainmod"
+  echo "Usage: gelux-verify-packages [-h|-i|-a] [package-name]"
+  echo "  [-h|--help] print this help"
+  echo "  [-i|--install] install the missing packages"
+  echo "  [-a|--add] add a new entry package to the XML template"
+  exit
+fi
+
+if [ "$1" = "-i" -o "$1" = "--install" ];then
+  INSTALL=yes
+fi
+
+if [ "$1" = "-a" -o "$1" = "--add" ];then
+  [ -z "$2" ] &&  echo "ERROR: You must specify the package to add!" && exit 1
+  INSERT=yes
+fi
+
+if test `ls /usr/share/gelux/gelux-*.xml|wc -l` -gt "1";then
+  echo "ERROR: Couldn't use more than 1 xml template:"
+  ls -1 /usr/share/gelux/gelux-*.xml
+  exit 1
+fi
+
+[ ! -f "$FILE" ] && echo "ERROR: Couldn't find xml template ($FILE)" && exit 1
+
+
+if [ -n "$INSERT" ];then
+  if sed -i -e "s/<!-- EXTRA please do not remove this line -->/<!-- EXTRA please do not remove this line -->\n<packagereq>$2</packagereq>\n/g" $FILE;then
+    echo "Package $2 added successfuly to the template!"
+  fi
+  exit 0
+fi
+
+
+MODULES=`grep -o -e "^<packagereq>.*</packagereq>" $FILE |sed  -e "s#^<packagereq>\(.*\)</packagereq>#\1#g"`
+LISTING=""
+
+echo "print the package to be installed. (make apt-get update/upgrade before) "
+for i in $MODULES;do
+  if ! dpkg -s $i &>/dev/null;then
+    echo "package $i "
+    LISTING="$LISTING $i"
+  fi
+done
+
+if [ -n "$INSTALL" ];then 
+  if  [ -d $GROOT ] && lsmod|grep -q unionfs;then
+    echo "WARNING: you can't install packages outside the gelux-chroot "
+  else
+    LANG=POSIX apt-get install $LISTING
+  fi
+fi

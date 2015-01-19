@@ -1,0 +1,14 @@
+# gdm xsession
+
+. /morphix/include.sh
+
+if [ -r /etc/default/gdm ]; then
+  . /etc/default/gdm
+fi
+
+if [ -x /usr/bin/gdm ]; then
+	/usr/bin/gdm -nodaemon 
+fi
+
+
+

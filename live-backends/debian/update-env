@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# Set up default environment for debian
+
+cp /usr/share/gelux-backend/$G_DIST_BACKEND/profile  $G_ROOTFS_RW/etc/
+[ -e $G_DESTDIR/etc/bash.bashrc ] && echo "source /etc/profile" >>$G_ROOTFS_RW/etc/bash.bashrc
+

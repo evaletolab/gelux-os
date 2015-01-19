@@ -1,0 +1,14 @@
+# gelux daemon
+
+if [ -e /etc/init.d/mdnsresponder ]; then
+	/etc/init.d/mdnsresponder start 
+fi
+
+if [ -e /etc/init.d/gelux-daemon ]; then
+	/etc/init.d/gelux-daemon start 
+fi
+
+exit $?
+
+
+

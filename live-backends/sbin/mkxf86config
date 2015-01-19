@@ -1,0 +1,272 @@
+#!/bin/sh
+#
+# $Id: mkxf86config,v 1.1.1.1 2006/05/13 10:50:10 evaleto Exp $
+#
+
+. /etc/gelux.d/color.sh
+. /etc/gelux.d/functions.sh
+
+KVER="$(uname -r)"
+BACKEND_ROOT=/usr/share/gelux-backend
+TMPFILE="/tmp/mkxf86config-$$"
+MONITORTMP="$TMPFILE-monitor"
+XMODPATH="$G_ROOTFS_RO/usr/lib/xorg/modules/drivers/"
+[ -e $XMODPATH ] || XMODPATH="$G_ROOTFS_RO/usr/X11R6/lib/modules/drivers/"
+[ -e $XMODPATH ] || XMODPATH="$G_ROOTFS_RO/usr/lib/modules/drivers/"
+rm -f "$TMPFILE" "$MONITORTMP"
+
+
+# Read in what hwsetup has found for X
+[ -f /etc/sysconfig/gelux ] && . /etc/sysconfig/gelux
+[ -f /etc/sysconfig/xserver ] && . /etc/sysconfig/xserver
+
+#
+# Xmodule : nv,nvidia,radeon,ati, etc.
+#
+NEWXMODULE="$(getbootparam xmodule 2>/dev/null)"
+[ -z "$XMODULE" -a -z "$NEWXMODULE" ] && NEWXMODULE="vesa"
+[ "$XMODULE" = "fglrx" -a ! -e ${XMODPATH}${XMODULE}_drv.* ]  && NEWXMODULE="radeon"
+[ "$XMODULE" = "nvidia" -a ! -e ${XMODPATH}${XMODULE}_drv.* ] && NEWXMODULE="nv"
+[ -e ${XMODPATH}${XMODULE}_drv.* ] || NEWXMODULE="vesa"
+
+[ -n "$NEWXMODULE" ] && { 
+  XMODULE="$NEWXMODULE"
+  echo "XMODULE='$XMODULE'" >> /etc/sysconfig/gelux 
+  echo "XMODULE='$XMODULE'" >> /etc/sysconfig/xserver
+}
+
+#
+# Xscreen : 1680x1050
+#
+XSCREEN="$(getbootparam xscreen 2>/dev/null)"
+[ -z "$XSCREEN" ] && XSCREEN="$(getbootparam screen 2>/dev/null)"
+[ -n "$XSCREEN" ] && { 
+  echo "XSCREEN='$XSCREEN'" >> /etc/sysconfig/gelux
+  echo "XSCREEN='$XSCREEN'" >> /etc/sysconfig/xserver
+}
+
+# Apparently, the mouse auto-protocol option works in XFree 4.3 now. Let's give it a try.
+WHEEL='s|"PS/2"|"auto"\
+Option          "ZAxisMapping"          "4 5"|g;'
+
+
+# Read in changes
+[ -f /etc/sysconfig/gelux ] && . /etc/sysconfig/gelux
+[ -f /etc/sysconfig/xserver ] && . /etc/sysconfig/xserver
+
+# Read default keyboard from config file.
+# There seems to be no reliable autoprobe possible.
+[ -f /etc/sysconfig/keyboard ] && . /etc/sysconfig/keyboard
+
+# Create mouse link and insert a mouse default type into XF86Config
+# if not already done by hwsetup
+[ -f /etc/sysconfig/mouse ] && . /etc/sysconfig/mouse
+[ ! -e /dev/mouse ] && {
+  [ -n "$DEVICE" ] && ln -sf $DEVICE /dev/mouse || ln -sf /dev/ttyS0 /dev/mouse
+}
+# PROTO="${XMOUSETYPE:-Auto}"
+PROTO="${XMOUSETYPE:-Microsoft}"
+NOEMU=""
+[ "${XEMU3}" = "no" ] && NOEMU='s|^.*Emulate3|# No 2 -> 3 Button emulation|g'
+DEADKEYS=""
+[ "$XKEYBOARD" = "de" ] || DEADKEYS='s|^.*nodeadkeys.*$||g;'
+if [ -n "XMODULE" ]; then
+# Check for Framebuffer X-Modules and initialize framebuffer module
+  case "$XMODULE" in
+    pvr2fb) modprobe "$XMODULE" >/dev/null 2>&1 ; XMODULE="fbdev"; ;;
+  esac
+fi
+
+NODDC=""
+checkbootparam noddc &&  NODDC="true"
+
+MONITOR=""
+COMPLETE=""
+RC=""
+
+#try to detect monitor with get-edid
+if [ -z "$NODDC" -a -x /usr/?bin/get-edid ];then
+    get-edid 2>/dev/null|parse-edid 2>/dev/null >/etc/sysconfig/xmonitor
+    RC="$?"
+    if [ "$RC" = "0"  ];then
+      sed -i -e 's/Identifier[ \t]*".*"/Identifier "Monitor0"/g' /etc/sysconfig/xmonitor  2>/dev/null
+      MONITOR=`cat /etc/sysconfig/xmonitor`
+    fi
+COMPLETE="$(awk '/EndSection/{print}' <<EOF
+$MONITOR
+EOF)"
+
+  XSCREEN=$(awk '/[0-9]*x[0-9]*.*vfreq/{print $2}' /etc/sysconfig/xmonitor|sed "s/\"//g")
+fi 
+
+#try to detect monitor with xprobe
+if [ -z "$NODDC" -a -z "$XSCREEN" -a "$XMODULE" != "vmware" ]; then
+  XPROBEDIR="$(xprobe.sh "$XMODULE")"
+  RETCODE="$?"
+  LOGFILE="$XPROBEDIR/xprobe.log"
+  XSCREEN="$(lcdsize.sh $XMODULE $LOGFILE)"
+#  XSCREEN="$XSCREEN" bash
+fi
+
+if [ -z "$NODDC" -a -z "$MONITOR" ]; then
+# Try to get Monitor data via ddcxinfo-knoppix
+MONITOR="$(ddcxinfo-knoppix -monitor)"
+RC="$?"
+COMPLETE="$(awk '/EndSection/{print}' <<EOF
+$MONITOR
+EOF
+)"
+fi
+
+MODEL="${MODEL#*\"}"
+MODEL="${MODEL%\"*}"
+
+HREFRESH="$(awk '/^[	 ]*HorizSync/{print $2 $3 $4; exit}'<<EOF
+$MONITOR
+EOF
+)"
+
+VREFRESH="$(awk '/^[	 ]*VertRefresh/{print $2 $3 $4; exit}'<<EOF
+$MONITOR
+EOF
+)"
+
+# Build line of allowed modes
+MODES=""
+ADDMODE=""
+# Use commandline modes if specified
+[ -n "$XSCREEN" ] && ADDMODE="-firstmode $XSCREEN"
+
+if [ -z "$NODDC" ]; then
+  MODES=$(ddcxinfo-knoppix -modes $ADDMODE)
+fi
+
+if [ -z "$MODES" ]; then
+  MODES="Modes "
+  [ -n "$XSCREEN" ] && MODES="$MODES \"$XSCREEN\""
+  MODES="$MODES \"1024x768\" \"800x600\" \"640x480\""
+fi
+
+
+
+# We need to check this because serial mice have long timeouts
+SERIALMOUSE="$(ls -l1 /dev/mouse* 2>/dev/null | awk '/ttyS/{print $NF ; exit 0}')"
+if [ -n "$SERIALMOUSE" ]; then
+SERIALMOUSE="s|/dev/ttyS0|$SERIALMOUSE|g;"
+else
+SERIALMOUSE='s|^.*InputDevice.*"Serial Mouse".*$|# Serial Mouse not detected|g;'
+fi
+
+# PS/2 bug: Some keyboards are incorrectly used as mice in XFree. :-(
+PSMOUSE="$(ls -l1 /dev/mouse* 2>/dev/null | awk '/mice/{print $NF ; exit 0}')"
+if [ -n "$PSMOUSE" ]; then
+PSMOUSE=""
+else
+PSMOUSE='s|^.*InputDevice.*"PS/2 Mouse".*$|# PS/2 Mouse not detected|g;'
+fi
+
+case "$(cat /proc/modules)" in *usbmouse*|*mousedev*|*hid\ *)
+USBMOUSE="" ;;
+*)
+USBMOUSE='s|^.*InputDevice.*"USB Mouse".*$|# USB Mouse not detected|g;';;
+esac
+
+# Kernel 2.6 reports psaux via /dev/input/mice like USB
+case "$KVER" in 2.6.*)
+if [ -z "$PSMOUSE" ]; then
+PSMOUSE='s|^.*InputDevice.*"PS/2 Mouse".*$|# PS/2 Mouse using /dev/input/mice in Kernel 2.6|g;'
+USBMOUSE=""
+fi
+;;
+esac
+
+if [ -a /proc/bus/input/devices ]; then
+	CHECK=$(cat /proc/bus/input/devices | grep -i synaptics | wc -l)
+	if [ $CHECK -gt 0 ]; then
+		modprobe evdev
+		SYNDEV=/dev/input/$(cat /proc/bus/input/devices | egrep -i -A 5 "^N: .*synaptics.*" | grep Handlers | sed -r "s/.*(event[0-9]+).*/\1/g")
+		SYNMOUSE=""
+	else
+		SYNMOUSE='s|^.*InputDevice.*"Synaptics".*$|#No Synaptics touchpad found|g;'
+	fi
+fi
+
+# Write Monitor data now
+rm -f "$MONITORTMP"
+echo "$MONITOR" >"$MONITORTMP"
+
+
+# VMWare special handling
+VMWARE=""
+if [ "$XMODULE" = "vmware" ]; then
+VMWARE='s|^.*BusID.*PCI.*$|BusID "PCI:0:15:0"|g;'
+DEPTH='s|DefaultColorDepth |# DefaultColorDepth |g;'
+fi
+
+# Do NOT use a default colordepth setting if we are using the "fbdev" module
+if [ "$XMODULE" = "fbdev" ]; then
+DEPTH='s|DefaultColorDepth |# DefaultColorDepth |g;'
+fi
+
+
+# These drivers need the sw_cursor option
+SWCURSOR=""
+case "$XMODULE" in ati|radeon|nv|trident) SWCURSOR='s|^.*#Option.*"sw_cursor".*$|Option "sw_cursor"|g;';; esac
+
+# We must use NoPM, because some machines freeze if Power management is being activated.
+
+NOPM=""
+DPMS=""
+#checkbootparam noapm && NOPM='Option	"NoPM"	"true"' || DPMS='Option	"DPMS"	"true"'
+
+[ -e $BACKEND_ROOT/etc/X11/xorg-$XMODULE.options ] && . $BACKEND_ROOT/etc/X11/xorg-$XMODULE.options
+
+
+sed -e 's|@@PROTOCOL@@|'"$PROTO"'|g;'"$NOEMU" \
+    -e '/@@MONITOR@@/r '"$MONITORTMP" \
+    -e 's|@@MONITOR@@||g' \
+    -e 's|@@NOPM@@|'"$NOPM"'|g' \
+    -e 's|@@XMODULE@@|'"$XMODULE"'|g;'"$VMWARE""$SERIALMOUSE""$USBMOUSE""$PSMOUSE""$SWCURSOR""$WHEEL""$SYNMOUSE" \
+    -e 's|@@SYNDEV@@|'"$SYNDEV"'|g' \
+    -e 's|@@MODES@@|'"$MODES"'|g;'"$DEPTH" \
+    -e 's|"XkbLayout" *"[^"]*"|"XkbLayout" "'"$XKEYBOARD"'"|g;'"$DEADKEYS" \
+    $BACKEND_ROOT/etc/X11/XF86Config-4.in >$G_ROOTFS_RW/etc/X11/XF86Config-4
+
+sed -e 's|@@PROTOCOL@@|'"$PROTO"'|g;'"$NOEMU" \
+    -e '/@@MONITOR@@/r '"$MONITORTMP" \
+    -e 's|@@MONITOR@@||g' \
+    -e 's|@@NOPM@@|'"$NOPM"'|g' \
+    -e 's|@@DRVOPTIONS@@|'"$X_DRIVER_OPTIONS"'|g' \
+    -e 's|@@XMODULE@@|'"$XMODULE"'|g;'"$VMWARE""$SERIALMOUSE""$USBMOUSE""$PSMOUSE""$SWCURSOR""$WHEEL""$SYNMOUSE" \
+    -e 's|@@SYNDEV@@|'"$SYNDEV"'|g' \
+    -e 's|@@MODES@@|'"$MODES"'|g;'"$DEPTH" \
+    -e 's|"XkbLayout" *"[^"]*"|"XkbLayout" "'"$XKEYBOARD"'"|g;'"$DEADKEYS" \
+    $BACKEND_ROOT/etc/X11/xorg.conf.in >$G_ROOTFS_RW/etc/X11/xorg.conf
+
+if [ -n "$DPMS" ]; then
+   sed -i -e 's|Identifier[	 ]*"Monitor0"|Identifier	"Monitor0"\
+	'"$DPMS"'|g' $G_ROOTFS_RW/etc/X11/XF86Config-4
+   sed -i -e 's|Identifier[	 ]*"Monitor0"|Identifier	"Monitor0"\
+	'"$DPMS"'|g' $G_ROOTFS_RW/etc/X11/xorg.conf
+fi
+
+
+
+rm -f "$TMPFILE" "$MONITORTMP" 2>/dev/null
+
+echo "MODES=\"$MODES\""		>> /etc/sysconfig/xmonitor
+echo "DEPTH=\"$DEPTH\""		>> /etc/sysconfig/xmonitor
+echo "HREFRESH=\"$HREFRESH\""	>> /etc/sysconfig/xmonitor
+echo "VREFRESH=\"$VREFRESH\""	>> /etc/sysconfig/xmonitor
+
+# Print info about selected X-Server
+[ -n "$XDESC" ] || XDESC="(yet) unknown card"
+echo -n " ${GREEN}* Video is"
+[ -n "$XDESC" ] && echo -n " ${YELLOW}$XDESC${GREEN},"
+echo -n " using ${YELLOW}${XSERVER:-generic VESA}"
+[ -n "$XMODULE" ] && echo -n "(${MAGENTA}$XMODULE${YELLOW})"
+echo " Server${NORMAL}"
+echo -n " ${GREEN}* Monitor is ${YELLOW}${MODEL:-Generic Monitor}${NORMAL}"
+[ -n "$HREFRESH" -a -n "$VREFRESH" ] && echo "${GREEN}, ${GREEN}H:${YELLOW}${HREFRESH}kHz${GREEN}, V:${YELLOW}${VREFRESH}Hz${NORMAL}" || echo ""
+[ -n "$VREFRESH" ] && echo " ${GREEN}* Trying specified vrefresh rate of ${YELLOW}${VREFRESH}Hz.${NORMAL}"
+[ -n "$MODES" ] && echo " ${GREEN}* Using Modes ${YELLOW}${MODES##Modes }${NORMAL}"

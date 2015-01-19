@@ -1,0 +1,7 @@
+#
+#
+
+if [ -e /etc/init.d/cupsys ]; then
+	/etc/init.d/cupsys start 1>/dev/null
+fi
+exit $?

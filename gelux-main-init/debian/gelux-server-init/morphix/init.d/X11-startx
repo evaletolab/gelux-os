@@ -1,0 +1,12 @@
+#!/bin/sh
+# Prepare and start X11 
+# $Id: X11-startx,v 1.2 2005/06/17 13:49:14 evaleto Exp $
+
+. /morphix/include.sh >/dev/null 2>&1
+
+echo "starting x11"
+
+if [ -n "$WINDOWMANAGER" ]; then
+    su -c "exec /usr/bin/X11/startx" - $USER &
+fi
+

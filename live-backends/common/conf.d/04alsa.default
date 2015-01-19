@@ -1,0 +1,81 @@
+#!/bin/sh
+
+# Set up default config
+
+. /etc/gelux.d/functions.sh
+import_env /etc/sysconfig/sound
+
+LOCALCONF=/usr/share/gelux/geluxmainconf
+
+#
+# No more needed, hwsetup make the work for us!
+#
+get_snd_modules (){
+ while read IGNORE ID IGNORE
+     do
+     VENDOR=`echo $ID | cut -b1-4`
+     DEVICE=`echo $ID | cut -b5-8`
+     DEVENTRY=`echo 0x0000${VENDOR} 0x0000${DEVICE}`
+     cat /lib/modules/`uname -r`/*.pcimap | grep "$DEVENTRY" | cut -d ' ' -f1|grep snd
+ done
+ }
+
+alsa_write_modutils_alias_append_driver(){
+
+echo "
+#
+# Configure aliases for $2
+alias snd-card-$1 $2
+# The following is only needed for OSS compatibility
+alias sound-slot-$1 snd-card-$1
+alias sound-service-$1-0 snd-mixer-oss
+alias sound-service-$1-1 snd-seq-oss
+alias sound-service-$1-3 snd-pcm-oss
+alias sound-service-$1-8 snd-seq-oss
+alias sound-service-$1-12 snd-pcm-oss
+
+">>$G_BACKEND_MODUTILS/alsa-gelux
+}
+
+alsa_write_modutils_alias(){
+  local COUNT=0
+  rm -f $G_BACKEND_MODUTILS/alsa-base
+echo "
+# snd module options
+options snd device_mode=0660
+# autoloader aliases
+alias char-major-116 snd
+alias char-major-14 soundcore
+">$G_BACKEND_MODUTILS/alsa-gelux 2>>/etc/sysconfig/stderr
+
+  for driver in ${DRIVERS}
+      do
+      alsa_write_modutils_alias_append_driver $COUNT $driver
+      COUNT="$(($COUNT + 1))"
+      modprobe $driver 2>/dev/null
+  done
+
+}
+
+
+if ! grep -q -e "^alsa$" $LOCALCONF ;then
+  einfo "config main module : setup alsa config"
+
+  #
+  # generate the modutils/alsa FOR INSTALL ONLY DETECTION IS OK ON LIVECD
+  #
+  DRIVERS="$DRIVER"
+  alsa_write_modutils_alias
+  update-modules force  1>/dev/null 2>>/etc/sysconfig/stderr
+  [ -x /usr/bin/amixer ] && {
+    /usr/bin/amixer >/dev/null
+    /usr/bin/amixer set Master 80 unmute >/dev/null
+    /usr/bin/amixer set PCM 80 unmute >/dev/null
+    /usr/bin/amixer set Headphone 80 unmute >/dev/null
+    /usr/bin/amixer set CD 80 unmute >/dev/null
+    /usr/bin/amixer set Aux 80 unmute >/dev/null
+    /usr/bin/amixer set Capture 70 unmute >/dev/null
+  }
+  echo "alsa" >>$LOCALCONF
+fi
+

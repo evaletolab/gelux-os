@@ -1,0 +1,17 @@
+# gdm xsession
+
+. /morphix/include.sh
+
+if [ -r /etc/default/gdm ]; then
+  . /etc/default/gdm
+fi
+
+if [ -x /usr/bin/gdm ]; then
+	echo "gdm; * ;*;Al0000-2400;dialout,dip,cdrom,video,audio,games,users,plugdev" >> /etc/security/group.conf
+#	find /var/lib/gdm/ -exec rm -f {} \;
+	/usr/bin/gdm  
+fi
+exit $?
+
+
+

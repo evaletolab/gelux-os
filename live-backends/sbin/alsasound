@@ -1,0 +1,327 @@
+#!/bin/sh
+#
+# Gentoo users: add this script to 'boot' run level.
+# ==================================================
+#
+# alsasound     	This shell script takes care of starting and stopping
+#               	the ALSA sound driver.
+#
+# This script requires /usr/sbin/alsactl and /usr/bin/aconnect programs
+# from the alsa-utils package.
+#
+# Copyright (c) by Jaroslav Kysela <perex@suse.cz> 
+#
+#
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+
+# ChangeLog:
+#
+# 2003.07.29 - John Mylchreest <johnm@gentoo.org>
+# Edited to support Linux kernel 2.5 and above as well as 2.4
+#
+# 2004.06.02 - Jeremy Huddleston <eradicator@gentoo.org>
+# Rewritten for better support for built-in drivers 
+#
+# 2004.10.29 - Jeremy Huddleston <eradicator@gentoo.org>
+# Cleaned up to work better for mixed builtin/module systems
+#
+# 2004.11.29 - Jeremy Huddleston <eradicator@gentoo.org>
+# Added save option thanks to Ben Anderson <roothorick@new.rr.com>
+#
+# 2005.04.21 - Jeremy Huddleston <eradicator@gentoo.org>
+# Added restore option and oss option.
+# Cleaned up code to use bash builtins instead of test.
+
+. /etc/gelux.d/color.sh
+. /etc/gelux.d/functions.sh
+. /etc/gelux.d/stateless-functions.sh
+
+ENABLE_OSS_EMUL="yes"
+
+alsactl=$G_ROOTFS_RW/usr/sbin/alsactl
+asoundcfg=/etc/asound.state
+aconnect=$G_ROOTFS_RW/usr/bin/aconnect
+alsascrdir=/etc/alsa.d
+
+opts="${opts} save"
+
+
+#
+# No more needed, hwsetup make the work for us!
+#
+get_snd_modules (){
+ while read IGNORE ID IGNORE
+     do
+     VENDOR=`echo $ID | cut -b1-4`
+     DEVICE=`echo $ID | cut -b5-8`
+     DEVENTRY=`echo 0x0000${VENDOR} 0x0000${DEVICE}`
+     cat /lib/modules/`uname -r`/*.pcimap | grep "$DEVENTRY" | cut -d ' ' -f1|grep snd
+ done
+ }
+ 
+ #
+ # generate the modutils/alsa FOR INSTALL ONLY DETECTION IS OK ON LIVECD
+ #
+
+alsa_write_modutils_alias_append_driver(){
+
+echo "
+#
+# Configure aliases for $2
+alias snd-card-$1 $2
+# The following is only needed for OSS compatibility
+alias sound-slot-$1 snd-card-$1
+alias sound-service-$1-0 snd-mixer-oss
+alias sound-service-$1-1 snd-seq-oss
+alias sound-service-$1-3 snd-pcm-oss
+alias sound-service-$1-8 snd-seq-oss
+alias sound-service-$1-12 snd-pcm-oss
+
+">>$G_ROOTFS_RW/etc/modutils/alsa-base
+}
+
+alsa_write_modutils_alias(){
+local COUNT=0
+rm -f $G_ROOTFS_RW/etc/modutils/alsa-base
+echo "
+# snd module options
+options snd device_mode=0660
+# autoloader aliases
+alias char-major-116 snd
+alias char-major-14 soundcore
+">$G_ROOTFS_RW/etc/modutils/alsa-base
+
+for driver in ${DRIVERS}
+     do
+     alsa_write_modutils_alias_append_driver $COUNT $driver
+     COUNT="$(($COUNT + 1))"
+done
+
+}
+
+
+load_modules() {
+	# List of drivers for each card. (depend on a proper module alias)
+	if [[ -z "${DRIVERS}" ]] ; then
+		DRIVERS="$(modprobe -c | grep -E "^[[:space:]]*alias[[:space:]]+snd-card-[[:digit:]]" | awk '{print $2}')"
+	fi
+
+	# Fall back on the automated aliases if we don't have ALSA configured properly...
+	if [[ -z "${DRIVERS}" && ! ( -d /proc/asound && -z "$(grep ' no soundcards ' /proc/asound/cards)" ) ]] ; then
+		ewarn "Could not detect custom ALSA settings.  Loading all detected alsa drivers."
+		DRIVERS="$(get_snd_modules < /proc/bus/pci/devices | sort -u)"
+		[[ -z "${DRIVERS}" ]] && eerror "Unable to find any ALSA drivers. Have you compiled alsa-drivers correctly?"
+	fi
+
+	if [[ ${ENABLE_OSS_EMUL} == "yes" ]] && modprobe -c | grep -q "snd.*oss$" ; then
+		# Test for use of OSS
+		local OSS="$(modprobe -l | grep "snd.*oss" | sed -e "s:\/.*\/::" -e "s:\..*::")"
+		# Add oss modules to list
+		local i
+		for i in ${OSS}
+		do
+			DRIVERS="${DRIVERS} ${i}"
+		done
+	fi
+
+	# We want to ensure snd-seq is loaded as it is needed for things like
+	# timidity even if we don't use a real sequencer.
+	DRIVERS="${DRIVERS} $(modprobe -l | grep "snd.seq\." | sed -e "s:\/.*\/::" -e "s:\..*::")"
+
+	# We want to ensure snd-ioctl32 is loaded as it is needed for 32bit
+	# compatibility
+	DRIVERS="${DRIVERS} $(modprobe -l | grep "snd.ioctl32\." | sed -e "s:\/.*\/::" -e "s:\..*::")"
+
+	local DRIVER
+	for DRIVER in ${DRIVERS}
+	do
+		if [[ "${DRIVER}" != "off"  &&
+		      -z $(cut -d' ' -f1 /proc/modules | egrep "^${DRIVER}\$") &&
+		      -z $(cut -d' ' -f1 /proc/modules | egrep "^${DRIVER//-/_}\$") ]] ; then
+			ebegin "  Loading: ${DRIVER}"
+			/sbin/modprobe ${DRIVER}
+			eend $?
+		fi
+	done
+		
+	sleep 1
+
+	if [[ -f /proc/asound/seq/drivers ]] ; then
+		local SEQUENCERS="$(awk -F, '$2~/^empty$/ {print $1}' /proc/asound/seq/drivers)"
+		local SEQUENCER
+		for SEQUENCER in ${SEQUENCERS}
+		do
+			if [[ -z $(cut -d' ' -f1 /proc/modules | egrep "^${SEQUENCER}\$")  &&
+			      -z $(cut -d' ' -f1 /proc/modules | egrep "^${SEQUENCER//-/_}\$") ]] ; then
+				ebegin "  Loading: ${SEQUENCER}"
+				/sbin/modprobe ${SEQUENCER}
+				eend $?
+			fi
+		done
+	fi
+		
+	for DRIVER in ${DRIVERS}
+	do
+		local TMP=${DRIVER##snd-}
+		TMP=${TMP##snd_}
+		if [[ -x "${alsascrdir}/${TMP}" ]] ; then
+			ebegin "  Running: ${alsascrdir}/${TMP}"
+			${alsascrdir}/${TMP}
+			eend $?
+		fi
+	done
+		
+	if [[ ! -d /proc/asound || -n "$(grep ' no soundcards ' /proc/asound/cards)" ]] ; then
+		eerror "Failed to load necessary drivers"
+		return 1
+	fi
+}
+
+unload_modules() {
+	local LOADED_MODULES="$(/sbin/lsmod | grep -E "^snd" | awk '{print $1}')"
+	local MODULE
+	for MODULE in ${LOADED_MODULES}
+	do
+		/sbin/rmmod ${MODULE} >& /dev/null
+	done
+	/sbin/rmmod soundcore >& /dev/null
+	/sbin/rmmod gameport >& /dev/null	
+
+	# Return success if the modules are unloaded
+	[[ -z "$(/sbin/lsmod | grep -E "^snd" | awk '{print $1}')" ]]
+}
+
+terminate() {
+	#
+	# Kill processes holding open sound devices
+	#
+	# DEVS=`find /dev/ -follow -type c -maxdepth 1 -print 2>/dev/null | xargs ls -dils | grep "1*1[46]," | cut -d: -f2 | cut -d" " -f2; echo /proc/asound/dev/*`
+	local ossdevs="/dev/admmidi? /dev/adsp? /dev/amidi? /dev/audio* /dev/dmfm* \
+			/dev/dmmidi? /dev/dsp* /dev/dspW* /dev/midi0? /dev/mixer? /dev/music \
+			/dev/patmgr? /dev/sequencer* /dev/sndstat"
+	local alsadevs="/proc/asound/dev/* /dev/sound/* /dev/snd/*"
+	fuser -k ${ossdevs} ${alsadevs} >& /dev/null
+	
+	#
+	# remove all sequencer connections if any
+	#
+	[[ -f /proc/asound/seq/clients && -x ${aconnect} ]] && ${aconnect} --removeall
+}
+
+restore_mixer() {
+	if [[ ${RESTORE_ON_START} == "no" ]] ; then
+		return 0
+	fi
+
+	ebegin "Restoring Mixer Levels"
+
+	local val=0
+
+	if [[ -x ${alsactl} ]] ; then
+		local CARDS="$(cat /proc/asound/cards | awk '/: / { print $1 }')"
+		local CARDNUM
+		for CARDNUM in ${CARDS}
+		do
+			[[ -e /dev/snd/controlC0 ]] || sleep 2
+			[[ -e /dev/snd/controlC0 ]] || sleep 2
+			[[ -e /dev/snd/controlC0 ]] || sleep 2
+			[[ -e /dev/snd/controlC0 ]] || sleep 2
+			${alsactl} -f ${asoundcfg} restore ${CARDNUM} 2>/dev/null
+			((val=val+$?))
+		done
+	else
+		if [ -x /usr/bin/amixer ];then
+		  /usr/bin/amixer >/dev/null
+		  /usr/bin/amixer set Master 100 unmute >/dev/null
+		  /usr/bin/amixer set PCM 100 unmute >/dev/null
+		elif [ -x /usr/bin/aumix ]; then
+		    /usr/bin/aumix -m 0 -v 70 -w 70 2>/dev/null # set pcm & master to 60, micro to 0
+		else
+			eerror -e "Cannot find alsactl, did you forget to install media-sound/alsa-utils?"
+		fi
+		val=1
+	fi
+
+	eend ${val}
+	return ${val}
+}
+
+
+
+save() {
+	ebegin "Storing ALSA Mixer Levels"
+
+	local val=0
+	
+	if [[ -x ${alsactl} ]] ; then
+		${alsactl} -f ${asoundcfg} store
+		val=$?
+	else
+		eerror -e "Cannot find alsactl."
+		val=1
+	fi
+
+	eend ${val}
+	return ${val}
+}
+
+start() {
+	if [[ -f /proc/modules ]] ; then
+		ebegin "Loading ALSA modules ${YELLOW}${DRIVERS}${NORMAL}"
+		if load_modules ; then
+			alsa_write_modutils_alias
+			# TODO I don't know if it is the better place, Installer should make the update-modules
+			# update-modules 2>/dev/null
+			# touch -r /lib/modules/`uname -r`/modules.dep /etc/modules.conf
+			eend 0
+		else
+			eend 1
+			return 1
+		fi
+	fi
+	
+	restore_mixer
+}
+
+stop() {
+	if [[ ! -d /proc/asound ]] ; then
+		eerror "ALSA is not loaded"
+		return 0
+	fi
+	
+	if [[ ${SAVE_ON_STOP} == "yes" ]]; then
+		save
+	fi
+
+	ebegin "Unloading ALSA${NORMAL}"
+	terminate
+	eend 0
+
+	if [[ -f /proc/modules ]]; then
+		ebegin "Unloading ALSA modules"
+		if unload_modules; then
+			eend 0
+		else
+			eend 1
+		fi
+	fi
+}
+
+if [ -z "$1" -o "$1" = "start" ];then
+  start
+else
+  stop
+fi
+

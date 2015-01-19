@@ -1,0 +1,12 @@
+# Try to start hald
+
+. /morphix/include.sh
+
+sleep 1
+if [ -x /usr/sbin/hald ]; then
+	if ! ps -C hald &>/dev/null ;then
+	  echo "BOGUS hald daemon, trying to restart in 5 seconde"
+	  /usr/sbin/hald --daemon=yes 
+	fi
+fi
+exit $?

@@ -1,0 +1,59 @@
+<comps>
+ <group>
+  <id>default</id>
+  <version>0.7</version>
+  <name>GeluX Base Default</name>
+  <repositorylist>
+   <repository type="debian">ftp://sunsite.cnlab-switch.ch/mirror/debian</repository>
+<!--   <repository type="debian">ftp://127.0.0.1/debian</repository>-->
+   <repository type="plain">http://www.morphix.org/debian</repository>
+   <repository type="plain">http://debian.programmers.ch/</repository>
+<!--   <repository type="plain">http://developer.linuxtag.net/knoppix</repository>-->
+  </repositorylist>
+  <description>GeluX Basemodule</description>
+  <type>basemod</type>
+  <suite>etch</suite>
+  <packagelist>
+   <packagereq>udev</packagereq>
+   <packagereq>read-edid</packagereq>
+   <packagereq>aumix</packagereq>
+   <packagereq>usbutils</packagereq>
+   <packagereq>hwsetup-morphix</packagereq>
+   <packagereq>libpci1</packagereq> <!-- hwsetup needs this, should be a depend... -->
+   <packagereq>hwdata-morphix</packagereq>
+   <packagereq>eject</packagereq>
+   <packagereq>netbase</packagereq>
+   <packagereq>usleep-knoppix</packagereq>
+   <packagereq>sysvinit-morphix</packagereq> <!-- for knoppix-style init -->
+   
+   <packagereq>dialog</packagereq> <!-- necessary for lowmem prompt, could be used for mainmodule selection -->
+   <packagereq>file</packagereq> <!-- need this for mount_module -->
+   <packagereq>module-init-tools</packagereq> <!-- necessary for kernels 2.5+ -->
+   <packagereq>mountmodule</packagereq> <!-- generic morphix modulemounter script -->
+   <packagereq>ddcxinfo-morphix</packagereq> <!-- necessary for X/monitor detection -->
+   <packagereq>morphix-base-scripts</packagereq> <!-- sets up number of knop/morph /usr/sbin scripts -->
+
+   <packagereq savestatus="true">kernel-gelux</packagereq>
+   <packagereq savestatus="true">kernel-gelux-ctrl</packagereq>
+   <packagereq savestatus="true">kernel-gelux-firmwares</packagereq>
+   <packagereq>morphix-base-splash</packagereq> <!-- bootsplash, you need the kernel patched for this one -->
+   <packagereq>dhcp3-common</packagereq>
+   <packagereq>dhcp3-client</packagereq>
+   <packagereq>morphix-base-conf</packagereq> <!-- /etc and morphix base init scripts, put this in as last -->
+
+   <!-- packages that are removed -->
+   <packagedel>aptitude</packagedel>
+   <packagedel>exim4</packagedel>
+   <packagedel>exim4-base</packagedel>
+   <packagedel>exim4-config</packagedel>
+   <packagedel>manpages</packagedel>
+   <packagedel>tasksel</packagedel>
+   <packagedel>telnet</packagedel>
+   <packagedel>pppoeconf</packagedel>
+   <packagedel>pppconfig</packagedel>
+   <packagedel>ppp</packagedel>
+   <packagedel>man-db</packagedel>
+  </packagelist>
+ </group>
+</comps>
+

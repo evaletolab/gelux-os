@@ -1,0 +1,13 @@
+#!/bin/sh
+# Set sudo if it is installed and not already configured for current user
+# $Id: sudoers,v 1.1.1.1 2005/01/19 16:56:15 evaleto Exp $
+
+. /morphix/include.sh >/dev/null 2>&1
+
+if [ -e /etc/sudoers ]; then
+  if ! grep -q $USER /etc/sudoers
+  then
+    echo -e "$USER ALL=NOPASSWD: ALL \n" >> /etc/sudoers
+  fi
+fi
+

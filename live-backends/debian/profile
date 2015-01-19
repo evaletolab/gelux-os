@@ -1,0 +1,24 @@
+# gelux default /etc/profile
+LD=/mnt/.hidden_base/mnt/rootfs-ro
+if [ "`id -u`" -eq 0 ]; then
+  LIVEPATH="$LD/usr/local/sbin:$LD/usr/local/bin:$LD/usr/sbin:$LD/usr/bin:$LD/sbin:$LD/bin:$LD/usr/bin/X11"
+  PATH="$LIVEPATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/bin/X11"
+else
+  LIVEPATH="$LD/usr/local/bin:$LD/usr/bin:/bin:$LD/usr/bin/X11:$LD/usr/games"
+  PATH="$LIVEPATH:/usr/local/bin:/usr/bin:/bin:/usr/bin/X11:/usr/games"
+fi
+
+if [ "$PS1" ]; then
+  if [ "$BASH" ]; then
+    PS1='\u@\h:\w\$ '
+  else
+    if [ "`id -u`" -eq 0 ]; then
+      PS1='\[\033[01;31m\]${debian_changeroot:+($debian_changeroot)}\h \[\033[01;34m\]\W \$ \[\033[00m\]'
+    else
+      PS1='\[\033[01;32m\]${debian_changeroot:+($debian_changeroot)}\u@\h \[\033[01;34m\]\w \$ \[\033[00m\]'
+    fi
+  fi
+fi
+
+export PATH
+umask 022

@@ -1,0 +1,9 @@
+#!/bin/sh
+rm var/lib/apt/lists/*
+rm var/lib/dpkg/available*
+rm var/lib/dpkg/*-old
+rm var/cache/apt/*.bin
+rm var/cache/apt/archives/partial/*
+rm var/cache/apt/archives/*
+rm var/cache/debconf/*-old
+touch var/lib/dpkg/available

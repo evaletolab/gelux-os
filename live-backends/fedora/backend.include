@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# Set up default environment for fedora
+
+PKG_EXT="rpm"
+PKG_CMD="rpm --nodeps --force "
+
+G_BACKEND_FIRMWARE="/lib/firmware/"

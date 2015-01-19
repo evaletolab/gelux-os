@@ -1,0 +1,34 @@
+Source: gelux-main-init
+Section: misc
+Priority: optional
+Maintainer: Olivier Evalet <evaleto@programmers.ch>
+Build-Depends: debhelper (>= 4.0.0)
+Standards-Version: 3.6.1.0
+
+Package: gelux-main-init
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Gelux mainmod workstation boot scripts
+ This package contains the default boot scripts for a Gelux
+ mainmodule. 
+
+Package: gelux-server-init
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Gelux mainmod server  boot scripts
+ This package contains the default boot scripts for a Server
+ mainmodule. 
+
+Package: gelux-samba-init
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends},gelux-main-init
+Description: Gelux mainmod samba start scripts
+ This package contains the default boot scripts for a SAMBA Server
+ in mainmodule. 
+
+Package: gelux-nis-init
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends},gelux-main-init
+Description: Gelux mainmod nis start scripts
+ This package contains the default boot scripts for a NIS Server
+ in mainmodule. 

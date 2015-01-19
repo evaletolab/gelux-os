@@ -1,0 +1,18 @@
+Source: gelux-node-installer
+Section: misc
+Priority: optional
+Maintainer: Olivier Evalet <evaleto@programmers.ch>
+Build-Depends: debhelper (>= 4.0.0)
+Standards-Version: 3.6.1.0
+
+Package: gelux-node-installer
+Architecture: i386
+Depends: ${shlibs:Depends}, ${misc:Depends},libglade2-java, libgnome2-java, libglade2-java, parted-java , libgcj6, partitionmorpher, gengrubmenu2
+Description: mainmodule configuration
+ Gelux installer for p2p environnement
+
+Package: gelux-debian-installer
+Architecture: i386
+Depends: ${shlibs:Depends}, ${misc:Depends},libglade2-java, libgnome2-java, libglade2-java, parted-java , libgcj6, partitionmorpher, gengrubmenu2
+Description: mainmodule configuration
+ Gelux installer for p2p environnement

@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# Set up default config
+
+LOCALCONF=/usr/share/gelux/geluxmainconf
+
+if ! grep -q -e "^pam_auth_nis$" $LOCALCONF ;then
+  echo "config main module : pam mount group mkhome"
+  
+  if ! grep -q "pam_group.so" /etc/pam.d/common-auth;then
+     echo  "auth      optional   pam_group.so">>/etc/pam.d/common-auth
+  fi
+
+  if ! grep -q "pam_mkhomedir.so" /etc/pam.d/common-session;then
+     echo  "session   required   pam_mkhomedir.so skel=/etc/skel umask=002">>/etc/pam.d/common-session
+  fi
+
+  echo "pam_auth_nis" >>$LOCALCONF
+fi

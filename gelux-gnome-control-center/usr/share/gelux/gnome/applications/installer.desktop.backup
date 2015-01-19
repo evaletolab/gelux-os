@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=Install MORPHIX
+Name[fr]=Installation de MORPHIX
+Comment=Install on your HDD
+Comment[fr]=Installer sur votre disque
+Type=Application
+Categories=Application;Core;
+Exec=gksu /usr/sbin/morphixinstaller
+Terminal=false
+Icon=gnome-devel

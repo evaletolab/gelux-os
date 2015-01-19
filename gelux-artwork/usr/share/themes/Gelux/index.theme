@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=X-GNOME-Metatheme
+Name=Gelux
+Comment=Gelux default theme
+Encoding=UTF-8
+
+[X-GNOME-Metatheme]
+GtkTheme=Gelux
+IconTheme=Suede2
+MetacityTheme=Wasp

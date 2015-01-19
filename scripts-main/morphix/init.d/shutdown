@@ -1,0 +1,8 @@
+# Everything is finished .. should reboot like Knoppix does
+
+. /morphix/include.sh
+
+echo "Rebooting... (disabled, just to be sure, for now)"
+echo "Use reboot or halt to shutdown your computer"
+                                                                                                
+#exec reboot

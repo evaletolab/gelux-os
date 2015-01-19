@@ -1,0 +1,147 @@
+<comps>
+ <group>
+  <version>0.6</version>
+  <id>basegui</id>
+  <name>gelux base meta-packages</name>
+  <repositorylist>
+   <repository type="debian">ftp://sunsite.cnlab-switch.ch/mirror/debian/</repository>
+   <repository type="plain">http://www.morphix.org/debian</repository>
+   <repository type="plain">http://debian.programmers.ch</repository>
+  </repositorylist>
+  <description>GeluX mainmodule</description>
+  <type>mainmod</type>
+  <suite>sarge</suite>
+  <packagelist>
+<!-- remove exim4 exim4-base exim4-config mailx ? -->
+<packagereq>strace</packagereq>
+<packagereq>alsa-base</packagereq>
+<packagereq>alsa-utils</packagereq>
+<packagereq>aspell</packagereq>
+<packagereq>balsa</packagereq>
+<packagereq>bzip2</packagereq>
+<packagereq>cdrecord</packagereq>
+<packagereq>cloop-utils</packagereq>
+<packagereq>ssh</packagereq>
+<packagereq>scite</packagereq>
+<packagereq>dialog</packagereq>
+<packagereq>dillo</packagereq>
+<packagereq>euro-support</packagereq>
+<packagereq>gnupg</packagereq> 
+<packagereq>eject</packagereq> 
+<packagereq>grub</packagereq>
+<packagereq>gs</packagereq>
+<packagereq>hdparm</packagereq>
+<packagereq>hostname</packagereq>
+<packagereq>hotplug</packagereq>
+<packagereq>dbus-1</packagereq>
+<packagereq>less</packagereq>
+<packagereq>menu</packagereq>
+<packagereq>menu-xdg</packagereq>
+<packagereq>mkisofs</packagereq>
+<packagereq>mutt</packagereq>
+<packagereq>module-init-tools</packagereq> <!-- necessary for kernels 2.5+ -->
+<packagereq>most</packagereq> 
+<packagereq>less</packagereq> 
+<packagereq>zip</packagereq> 
+<packagereq>unzip</packagereq> 
+<packagereq>unace</packagereq> 
+<packagereq>unrar</packagereq> 
+<!-- web -->
+<packagereq>mozilla-firefox</packagereq>
+<packagereq>mozilla-firefox-locale-fr-fr</packagereq>
+<packagereq>flashplugin-nonfree</packagereq> 
+<!--<packagereq>mozilla-thunderbird</packagereq>-->
+<packagereq>mtools</packagereq>
+<packagereq>pcmcia-cs</packagereq>
+<packagereq>pump</packagereq>
+<packagereq>reiserfsprogs</packagereq>
+<packagereq>ntfsprogs</packagereq>
+<packagereq>libntfs-gnomevfs</packagereq>
+<packagereq>sudo</packagereq>
+<packagereq>parted</packagereq>
+<packagereq>cdrdao</packagereq>
+<!-- network -->
+<packagereq>libpam-mount</packagereq>
+<packagereq>libpam-smbpass</packagereq>
+<packagereq>ftp</packagereq>
+<packagereq>ssh</packagereq>
+<packagereq>rsync</packagereq>
+<packagereq>smbclient</packagereq>
+<packagereq>ntp</packagereq>
+<packagereq>smbfs</packagereq>
+<packagereq>iproute</packagereq>
+<packagereq>bridge-utils</packagereq> 
+<packagereq>winbind</packagereq>
+<packagereq>samba</packagereq>
+<packagereq>samba-common</packagereq>
+<packagereq>synaptic</packagereq>
+<packagereq>wget</packagereq>
+<packagereq>vnc-common</packagereq>
+<!--<packagereq>vim-gtk</packagereq>-->
+<packagereq>wireless-tools</packagereq>
+<packagereq>xfsprogs</packagereq>
+<packagereq>xpdf</packagereq>
+<packagereq>xbase-clients</packagereq>
+<packagereq>x-window-system-core</packagereq>
+<packagereq>xloadimage</packagereq> <!-- necessary for xsetbg at boot -->
+<packagereq>xserver-xfree86</packagereq>
+<packagereq>xterm</packagereq>
+<packagereq>locales</packagereq>
+<packagereq>lsof</packagereq>
+<packagereq>apmd</packagereq> 
+<packagereq>libdvdcss2</packagereq>
+<packagereq>libdvdread3</packagereq>
+<packagereq>prelink</packagereq> 
+<!-- gdm -->
+<packagereq>gdm</packagereq>
+<packagereq>libcroco3</packagereq>
+<packagereq>libgsf-1</packagereq>
+<packagereq>librsvg2-2</packagereq>
+<packagereq>librsvg2-common</packagereq>
+<packagereq>libselinux1</packagereq>
+<!-- fonts -->
+<packagereq>xfonts-base</packagereq>
+<packagereq>xfonts-100dpi</packagereq>
+<packagereq>xfonts-artwiz</packagereq>
+<packagereq>xfonts-base-transcoded</packagereq> 
+<packagereq>msttcorefonts</packagereq>
+<packagereq>gsfonts-x11</packagereq>
+<packagereq>t1-xfree86-nonfree</packagereq>
+<packagereq>ttf-xfree86-nonfree</packagereq>
+<packagereq>ttf-alee</packagereq>
+<packagereq>ttf-bitstream-vera</packagereq>
+<packagereq>ttf-dustin</packagereq>
+<packagereq>ttf-freefont</packagereq>
+<packagereq>ttf-opensymbol</packagereq>
+<packagereq>xfonts-scalable</packagereq>
+<packagereq>xfonts-knickers</packagereq>
+<!-- <packagereq>xfs</packagereq> -->
+<packagereq>xfonts-base</packagereq> 
+<packagereq>xfonts-scalable</packagereq> 
+<!-- printer -->
+<packagereq>cupsys</packagereq>
+<packagereq>foomatic-db-hpijs</packagereq>
+<packagereq>cups-pdf</packagereq>
+<packagereq>cupsys-bsd</packagereq>
+<packagereq>foomatic-db-gimp-print</packagereq>
+<packagereq>hpoj</packagereq>
+<packagereq>bluez-cups</packagereq>
+<packagereq>bluez-utils</packagereq>
+<!-- scanner -->
+<!-- programmers -->
+<packagereq>gelux-meta-guibase</packagereq>
+<packagereq>partitionmorpher</packagereq>
+<packagereq>gengrubmenu2</packagereq>
+<packagereq>java-common</packagereq>
+<packagereq>parted-java</packagereq>
+<packagereq>gelux-main-conf</packagereq>
+<packagereq>gelux-main-init</packagereq>
+<packagereq>gelux-artwork</packagereq>
+<packagereq>gelux-node</packagereq>
+<packagereq>gelux-node-installer</packagereq>
+
+<!-- gelux devel java-->
+<!-- EXTRA please do not remove this line -->
+</packagelist>
+</group>
+</comps>

@@ -1,0 +1,13 @@
+#!/bin/sh
+# Try to find and load a drm module for this graphics card
+# ripped from Knopper's xsession
+# $Id: drm,v 1.1.1.1 2005/01/19 16:56:15 evaleto Exp $
+
+. /morphix/include.sh >/dev/null 2>&1
+
+if [ -n "$XMODULE" ]; then
+  for i in /lib/modules/*/kernel/drivers/char/drm/*; do
+    case "$i" in *$XMODULE*) modprobe $XMODULE;; esac
+  done
+fi
+

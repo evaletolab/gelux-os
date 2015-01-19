@@ -1,0 +1,5 @@
+#!/bin/bash
+HOST=www.programmers.ch
+DEST=/var/www/programmers.debian/binary/
+PREFIX=/home/devel/gelux/geluxcvs/
+find $PREFIX -iname "*.deb" -exec rsync --backup -a {} $HOST:$DEST \;

@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# Set up default config
+
+LOCALCONF=/usr/share/gelux/geluxmainconf
+
+#
+# always make the prelink
+#
+
+echo "config main module : gdm"
+#sed -i -e "s|^PRELINKING=.*|PRELINKING=yes|g" 		/etc/default/prelink
+#if  ! grep -q -e "^KDE_IS_PRELINKED=" /etc/default/prelink;then
+#  echo "KDE_IS_PRELINKED=true" >>/etc/default/prelink
+#fi
+echo "prelink your system: prelink -amR"
+
+

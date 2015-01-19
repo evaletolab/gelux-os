@@ -1,0 +1,9 @@
+Package: gelux-gnome-control-center
+Version: 0.1-7
+Section: misc
+Priority: optional
+Architecture: all
+Installed-Size: 189
+Maintainer: Olivier Evalet <evaleto@programmers.ch>
+Description: new gnome contro center menu
+ gelux vision of the gnome contro center.

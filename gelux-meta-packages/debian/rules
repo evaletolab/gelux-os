@@ -1,0 +1,110 @@
+#!/usr/bin/make -f
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+CFLAGS = -Wall -g
+
+ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+	CFLAGS += -O0
+else
+	CFLAGS += -O2
+endif
+
+configure: configure-stamp
+configure-stamp:
+	dh_testdir
+	# Add here commands to configure the package.
+
+build: build-stamp
+
+build-stamp: configure-stamp 
+	dh_testdir
+
+clean:
+	dh_testdir
+	dh_testroot
+
+	dh_clean 
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k 
+	dh_installdirs
+
+##
+## META CONTENT FOR GNOME
+##
+#	cp -vR usr $(CURDIR)/debian/gelux-meta-gnome/
+#	cp gelux-gnome.xml $(CURDIR)/debian/gelux-meta-gnome/usr/share/gelux/
+#	cd $(CURDIR)/debian/gelux-meta-gnome && find -name 'CVS' -print0 | xargs -0r rm -rf
+#	cd $(CURDIR)
+
+##
+## META CONTENT FOR OFFICE
+##
+	cp -vR usr $(CURDIR)/debian/gelux-meta-office/
+	mkdir -p $(CURDIR)/debian/gelux-meta-office/usr/share/gelux
+	cp gelux-office.xml $(CURDIR)/debian/gelux-meta-office/usr/share/gelux/
+	cd $(CURDIR)/debian/gelux-meta-office && find -name 'CVS' -print0 | xargs -0r rm -rf
+	cd $(CURDIR)
+##
+## META CONTENT FOR UBUNTU-OFFICE
+##
+	cp -vR usr $(CURDIR)/debian/gelux-ubuntu-meta-office/
+	mkdir -p $(CURDIR)/debian/gelux-ubuntu-meta-office/usr/share/gelux
+	cp gelux-ubuntu-office.xml $(CURDIR)/debian/gelux-ubuntu-meta-office/usr/share/gelux/
+	cd $(CURDIR)/debian/gelux-ubuntu-meta-office && find -name 'CVS' -print0 | xargs -0r rm -rf
+	cd $(CURDIR)
+
+##
+## META CONTENT FOR DEVEL
+##
+	cp -vR usr $(CURDIR)/debian/gelux-meta-devel/
+	mkdir -p $(CURDIR)/debian/gelux-meta-devel/usr/share/gelux
+	cp gelux-devel.xml $(CURDIR)/debian/gelux-meta-devel/usr/share/gelux/
+	cd $(CURDIR)/debian/gelux-meta-devel && find -name 'CVS' -print0 | xargs -0r rm -rf
+	cd $(CURDIR)
+
+##
+## META CONTENT FOR SERVER
+##
+	cp -vR usr $(CURDIR)/debian/gelux-meta-server/
+	mkdir -p $(CURDIR)/debian/gelux-meta-server/usr/share/gelux
+	cp gelux-server.xml $(CURDIR)/debian/gelux-meta-server/usr/share/gelux/
+	cd $(CURDIR)/debian/gelux-meta-server && find -name 'CVS' -print0 | xargs -0r rm -rf
+	cd $(CURDIR)
+
+##
+## META CONTENT FOR BASE
+##
+	cp -vR usr $(CURDIR)/debian/gelux-meta-base/
+	mkdir -p $(CURDIR)/debian/gelux-meta-base/usr/share/gelux
+	cp basemodule.xml $(CURDIR)/debian/gelux-meta-base/usr/share/gelux/gelux-base.xml
+	cd $(CURDIR)/debian/gelux-meta-base && find -name 'CVS' -print0 | xargs -0r rm -rf
+	cd $(CURDIR)
+
+# Build architecture-independent files here.
+binary-indep: build install
+# We have nothing to do by default.
+
+# Build architecture-dependent files here.
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs 
+	dh_installdocs
+	dh_installexamples
+	dh_installman
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install configure

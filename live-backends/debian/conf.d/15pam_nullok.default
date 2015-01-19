@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# Set up default config
+
+. /etc/gelux.d/functions.sh
+
+LOCALCONF=/usr/share/gelux/geluxmainconf
+
+if ! grep -q -e "^pam_auth_nullok$" $LOCALCONF ;then
+  einfo "config main module : pam auth"
+  sed -i -e "s/\(auth.*\)nullok_secure/\1nullok/g" /etc/pam.d/common-auth
+  echo "pam_auth_nullok" >>$LOCALCONF
+fi

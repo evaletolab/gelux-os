@@ -1,0 +1,11 @@
+Package: gelux-samba-conf
+Version: 0.4-14
+Section: misc
+Priority: optional
+Architecture: all
+Depends: gelux-main-conf
+Installed-Size: 8
+Maintainer: Olivier Evalet <evaleto@programmers.ch>
+Source: gelux-main-conf
+Description: samba configuration
+ This configuration is done once

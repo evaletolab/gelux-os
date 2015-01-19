@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# Set up default config
+
+. /etc/gelux.d/functions.sh
+. /etc/sysconfig/desktop
+
+LOCALCONF=/usr/share/gelux/geluxmainconf
+
+if ! grep -q -e "^freevo$" $LOCALCONF && test -e /usr/bin/freevo && getconfigparam "freevo";then
+
+  einfo "config main module : create freevo service on /home/$USERNAME"
+  mkdir -p /home/$USERNAME/tvshows
+  echo "#!/bin/bash
+#
+#nvidia-settings -l # used to adjust overscan/color ect on nVidia cards.
+export TV_RECORD_DIR=/home/$USERNAME/tvshows
+xset s noblank
+xset s off
+xset -dpms
+
+exec freevo
+
+">/home/$USERNAME/.xinitrc
+  echo "freevo" >>$LOCALCONF
+fi
+

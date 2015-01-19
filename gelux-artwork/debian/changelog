@@ -1,0 +1,95 @@
+gelux-artwork (0.6-3) unstable; urgency=low
+
+  * Add userlist to gdm themes
+
+ -- Olivier Evalet <evaleto@gelux.ch>  Fri, 21 Apr 2006 07:57:23 +0000
+
+gelux-artwork (0.6-2) unstable; urgency=low
+
+  * change background
+
+ -- Olivier Evalet <evaleto@gelux.ch>  Fri, 17 Mar 2006 11:21:22 +0000
+
+gelux-artwork (0.6-1) unstable; urgency=low
+
+  * new theme for gnome 2.12
+
+ -- root <root@evaleto>  Thu, 29 Dec 2005 10:22:10 +0000
+
+gelux-artwork (0.5-1) unstable; urgency=low
+
+  * new gelux theme
+
+ -- root <root@evaleto>  Wed, 28 Dec 2005 12:55:37 +0000
+
+gelux-artwork (0.3-7) unstable; urgency=low
+
+  * FIX background, gnome console
+
+ -- root <root@evaleto>  Thu, 17 Nov 2005 15:53:46 +0000
+
+gelux-artwork (0.3-6) unstable; urgency=low
+
+  *  * new backgroud
+
+ -- root <root@evaleto>  Mon, 14 Nov 2005 22:02:59 +0000
+
+gelux-artwork (0.3-5) unstable; urgency=low
+
+  *  * change splash gnome-2.10
+
+ -- root <root@evaleto>  Thu,  6 Oct 2005 16:27:20 +0000
+
+gelux-artwork (0.3-4) unstable; urgency=low
+
+  * Clean the theme
+
+ -- root <root@evaleto>  Tue,  6 Sep 2005 16:43:25 +0000
+
+gelux-artwork (0.3-3) unstable; urgency=low
+
+  * FIX icons Suede2
+
+ -- root <root@evaleto>  Thu, 28 Jul 2005 18:08:50 +0000
+
+gelux-artwork (0.3-2) unstable; urgency=low
+
+  * FIX exec format
+
+ -- root <root@evaleto>  Thu, 28 Jul 2005 16:19:48 +0000
+
+gelux-artwork (0.3-1) unstable; urgency=low
+
+  * NEW version
+
+ -- root <root@evaleto>  Wed, 27 Jul 2005 13:25:13 +0000
+
+gelux-artwork (0.2-1) unstable; urgency=low
+
+  * add app conf for gnome 
+  * update gelux theme Wasp for Metacity 
+
+ -- Olivier Evalet <evaleto@programmers.ch>  Thu, 21 Apr 2005 15:03:26 +0200
+
+gelux-artwork (0.1-4) unstable; urgency=low
+
+  * add postinst for gnome panel
+  * update gelux theme Metacity & Gtk
+  * fix gnome-panel logo: stock ["panel-gnome-logo"] =    {{"gnome-logo.png"}}
+  * fix index.theme
+
+
+ -- Olivier Evalet <evaleto@programmers.ch>  Thu, 21 Apr 2005 15:03:26 +0200
+
+gelux-artwork (0.1-2) unstable; urgency=low
+
+  * add postinst for gnome setup
+
+ -- Olivier Evalet <evaleto@programmers.ch>  Mon, 1 Jan 2005 17:10:19 +0200
+
+gelux-artwork (0.1-1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Olivier Evalet <evaleto@programmers.ch>  Mon, 1 Jan 2005 17:10:19 +0200
+

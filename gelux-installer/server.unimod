@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE model PUBLIC "-//eVelopers Corp.//DTD State machine graphical model V1.0//EN" "http://www.evelopers.com/dtd/unimod/gmodel.dtd">
+<model version="1.0">
+  <property name="name" value="server"/>
+  <elements/>
+  <diagrams>
+    <diagram/>
+  </diagrams>
+</model>

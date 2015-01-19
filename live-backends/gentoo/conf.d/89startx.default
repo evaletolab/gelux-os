@@ -1,0 +1,54 @@
+#!/bin/sh
+
+# Set up default config
+
+. /etc/gelux.d/functions.sh
+. /etc/sysconfig/desktop
+
+LOCALCONF=/usr/share/gelux/geluxmainconf
+
+if ! grep -q -e "^startx$" $LOCALCONF && ! checkbootparam "nostartx" && test -e /usr/bin/startx && ! test -e /etc/gdm/gdm.conf;then
+  einfo "config main module : create startx service"
+
+#XSESSION
+. /etc/rc.conf
+[ -z "$XSESSION" ] && sed_variable "XSESSION"  "wmaker" /etc/rc.conf
+
+echo "#!/sbin/runscript
+#
+PATH=/sbin:/bin
+
+depend() {
+        use xfs
+}
+
+start () {
+  ( su - $USERNAME -c \"exec /usr/bin/startx\" && /sbin/halt )&
+}
+
+stop() {
+  echo \"\"
+}
+
+">/etc/init.d/gelux-startx
+
+  mkdir /tmp/.ICE-unix 2>/dev/null
+  chown 0:0 /tmp/.ICE-unix
+  chmod 1777 /tmp/.ICE-unix
+  restorecon /tmp/.ICE-unix &>/dev/null
+  
+  mkdir /tmp/.X11-unix 2>/dev/null
+  chown 0:0 /tmp/.X11-unix
+  chmod 1777 /tmp/.X11-unix
+  restorecon /tmp/.X11-unix &>/dev/null
+  echo "allowed_users=anybody" > /etc/X11/Xwrapper.config
+  
+  
+  bgimage="/usr/share/backgrounds/*.png"
+  [ -n "$bgimage" ] && echo "exec xsetbg -fullscreen $bgimage &" >> /etc/X11/xinit/xinitrc
+  chmod 755 /etc/init.d/gelux-startx
+#  /sbin/depscan.sh &>/dev/null
+  rc-update add gelux-startx default  &>/dev/null
+  echo "startx" >>$LOCALCONF
+fi
+

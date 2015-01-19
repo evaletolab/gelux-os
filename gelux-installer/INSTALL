@@ -1,0 +1,47 @@
+Building gelux-installer
+---------------------
+
+
+
+REQUIREMENTS:
+
+- A JDK for Linux such as the IBM Jikes compiler or the Sun/Blackdown compiler.
+  Make sure that javadoc, javac, java etc. is in your PATH.
+  Warning: JNI calls are not compatible with Metrowerks JIT compiler on
+  JDK PowerPC 1.1.  Be sure to unset the JAVA_COMPILER variable.
+
+- GTK2 and/or GNOME2 libraries.
+  If you install these from rpm, you should get both the system rpm and the 
+  developer rpm (the latter containing the files for pkg-config and headerfiles).
+  Your rpm distributer may chose not to split the packages in this way.
+
+- GCJ release 3.0.0 or higher. See http://gcc.gnu.org/java/
+
+
+CONFIGURE THE BUILDPROCESS:
+
+Run ./configure using the following flags to customize the build:
+
+--libdir=<install dir for shared objects>
+eg. --libdir=/usr/lib
+
+--with-gcj-prefix=<root dir of gcc that also contain gcj>
+
+--with-java-prefix=<root dir of JDK that you wish to use>
+Only required if the build process does not find your java compiler. If you
+have more than one JDK then type "which java" to find out which is the default.
+
+
+BUILD AND INSTALL:
+
+Run ./make or ./make all
+Run ./make install
+
+You can save space after the build by running ./make clean. If you later want
+to uninstall then run ./make uninstall.
+
+
+
+
+Have fun
+

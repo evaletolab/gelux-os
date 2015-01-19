@@ -1,0 +1,42 @@
+#!/bin/sh
+
+# Set up default config
+
+LOCALCONF=/usr/share/gelux/geluxmainconf
+
+if ! grep -q -e "^nisclient$" $LOCALCONF ;then
+  echo "config main module : configure NIS for gelux worstation"
+  
+  sed -i -e "s|^.*NISSERVER=.*$|NISSERVER=slave|g" 		/etc/default/nis
+  sed -i -e "s|^.*NISCLIENT=.*$|NISCLIENT=true|g" 		/etc/default/nis
+  
+  echo "
+passwd:      compat
+shadow:      compat
+group:       compat
+
+passwd_compat: nis files
+group_compat: nis files
+shadow_compat: nis files
+
+hosts:      nis files dns
+services:   nis [NOTFOUND=return] files
+networks:   nis [NOTFOUND=return] files
+protocols:  nis [NOTFOUND=return] files
+rpc:        nis [NOTFOUND=return] files
+ethers:     nis [NOTFOUND=return] files
+netmasks:   nis [NOTFOUND=return] files
+netgroup:   nis
+bootparams: nis [NOTFOUND=return] files
+publickey:  nis [NOTFOUND=return] files
+automount:  files
+aliases:    nis [NOTFOUND=return] files
+" >/etc/nsswitch.conf
+  
+  echo "+::0:0:::">>/etc/passwd
+  echo "+:::">>/etc/group
+  echo "+::::::::">>/etc/shadow
+
+  echo "nisclient" >>$LOCALCONF
+fi
+

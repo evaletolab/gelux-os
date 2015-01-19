@@ -1,0 +1,9 @@
+Package: gelux-server-conf
+Version: 0.1-1
+Section: misc
+Priority: optional
+Architecture: all
+Installed-Size: 8
+Maintainer: Olivier Evalet <evaleto@programmers.ch>
+Description: Gelux configuration for server
+ This package contains configuration files to set up a server

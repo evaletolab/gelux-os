@@ -1,0 +1,56 @@
+#!/bin/sh
+
+# Set up default config
+
+. /etc/gelux.d/functions.sh
+
+LOCALCONF=/usr/share/gelux/geluxmainconf
+
+if ! grep -q -e "^initrc$" $LOCALCONF ;then
+  einfo "config main module : setup sysinit "
+
+  RUNLEVEL=$(getbootparam runlevel "3")
+  sed -i -e "s/id:.:initdefault/id:$RUNLEVEL:initdefault/g" /etc/inittab
+
+  sed_variable "RC_PARALLEL_STARTUP" "yes"    /etc/conf.d/rc
+  
+
+#BOOT
+  echo "hostname modules clock" > /etc/runlevels/boot/.critical    
+  rc-update del bootmisc   1>/dev/null 2>>/etc/sysconfig/stderr
+  rc-update del checkfs    1>/dev/null 2>>/etc/sysconfig/stderr
+  rc-update del checkroot  1>/dev/null 2>>/etc/sysconfig/stderr
+  rc-update del localmount 1>/dev/null 2>>/etc/sysconfig/stderr
+  
+#ugly hack
+echo "#!/sbin/runscript
+#
+
+start () {
+  :
+}
+
+stop() {
+  :
+}
+
+">/etc/init.d/checkroot 
+echo "#!/sbin/runscript
+#
+
+start () {
+  :
+}
+
+stop() {
+  :
+}
+
+">/etc/init.d/checkfs
+   
+  
+#DEFAULT
+  
+  echo "initrc" >>$LOCALCONF
+fi
+

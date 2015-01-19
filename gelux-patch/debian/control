@@ -1,0 +1,12 @@
+Source: gelux-patch
+Section: misc
+Priority: optional
+Maintainer: Olivier Evalet <evaleto@programmers.ch>
+Build-Depends: debhelper (>= 4.0.0)
+Standards-Version: 3.6.1.0
+
+Package: gelux-patch
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Gelux mainmod livecd patch
+ This package correct Gelux installation

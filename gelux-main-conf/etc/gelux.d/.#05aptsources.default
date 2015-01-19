@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# Set up default config
+
+LOCALCONF=/usr/share/gelux/geluxmainconf
+
+
+
+if ! grep -q -e "^apt_source_nonfree$" $LOCALCONF ;then
+  echo "config main module : apt config add non-free contrib"
+
+#  if ! grep -q "deb .*switch.ch.* main .*contrib .*non-free" /etc/apt/sources.list;then
+#    sed -i -e "s/\(deb .*switch.ch.* main\)/\1 contrib non-free/g" /etc/apt/sources.list
+#  fi
+
+  echo "apt_source_nonfree" >>$LOCALCONF
+fi

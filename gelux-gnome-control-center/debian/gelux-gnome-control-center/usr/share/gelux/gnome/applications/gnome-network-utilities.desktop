@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Remote shell
+Comment=Open a shell on a remote server
+Exec=gnome-remote-shell
+Icon=gnome-remote-shell.png
+Terminal=0
+Type=Application
+Categories=Application;Settings;Network;
+

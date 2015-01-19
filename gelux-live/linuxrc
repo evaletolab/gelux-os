@@ -1,0 +1,428 @@
+#!/bin/sh
+#
+#  Copyright 2005 Olivier Evalet
+#  This file is part of gelux-livecd.
+#
+#  Copyright 2005 Olivier Evalet evaleto@gelux.ch
+#  This file is part of gelux-live project.
+#
+#  Parts of this file have been copied from :
+#    Morphix scripts  (C) Alex de Landgraaf <alex at delandgraaf dot com>
+#
+#  gelux is free software; you can redistribute it and/or modify it
+#  under the terms of the GNU Lesser General Public License as
+#  published by the Free Software Foundation; either version 2 of the
+#  License, or (at your option) any later version.
+#
+#  gelux is distributed in the hope that it will be useful, but WITHOUT
+#  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+#  or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public
+#  License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public
+#  License along with gelux; if not, write to the Free Software
+#  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+#  USA.
+#
+# Based on the morphix and Knoppix project: 
+#   Copyright Alex de Landgraaf <alex@delandgraaf.com>
+#   Copyright Knopper@knopper.net
+# 
+
+
+# Misc functions
+LOSETUP="losetup"
+BUILTIN_FS="iso9660 ext3 ext2 reiserfs vfat ntfs"
+FOUND_SCSI=""
+FOUND_MORPHIX=""
+INTERACTIVE=""
+#USE_SQUASH="default"
+PATH="/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/sbin:/usr/local/bin:/usr/share/gelux-backend/sbin"
+RAMSIZE=1000000
+RET_VAL=0
+trap "" 1 2 3 15
+export PATH
+
+# Clean input/output
+exec >/dev/console </dev/console 2>&1
+
+
+# DERIVATE: Name of the Morphix derivate (MORPHIX)
+DERIVATE="GELUX"
+
+echo ""
+echo "${WHITE}Welcome to the ${YELLOW}${DERIVATE}${WHITE} OS!${NORMAL}"
+echo ""
+
+# We only need the builtin commands and /static at this point
+
+umask 022
+
+# Mount /proc, /sys and /dev/pts 
+mount -t proc /proc /proc
+mount -t devpts /dev/pts /dev/pts > /dev/null 2>>/etc/sysconfig/stderr
+mount -t sysfs /sys /sys > /dev/null 2>>/etc/sysconfig/stderr
+
+. /etc/gelux.d/color.sh
+. /etc/gelux.d/functions.sh
+
+# DMA is now on by default
+DMA="yes"
+NOSCSI=""
+NOCD=""
+COPYTOHD=""
+COPYTO=""
+COPYTORAM=""
+MOUNT_IMAGE="cdrom"
+MOUNT_OPT="ro"
+G_ROOTFS_RW="/mnt/unionfs"
+G_ROOTFS_RO="/mnt/rootfs-ro"
+
+# Check if we are in interactive startup mode
+checkbootparam "BOOT_IMAGE=expert" 	    && INTERACTIVE="yes" && :>/interactive
+checkbootparam modules-disk		          && INTERACTIVE="yes"
+checkbootparam nodma			              && DMA=""
+checkbootparam fromhd			              && NOCD="yes"
+checkbootparam fromdirectory		        && NOCD="yes" && HD_DIRECTORY="Yes"
+checkbootparam fromnfs			            && NOCD="yes" && NFS_SERVER="Yes"
+checkbootparam fromiso			            && FROMISO="yes"
+checkbootparam noscsi                   && NOSCSI="yes"
+checkbootparam fast                     && FAST="yes"
+checkbootparam forcep4clock             && P4CLOCK="yes"
+checkbootparam splash			              && SPLASH="yes"
+checkbootparam bootusb			            && USBBOOT="yes"
+checkbootparam vfat			                && VFAT="yes"
+checkbootparam debugmorphix		          && DEBUG="yes"
+checkbootparam "debugmorphix=miniroot"	&& DEBUGMINIROOT="yes"
+checkbootparam noaudio                  && NOAUDIO="yes"
+checkbootparam nosound                  && NOAUDIO="yes"
+checkbootparam noscsi                   && NOSCSI="yes"
+checkbootparam startx                   && DOSTARTX="yes"
+checkbootparam persistlib               && PERSISTENT_VARLIB="yes"
+
+#  -- deprectated -- deprectated -- deprectated -- deprectated
+# COPYTORAM copied (ironic, isn't it?) from Fabian's linuxrc.rampatch 2003-07-26
+# COPYTOHD goes into a single folder /$DERIVATE/ off the root of the hard drive 
+# checkbootparam toram			              && COPYTO="yes" && COPYTORAM="yes"
+# checkbootparam tohd			                && COPYTO="yes" && COPYTOHD="yes"
+
+RUNLEVEL=$(getbootparam runlevel "5")
+BINDHOME=$(getbootparam bindhome)
+FILTER=$(getbootparam modulefilter)
+STARTX=$(getbootparam startx)
+
+G_DIST_BACKEND=$(getbootparam backend debian)
+
+#check boot params to get /linuxrc PID == 1
+if [ "$$" != "1" ];then
+  echo
+  eerror "${RED}Ooops, error PID != 1 ($$)."
+  eerror "${RED}You should use special boot params :init=/linuxrc root=/dev/ram0 rw"
+  echo -n "  ";for i in 1 2 3 4 5;do read -t 1;echo -n .;done;echo .
+fi
+
+
+export G_DIST_BACKEND G_ROOTFS_RW G_ROOTFS_RO
+
+# added by guido socher to suppress warnings about nonexistant /proc/splash
+if [ ! -f "/proc/splash" ]; then
+  unset SPLASH
+fi
+
+mkdir /$MOUNT_IMAGE 2>/dev/null
+
+# Bootsplash by Eadz at eadz.co.nz
+#[ -n "$SPLASH" ] && splash -s -u 0 /bootsplash/config/bootsplash-1024x768.cfg >/dev/null
+
+# Disable kernel messages while probing modules in autodetect mode
+echo "0" > /proc/sys/kernel/printk
+
+if [ -e "/modules/usr.squashfs" ];then
+  mkdir /usr 2>/dev/null
+  mount -n -t squashfs -o loop,ro /modules/usr.squashfs /usr
+fi
+
+#looking for modules
+KERN_MODULES="$(uname -r)"
+einfo "${BLUE}Running Linux Kernel ${GREEN}${KERN_MODULES}${GREEN}${NORMAL}"
+
+if [ ! -e "/modules/$KERN_MODULES" ];then
+   eerror "Could not find kernel modules (1) for kernel $KERN_MODULES, starting basic shell:"
+   ls -1 /modules/*
+   gelux_start_shell
+   exit
+fi
+
+mkdir -p /lib/modules/$KERN_MODULES
+if ! mount -t squashfs -o loop,ro /modules/$KERN_MODULES /lib/modules/$KERN_MODULES;then
+   eerror "Could not mount kernel modules (2), starting basic shell."
+   gelux_start_shell
+   exit
+fi
+
+#firmware loading
+modprobe firmware_class &>/dev/null
+
+#437, 850?
+modprobe nls_cp850 	&>/dev/null
+modprobe nls_iso8859-1	&>/dev/null
+modprobe ide-scsi	&>/dev/null
+modprobe ide-cd		&>/dev/null
+modprobe cloop		&>/dev/null
+modprobe squashfs	&>/dev/null
+[ -n "$USBBOOT" ] && modprobe usb-storage >/dev/null
+
+if ! modprobe unionfs &>/dev/null;then
+   eerror "Could not load unionfs kernel modules (3), starting basic shell."
+   gelux_start_shell
+   exit
+fi
+
+# Delete obsolete links and files before starting autoconfig
+if ! checkbootparam "nohwsetup"; then
+    rm -f /dev/cdrom* /dev/cdwriter* /dev/mouse* /dev/modem* /dev/scanner* 2>/dev/null
+fi
+
+# Start the detection now
+[ -n "$NOSCSI" ]  && HWSETUP_NOSCSI="-s"
+[ -n "$FAST" ] && HWSETUP_FAST="-f" 
+ebegin "${BLUE}Autoconfiguring devices (hardware setup)"
+if [ -z "$DEBUG" ]; then
+  if hwsetup -p $HWSETUP_NOSCSI $HWSETUP_FAST &>/dev/null 
+    then
+    eend 0
+  else
+    eerror "${RED}Please check.${NORMAL}"
+    eend 1
+  fi
+else
+  hwsetup -p $HWSETUP_NOSCSI $HWSETUP_FAST &>/dev/null 
+  eend $?
+fi
+[ -f /etc/sysconfig/gentoo ] && cat /etc/sysconfig/gentoo >> /etc/sysconfig/gelux
+
+
+
+
+# Disable kernel messages again
+echo "0" > /proc/sys/kernel/printk
+
+
+if test -n "$NFS_SERVER" -a -f /nfsrc; then
+  . /nfsrc
+else
+if test -n "$NFS_SERVER"; then
+  echo "couldn't find network configuration, booting localy"
+fi
+
+# Check for ide-scsi supported CD-Roms et al.
+test -f /proc/scsi/scsi && FOUND_SCSI="yes"
+
+
+# Now that the right SCSI driver is (hopefully) loaded, try to find CDROM
+test -z "$USBBOOT" && DEVICES="/dev/hd? /dev/hd?[1-9]"
+test -n "$FOUND_SCSI" -a -z "$NOCD" && DEVICES="/dev/scd? /dev/scd?? $DEVICES"
+# New: Also try parallel port CD-Roms [for Mike].
+# New: also check HD partitions for a MORPHIX/MORPHIX image
+test -n "$FOUND_SCSI" && DEVICES="$DEVICES /dev/sd?[1-9] /dev/sd?[1-9][0-9]"
+test -n "$USBBOOT" && DEVICES="$DEVICES /dev/sda1"
+DEVICES="$DEVICES /dev/hd?[1-9][0-9]"
+DEVICES="$DEVICES /dev/pcd?"
+ALL_DEVICES=$(find /sys/block/ -type d)
+
+#UML device 
+#DEVICES="$DEVICES /dev/ubd[1-9]" 
+
+#you could not define a directory with space
+if test -n "$HD_DIRECTORY";then
+  for i in $CMDLINE ; do case "$i" in fromdirectory=*) eval $i;; esac; done
+  if [ -n "$fromdirectory" ];then
+    HD_DIRECTORY="$fromdirectory"
+    MOUNT_IMAGE="localrw"
+    MOUNT_OPT="ro"
+    mkdir /$MOUNT_IMAGE
+    echo "${CRE}${BLUE}Looking for base in directory: ${MAGENTA}$HD_DIRECTORY${NORMAL}   "
+  else
+    HD_DIRECTORY=""
+  fi
+fi
+
+for i in $DEVICES
+  do
+  tmpdev="$(echo $i|sed -e 's@/dev/@@g')"
+  stringinstring "$tmpdev" "$ALL_DEVICES" ||continue
+
+  echo -n "${CRE}${RED} * ${BLUE}Looking for images in: ${MAGENTA}$i${NORMAL}   "
+  if [ -z "$FROMISO" ]; then
+    if mountit $i /$MOUNT_IMAGE "-n -o $MOUNT_OPT"   >/dev/null;then
+	   if test -d /$MOUNT_IMAGE/$HD_DIRECTORY/mainmod
+	       then
+	       echo -n "${CRE}${GREEN} * ${BLUE}Accessing ${DERIVATE} image at ${MAGENTA}$i on /$HD_DIRECTORY${GREEN}...${NORMAL}"
+	       FOUND_MORPHIX="$i"
+	       break
+	   fi
+            ## Detect default "copyto"'ed bases, too (see copyto section below)
+	   if test -d /$MOUNT_IMAGE/$DERIVATE/mainmod
+	       then
+	       HD_DIRECTORY=$DERIVATE
+	       echo -n "${CRE}${GREEN} * ${BLUE}Accessing ${DERIVATE} image at ${MAGENTA}$i on /$HD_DIRECTORY${GREEN}...${NORMAL}"
+	       FOUND_MORPHIX="$i"
+	       umount /$MOUNT_IMAGE
+	       MOUNT_IMAGE="localrw"
+	       mountit $i /$MOUNT_IMAGE "-n ">/dev/null
+	       break
+	   fi
+	   umount /$MOUNT_IMAGE
+    fi
+  fi
+done
+echo
+
+[ -n "$HD_DIRECTORY" ] && mount -n -o bind,ro /$MOUNT_IMAGE/$HD_DIRECTORY /cdrom >>/etc/sysconfig/stderr
+
+
+if test -n "$SPLASH"; then
+  splash -s -u 1000 /bootsplash/config/bootsplash2-1024x768.cfg &>/dev/null
+fi
+
+fi
+#NFS end
+
+
+# Harddisk-installed script part version has been removed
+# (MORPHIX can be booted directly from HD now).
+
+if test -n "$FOUND_MORPHIX" -a -d /cdrom/boot/; then
+# DEBUG
+
+  if test -n "$DEBUG"; then
+    echo "6" > /proc/sys/kernel/printk
+  fi
+
+  # brain dammage with sorting on busybox!!! |sort -nr|grep -e "[0-9]"|
+  MAIN_BACKEND_CONF=$(ls -r1 /cdrom/base/backend*.conf.mod|head -n1)
+  ebegin "${BLUE}Mounting configuration backend: ${GREEN}$MAIN_BACKEND_CONF"
+  mount-module $MAIN_BACKEND_CONF /usr/share/gelux-backend 0 
+  RET_VAL=$?
+  eend $RET_VAL
+  if [ $RET_VAL != 0 ];then
+    einfo "${CRE}${RED}Can't continue on ${DERIVATE}, sorry${NORMAL}"
+    exit
+  fi
+    
+  . /usr/share/gelux-backend/etc/gelux.d/stateless-functions.sh
+
+  gelux_create_ramdisk
+  gelux_debug_shell
+
+#
+# Mount here the mainmod
+#
+  mkdir -p /var/log           2>>/etc/sysconfig/stderr
+  mkdir -p $G_ROOTFS_RW         2>>/etc/sysconfig/stderr
+  mkdir /mnt/rootfs-ro        2>>/etc/sysconfig/stderr
+  mkdir -p /ramdisk/rootfs-rw 2>>/etc/sysconfig/stderr
+  mkdir -p /ramdisk/modules   2>>/etc/sysconfig/stderr
+  mkdir -p /ramdisk/tmp       2>>/etc/sysconfig/stderr
+  mkdir -p /ramdisk/mnt       2>>/etc/sysconfig/stderr
+  mkdir -p /ramdisk/vartmp    2>>/etc/sysconfig/stderr
+  mkdir -p /ramdisk/home      2>>/etc/sysconfig/stderr
+  mkdir -p /ramdisk/root      2>>/etc/sysconfig/stderr
+
+  MAIN_ROOT_RO=$(ls -1d /cdrom/mainmod/*${FILTER}*.mod 2>>/etc/sysconfig/stderr|head -n1)
+  if [ -z "$MAIN_ROOT_RO" ];then
+    eerror "Could not load main applications module, starting basic shell."
+    gelux_start_shell
+    exit
+  fi
+  if file $MAIN_ROOT_RO |grep -q directory;then
+    echo "IMAGE_TYPE=directory" >>/etc/sysconfig/gelux
+  else
+    echo "IMAGE_TYPE=file" >>/etc/sysconfig/gelux
+  fi
+  ebegin "${BLUE}Mounting main applications backend: ${GREEN}$MAIN_ROOT_RO"
+  mount-module $MAIN_ROOT_RO /mnt/rootfs-ro 1 
+  RET_VAL=$?
+  eend $RET_VAL
+  if [ $RET_VAL != 0 ];then
+   gelux_start_shell
+   exit
+  fi
+  
+  gelux_detect_backend
+
+  ebegin "${BLUE}Layering $G_DIST_BACKEND main module application"
+  mount -t unionfs -o dirs=/ramdisk/rootfs-rw=rw:$G_ROOTFS_RO=ro none $G_ROOTFS_RW  1>/dev/null 2>>/etc/sysconfig/stderr
+  eend $?
+  ebegin "${BLUE}Layering kernel modules on $G_DIST_BACKEND"
+  mkdir -p $G_ROOTFS_RW/lib/modules/$KERN_MODULES 2>/dev/null
+  mount -t unionfs -o dirs=/ramdisk/modules/=rw:/lib/modules/$KERN_MODULES=ro none $G_ROOTFS_RW/lib/modules/$KERN_MODULES 1>/dev/null 2>>/etc/sysconfig/stderr
+  eend $?
+
+# Enable kernel messages
+
+  echo "6" > /proc/sys/kernel/printk
+    
+    
+# From here, we should have all essential commands available.
+  hash -r
+
+# Now tell kernel where the real modprobe lives
+  echo "/sbin/modprobe" > /proc/sys/kernel/modprobe
+
+# Change root device from /dev/fd0 to /dev/ram0
+  echo "0x100" > /proc/sys/kernel/real-root-dev
+
+  gelux_install_bindhome
+  gelux_install_varlib
+
+  chmod 777 $G_ROOTFS_RW/tmp
+  mkdir -p $G_ROOTFS_RW/var/run/
+  :> $G_ROOTFS_RW/var/run/utmp
+  :> $G_ROOTFS_RW/var/run/wtmp
+  :> $G_ROOTFS_RW/etc/ioctl.save
+  :> $G_ROOTFS_RW/etc/pnm2ppa.conf
+
+
+  einfo "${BLUE}Configuring hardware"
+
+# start the config process here
+# configure fstab, swap, ACPI, CPU, Xorg, Sounds, NETWORK, 
+  gelux_detect_identity
+  gelux_detect_acpi
+  gelux_detect_cpu
+  gelux_detect_usb
+  gelux_detect_hdparm
+#  gelux_detect_pcmcia
+#  gelux_detect_firewire
+#  gelux_detect_alsa_sound
+  gelux_detect_xorg
+  gelux_detect_braille
+  gelux_detect_fstab
+  gelux_detect_swap
+
+  einfo "${BLUE}Configuring backend $G_DIST_BACKEND ${NORMAL}"
+  cp -a /etc/sysconfig $G_ROOTFS_RW/etc/
+  gelux_install_backend_env
+  gelux_install_firmware
+  cd $G_ROOTFS_RW
+  mkdir $G_ROOTFS_RW/mnt/.hidden_base
+
+  gelux_mount_modules /cdrom
+  pivot_root . $G_ROOTFS_RW/mnt/.hidden_base
+
+  gelux_install_main_module
+  gelux_install_modules
+  gelux_install_packages /mnt/.hidden_base/cdrom
+  chroot . umount /sys  2>/dev/null
+  chroot . umount /proc 2>/dev/null 
+
+  einfo "${BLUE}Starting init process${NORMAL}"
+  [ -e /sbin/initng ] && INITNG=/sbin/initng || INITNG=/sbin/init
+
+  exec chroot . $INITNG $RUNLEVEL  <dev/console >dev/console 2>&1   
+  eerror "[------------------> You'll never see this message <---------------------]"
+fi
+
+gelux_start_shell
+

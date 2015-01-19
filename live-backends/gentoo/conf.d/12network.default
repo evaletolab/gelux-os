@@ -1,0 +1,50 @@
+#!/bin/sh
+
+# Set up default config
+
+. /etc/gelux.d/functions.sh
+
+LOCALCONF=/usr/share/gelux/geluxmainconf
+
+
+set_var(){
+  if ! sed_variable "$1"     "$2" $3;then
+    echo "$1=$2" >> $3
+  fi
+}
+
+if ! grep -q -e "^ifplugd$" $LOCALCONF && test -e /etc/default/ifplugd ;then
+  einfo "config main module : setup ifplugd"
+  sed_variable "INTERFACES" "auto"  /etc/default/ifplugd
+  IFPLUGD=yes
+  echo "ifplugd" >>$LOCALCONF
+fi
+
+if ! grep -q -e "^network$" $LOCALCONF ;then
+  INTF="/etc/conf.d/net"
+  
+  # add header
+  echo "# This network configuration was written by net-setup" > $INTF
+  
+  NETDEVICES="$(awk -F: '/wlan.:|eth.:|tr.:/{print $1}' /proc/net/dev 2>/dev/null)"
+#  NETDEVICES="$(grep -o -e  "\(wlan.\|eth.\|tr.\)" /proc/net/dev)"
+  if checkbootparam "nodhcp"; then
+      einfo "Skipping DHCP broadcast/network detection as requested on boot commandline"
+  else
+      [ -e /etc/default/ifupdown ] && set_var "IFUPDOWN_TIMEOUT" "10" /etc/default/ifupdown
+      [ -e /etc/dhclient.conf ] && sed_variable "timeout" "10;" /etc/dhclient.conf
+#      sed_variable "script" "/etc/gelux/dhclient-script" /etc/dhclient.conf
+
+      
+      for DEVICE in $NETDEVICES
+        do
+        configured="$configured $DEVICE"
+        echo "iface_${iface}=\"dhcp\"" >> $INTF
+      done
+  fi
+  echo "network" >>$LOCALCONF
+  einfo "config main module : setup network devices $configured"
+fi
+
+
+

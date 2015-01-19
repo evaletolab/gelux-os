@@ -1,0 +1,87 @@
+#!/bin/sh
+# Simple script to load a module, using either cloopv1 or cloopv2
+#  mount_module sourcefile.mod destinationdir [loop_number]
+# doesn't execute the loadmod.sh for you
+#
+# $Id: mount-module,v 1.1.1.1 2006/05/13 10:47:39 evaleto Exp $
+#
+# Alex de Landgraaf <alextreme@xs4all.nl>, copyright 2004
+#
+# Modified by J Silverman <g1powermac@yahoo.com> to add support for
+# loading normal .iso images and fixing squashfs mount, copyright 2004
+#
+# Support for zisofs and small bugfixes
+# by Dmitry Golubev <lastguru@laka.lv>, copyright 2004
+
+if [ -z "$1" -o -z "$2" ]; then
+	echo "Simple script to load a module, using cloopv1, cloopv2, squashfs, iso or zisofs"
+	echo " Usage: mount_module modulesource destinationdir loop_number"
+	echo "  Note: you may not specify a loop_number for squashfs, iso, and zisofs images"
+	echo "  If modulesource is a directory, it is assumed its a zisofs image"
+	exit 1
+fi
+
+LOOPNR="$3"
+SOURCE="$1"
+DESTDR="$2"
+
+if [ -z "$3" ]; then
+	LOOPNR=0
+	until ( [ ! -e "/dev/cloop$LOOPNR" ] ) && ( [ ! -e "/dev/cloopv1-$LOOPNR" ] ) ; do
+		LOOPNR=$(($LOOPNR+1))
+	done
+fi
+
+if [ ! -d "$DESTDR" ]; then
+	mkdir $DESTDR
+	if [ ! -d "$DESTDR" ]; then
+		echo "Destination is not a directory, and it can't be made, aborting"
+		exit 1
+	fi
+fi
+
+# It must be a generic deirectory, or a ZISO if the source is a directory
+if [ -d "$SOURCE" ]; then
+    ZISOFS="zisofs"
+# but if ir is regular file, it must be cloopv1, cloopv2, iso or squashfs
+elif [ -f "$SOURCE" ]; then
+    VERSION1=`head -n 2 $SOURCE | grep "V1.0 Format"`
+    VERSION2=`head -n 2 $SOURCE | grep "V2.0 Format"`
+    SQUASH=`head -n 1 $SOURCE | grep "hsqs"`
+    ISO=`file $SOURCE | grep "ISO 9660"`
+fi
+
+# We don't support v1 anymore...
+
+if [ -n "$VERSION2" ]; then
+# use primary MAJORNR
+    # possibly ext3 is necessary, however don't bug us if it doesn't exist
+    modprobe ext3 >/dev/null 2>&1
+
+    mknod /dev/cloop$LOOPNR b 240 $LOOPNR >/dev/null 2>&1
+    losetup /dev/cloop$LOOPNR $SOURCE >/dev/null 2>&1
+
+    mount /dev/cloop$LOOPNR $DESTDR >/dev/null 2>&1
+
+elif [ -n "$SQUASH" ]; then
+# mount using squashfs module, if available
+# TODO: check for squashfs support first
+    modprobe squashfs >/dev/null 2>&1
+    mount -t squashfs $SOURCE $DESTDR -o loop >/dev/null 2>&1
+
+elif [ -n "$ISO" ]; then
+# mount normal iso images
+    mount -o loop $SOURCE $DESTDR >/dev/null 2>&1
+
+elif [ -n "$ZISOFS" ]; then
+# just bind, nothing more is requires to work with ZISOFS
+    mount --bind $SOURCE $DESTDR
+fi
+
+if [ -z "$VERSION1" -a -z "$VERSION2" -a -z "$SQUASH" -a -z "$ZISOFS" -a -z "$ISO" ]; then
+	echo "Module is of an unknown version!"
+	echo "can only handle cloopv1, cloopv2, squashfs, iso, zisofs or directory"
+	exit 1
+fi
+
+exit 0

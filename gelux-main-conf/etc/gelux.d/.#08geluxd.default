@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# Set up default config
+
+LOCALCONF=/usr/share/gelux/geluxmainconf
+
+
+if ! grep -q -e "^geluxd-security$" $LOCALCONF ;then
+  echo "config gelux security with randmon password"
+  echo $(date -R) |md5sum |cut -d ' ' -f 1 >/etc/gelux/geluxd.secret
+  echo "geluxd" >/etc/gelux/geluxd.identity
+  chmod 600 /etc/gelux/geluxd.*
+  echo "generate certificat"
+  cd /etc/gelux/
+  openssl genrsa -des3 -out gelux.key 1024
+  openssl rsa -in gelux.key -out gelux-key.pem
+  openssl req -new -key gelux.key -out gelux-cert.pem
+  openssl x509 -req -days 1600 -in gelux-cert.pem -signkey gelux.key -out gelux-ca-cert.pem
+  rm gelux.key
+  
+  echo "geluxd-security" >>$LOCALCONF
+fi

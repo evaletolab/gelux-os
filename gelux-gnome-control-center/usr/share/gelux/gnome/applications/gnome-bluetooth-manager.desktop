@@ -1,0 +1,14 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Bluetooth Manager
+Name[en_GB]=Bluetooth Manager
+Comment=Display Bluetooth devices and their properties
+Comment[en_GB]=Display Bluetooth devices and their properties
+Icon=../gnome-bluetooth/pixmaps/blueradio-48.png
+Exec=gnome-bluetooth-manager
+Terminal=0
+Type=Application
+Categories=Application;Hardware;System;Settings;
+X-GNOME-Bugzilla-Bugzilla=GNOME
+X-GNOME-Bugzilla-Product=gnome-bluetooth
+X-GNOME-Bugzilla-Component=admin-tools

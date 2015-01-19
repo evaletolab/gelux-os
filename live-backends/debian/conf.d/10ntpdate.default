@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# Set up default config
+
+. /etc/gelux.d/functions.sh
+
+LOCALCONF=/usr/share/gelux/geluxmainconf
+
+if ! grep -q -e "^ntpdate$" $LOCALCONF && test -e /etc/default/ntpdate;then
+  einfo "config main module : setup ntpdate "
+  sed_variable "NTPSERVERS" "swisstime.ethz.ch" /etc/default/ntpdate
+  sed_variable "NTPOPTIONS" "-u " /etc/default/ntpdate
+  echo "ntpdate" >>$LOCALCONF
+fi
+

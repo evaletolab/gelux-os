@@ -1,0 +1,14 @@
+#!/bin/sh
+# X-server shut down
+# $Id: X11-shutdown,v 1.1.1.1 2005/01/19 16:56:15 evaleto Exp $
+
+. /morphix/include.sh >/dev/null 2>&1
+
+if [ -n "$WINDOWMANAGER" ]; then
+    for i in $XSERVER; do
+	killall -TERM $i 2> /dev/null && echo "X-Server shut down." && break
+    done
+fi
+
+    
+    

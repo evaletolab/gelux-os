@@ -1,0 +1,203 @@
+<VFolderInfo>
+  <!-- Write changes here, instead of to the original files -->
+  <WriteDir>/etc/gnome-vfs-2.0/vfolders/applications-all-users/</WriteDir>
+
+  <!-- Load the GNOME2 applications from our prefix -->
+  <ItemDir>/usr/share/applications/</ItemDir>
+
+  <!-- Add main GNOME2 entries if you build into a non-default prefix -->
+  <ItemDir>/usr/share/applications/</ItemDir>
+
+  <!-- Default .directory location -->
+  <DesktopDir>/usr/share/gnome/vfolders/</DesktopDir>
+
+  <!-- Add Ximian Menu Entries, uncomment for menu nirvana -->
+  <MergeDir>/usr/share/gnome/ximian/Programs/</MergeDir>
+
+  <!-- Merge in the GNOME1 menus if you build into a non-default prefix -->
+  <MergeDir>/usr/share/gnome/apps/</MergeDir>
+
+  <!-- Merge KDE  -->
+  <MergeDir>/usr/share/applnk/</MergeDir>
+  
+  <!-- Merge dirs optional -->
+  <MergeDir>/etc/X11/applnk/</MergeDir>
+
+  <!-- Root folder -->
+  <Folder>
+    <Name>Applications</Name>
+    <Desktop>Applications.directory</Desktop>
+
+    <Exclude>gnome-search-tool.desktop</Exclude>
+    <Exclude>Gmc.desktop</Exclude>
+    <Exclude>nautilus-help.desktop</Exclude>
+    <Exclude>gnome-help.desktop</Exclude>
+    <Exclude>KControl.desktop</Exclude>
+
+    <Query>
+      <And>
+        <Keyword>Core</Keyword>
+	<!-- FIXME: Seth, why would this be wanted? -->
+	<!--<Not>
+	  <Keyword>Merged</Keyword>
+        </Not>-->
+      </And>
+    </Query>
+
+    <!-- Accessories -->
+    <Folder>
+      <Name>Accessories</Name>
+      <Desktop>Accessories.directory</Desktop>
+      <Query>
+	<And>
+	  <Keyword>Application</Keyword>
+	  <Keyword>Utility</Keyword>
+	  <Not>
+	    <Keyword>System</Keyword>
+	  </Not>
+	</And>
+      </Query>
+      <DontShowIfEmpty/>
+    </Folder>
+    
+    <!-- Accessibility -->
+    <Folder>
+      <Name>Accessibility</Name>
+      <Desktop>Accessibility.directory</Desktop>
+      <Query>
+	<And>
+	  <Keyword>Application</Keyword>
+	  <Keyword>Accessibility</Keyword>
+	  <Not>
+	    <Keyword>Settings</Keyword>
+	  </Not>
+	</And>
+      </Query>
+      <DontShowIfEmpty/>
+    </Folder>
+
+    <!-- Other, catch-all unmatched folder -->
+    <Folder>
+      <Name>Other</Name>
+      <Desktop>Other.directory</Desktop>
+      <OnlyUnallocated/>
+      <Query>
+	<And>
+          <Keyword>Application</Keyword>
+          <Not>
+	    <Or>
+              <Keyword>Settings</Keyword>
+              <Keyword>System</Keyword>
+              <Keyword>Hardware</Keyword>
+              <Keyword>Network</Keyword>
+	    </Or>
+          </Not>
+        </And>
+      </Query>
+      
+      
+      <Exclude>vumeter.desktop</Exclude>
+      <Exclude>reclevel.desktop</Exclude>
+      <Exclude>gnome-search-tool.desktop</Exclude>
+      <Exclude>gnomecc.desktop</Exclude>
+      <Exclude>sound-properties.desktop</Exclude>
+
+      <DontShowIfEmpty/>
+    </Folder>
+
+    <!-- Development Tools -->
+    <Folder>
+      <Name>Programming</Name>
+      <Desktop>Development.directory</Desktop>
+      <Query>
+        <And>
+          <Keyword>Application</Keyword>
+	  <Keyword>Development</Keyword>
+        </And>
+      </Query>
+      <DontShowIfEmpty/>
+    </Folder>
+
+    <!-- Games -->
+    <Folder>
+      <Name>Games</Name>
+      <Desktop>Games.directory</Desktop>
+      <Query>
+        <And>
+          <Keyword>Application</Keyword>
+	  <Keyword>Game</Keyword>
+        </And>
+      </Query>
+      <DontShowIfEmpty/>
+    </Folder>
+
+    <!-- Graphics -->
+    <Folder>
+      <Name>Graphics</Name>
+      <Desktop>Graphics.directory</Desktop>
+      <Query>
+        <And>
+          <Keyword>Application</Keyword>
+	  <Keyword>Graphics</Keyword>
+        </And>
+      </Query>
+      <DontShowIfEmpty/>
+    </Folder>
+
+    <!-- Internet -->
+    <Folder>
+      <Name>Internet</Name>
+      <Desktop>Internet.directory</Desktop>
+      <Query>
+        <And>
+          <Keyword>Application</Keyword>
+	  <Keyword>Network</Keyword>
+          <Not>
+	    <Keyword>Settings</Keyword>
+          </Not>
+        </And>
+      </Query>
+      <DontShowIfEmpty/>
+    </Folder>
+
+    <!-- Multimedia -->
+    <Folder>
+      <Name>Multimedia</Name>
+      <Desktop>Multimedia.directory</Desktop>
+      <Query>
+        <And>
+          <Keyword>Application</Keyword>
+	  <Keyword>AudioVideo</Keyword>
+        </And>
+      </Query>
+
+      <Exclude>vumeter.desktop</Exclude>
+      <Exclude>reclevel.desktop</Exclude>
+
+      <DontShowIfEmpty/>
+    </Folder>
+
+    <!-- Office -->
+    <Folder>
+      <Name>Office</Name>
+      <Desktop>Office.directory</Desktop>
+      <Query>
+	<And>
+	  <Keyword>Application</Keyword>
+	  <Or>
+	    <Keyword>Office</Keyword>
+	    <Keyword>Spreadsheet</Keyword>
+	    <Keyword>WordProcessor</Keyword>
+	    <Keyword>Calendar</Keyword>
+	    <Keyword>ProjectManagement</Keyword>
+	  </Or>
+	</And>
+      </Query>
+      <DontShowIfEmpty/>
+    </Folder>
+
+
+
+    
+  </Folder>
+</VFolderInfo>

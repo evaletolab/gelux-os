@@ -1,0 +1,10 @@
+# hal
+
+if [ -e /etc/init.d/dbus-1 ]; then
+  	sed -i -e "s/DAEMON_OPTS=[-a-zA-Z0-9]*/DAEMON_OPTS=/g"  /etc/default/hal 2>/dev/null
+	/etc/init.d/dbus-1 start &>/dev/null
+	exit $?
+fi
+
+
+

@@ -1,0 +1,34 @@
+#!/bin/sh
+
+# Set up default config
+
+. /etc/gelux.d/functions.sh
+. /etc/sysconfig/i18n
+
+LOCALCONF=/usr/share/gelux/geluxmainconf
+
+if test -e /etc/gdm/gdm.conf;then
+  NAME=$(gdm --version| sed -e "s/ /-/g")
+  if ! grep -q -e "^${NAME}$" $LOCALCONF;then
+    einfo "config main module : setup gdm configuration"
+    sed -i -e "s|^#Greeter=.*|Greeter=/usr/bin/gdmgreeter|g" 		/etc/gdm/gdm.conf
+    sed -i -e "s|^#RemoteGreeter=.*|RemoteGreeter=/usr/bin/gdmgreeter|g" 	/etc/gdm/gdm.conf
+    sed -i -e "s|^AllowRoot=.*|AllowRoot=true|g" 				/etc/gdm/gdm.conf
+    sed -i -e "s|^AllowRemoteRoot=.*|AllowRemoteRoot=true|g" 		/etc/gdm/gdm.conf
+    sed -i -e "s|^DisallowTCP=.*|DisallowTCP=false|g" 			/etc/gdm/gdm.conf
+    sed -i -e "s|^Enable=.*|Enable=true|g" 					/etc/gdm/gdm.conf
+    sed -i -e "s|^#GtkTheme=Default|GtkTheme=Gelux|g" 			/etc/gdm/gdm.conf
+    sed -i -e "s|^SecureSystemMenu=.*|SecureSystemMenu=false|g" 		/etc/gdm/gdm.conf
+    sed -i -e "s|^#Use24Clock=false|Use24Clock=true|g" 			/etc/gdm/gdm.conf
+    sed -i -e "s|^.*GraphicalTheme=.*$|GraphicalTheme=sakura|g" 		/etc/gdm/gdm.conf
+    sed -i -e "s|^#Welcome=Welcome|Welcome=Bienvenue sur gelux|g" 		/etc/gdm/gdm.conf
+    sed -i -e "s|^#RemoteWelcome=Welcome to %n|RemoteWelcome=Bienvenue sur gelux|g" 	/etc/gdm/gdm.conf
+    sed -i -e "s|^.*GraphicalThemeRand=.*$|GraphicalThemeRand=false|g" 		/etc/gdm/gdm.conf
+    
+    update-rc.d -f gdm remove &>/dev/null
+    update-rc.d -f gdm start 10 2 3 4 5 . &>/dev/null  
+    echo "LANG=$LANG" >/etc/default/gdm
+    
+    echo "$NAME" >>$LOCALCONF
+  fi
+fi

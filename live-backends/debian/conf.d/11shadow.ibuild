@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# Set up default config
+
+. /etc/gelux.d/functions.sh
+
+LOCALCONF=/usr/share/gelux/geluxmainconf
+
+if ! grep -q -e "^shadow" $LOCALCONF ;then
+  einfo "config main module : activate shadow config"
+  shadowconfig on 1>/dev/null
+  echo "shadow" >>$LOCALCONF
+fi
+

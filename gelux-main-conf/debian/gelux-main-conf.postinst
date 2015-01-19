@@ -1,0 +1,25 @@
+#!/bin/sh
+
+# Set up the main module to get all working correctly
+
+# This probably violates every debian policy in existance, but we don't care right now...
+
+LOCALCONF=/usr/share/gelux/geluxmainconf
+
+if [ ! -f $LOCALCONF ] ;then
+echo "#
+# GeluX main configuration. This file contains the id of configured items. 
+# If you want to restore the GeluX default values delete those items
+# olivier evalet @ programmers.ch
+">$LOCALCONF
+fi
+
+
+for file in `ls /etc/gelux.d`;do 
+  . /etc/gelux.d/$file 
+done
+
+
+echo "lock/unlock the configuration items on $LOCALCONF"
+
+

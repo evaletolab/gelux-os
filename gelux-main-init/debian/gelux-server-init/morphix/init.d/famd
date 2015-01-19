@@ -1,0 +1,7 @@
+# Try to find and load a drm module for this graphics card
+# ripped from Knopper's xsession
+
+if [ -e /etc/init.d/fam ]; then
+	/etc/init.d/fam start &>/dev/null
+	exit $?
+fi

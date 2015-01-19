@@ -1,0 +1,20 @@
+#!/bin/sh
+# Prepare and start X11 
+# $Id: X11-setup,v 1.1.1.1 2005/01/19 16:56:15 evaleto Exp $
+. /morphix/include.sh >/dev/null 2>&1
+
+if [ -n "$WINDOWMANAGER" ]; then
+    echo "allowed_users=anybody" > /etc/X11/Xwrapper.config
+
+    if [ -n "$BGIMAGE" ]; then
+	echo "exec xsetbg -fullscreen $BGIMAGE &" >> /etc/X11/xinit/xinitrc
+    fi
+
+    echo "exec $WINDOWMANAGER" >> /etc/X11/xinit/xinitrc
+
+    if [ ! -e /home/$USER/.xinitrc ]; then
+	cp /etc/X11/xinit/xinitrc /home/$USER/.xinitrc 2>/dev/null
+    fi
+
+fi
+

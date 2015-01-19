@@ -1,0 +1,42 @@
+* Thanks to garyng for this help and files *
+See the knoppix.net newsgroups for more information.
+------------------------------------------------------------------------
+w32grub.zip <http://www.skyjammer.com/files/knoppix/w32grub.zip>
+
+w32grub.zip contains the GRUB boot loader. This is
+necessary if you don't want to boot from floppy or
+CD-ROM.
+
+Just unzip it to c:\ then run c:\boot\grub\w32grub
+This would patch the necessary files(under XP, not
+linux). Then add :
+
+c:\boot\stage1="GRUB" to c:\boot.ini
+
+and you now have a grub boot loader on your XP system
+which can be used to boot all flvors of linux. Check
+the GRUB manual for detail how to add entries to GRUB.
+
+------------------------------------------------------------------------
+minintfs.gz <http://www.skyjammer.com/files/knoppix/minintfs.gz>
+
+minintfs.gz is the modified initrd I use. The file of
+interest is linuxrc as well as files under /static and
+/modules. Currently, I have compiled the NTFS support
+in my kernel rather than a module so if you want it as
+module, you have to compile it and copy ntfs.o to
+/modules and add the necessary line in linuxrc(before
+the hd scanning code).
+
+Should you want to use minintfs.gz unmodified(I mean
+the linuxrc actually), make sure you remove everything
+under /etc as that contains my machine specific stuff
+which may interfere with your operation. You may also
+need to copy a new cloop.o from newer KNOPPIX as it
+changes the format of the cloop image recently, the
+one I use is a few months old.
+
+Sorry that I haven't packaged it in a better way but I
+am the kind of person who just like to make it work
+and forget.
+

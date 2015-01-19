@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# Set up default config
+
+. /etc/gelux.d/functions.sh
+
+LOCALCONF=/usr/share/gelux/geluxmainconf
+
+if ! grep -q -e "^mono$" $LOCALCONF ;then
+  einfo "config main module : setup mono "
+  echo "export MONO_CFG_DIR=/etc" >>/etc/profile
+  echo "mono" >>$LOCALCONF
+fi
+

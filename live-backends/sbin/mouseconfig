@@ -1,0 +1,92 @@
+#!/bin/sh
+# mouseconfig - A very light-weight text-based mouse configuration tool.
+# (C) Klaus Knopper Jun 2001
+#
+# $Id: mouseconfig,v 1.1.1.1 2006/05/13 10:50:10 evaleto Exp $
+#
+ 
+PATH="/bin:/sbin:/usr/bin:/usr/sbin"
+export PATH
+
+XDIALOG_HIGH_DIALOG_COMPAT=1
+export XDIALOG_HIGH_DIALOG_COMPAT
+  
+TMP="/tmp/mouseconfig.tmp$$"
+   
+bailout(){
+   rm -f "$TMP"
+   exit $1
+}
+
+DIALOG="dialog"
+[ -n "$DISPLAY" ] && [ -x /usr/bin/Xdialog ] && DIALOG="Xdialog"
+
+trap bailout 2 15
+
+[ -f /etc/sysconfig/i18n ] && . /etc/sysconfig/i18n
+[ -f /etc/sysconfig/mouse ] && . /etc/sysconfig/mouse
+
+case "$LANGUAGE" in
+de) TITLE0="Wie ist Ihre Maus angeschlossen?"
+    TITLE1="Bitte wählen Sie Ihren Maustyp"; ;;
+*)  TITLE0="How is your mouse connected?"
+    TITLE1="Please choose your mouse type"; ;;
+esac
+
+DEVICES="psaux PS/2-Port usbmouse USB ttyS0 (COM1:) ttyS1 (COM2:) ttyS2 (COM3:) ttyS3 (COM4:)"
+PROTOCOLS="PS/2 PS/2 IMPS/2 PS/2-Wheelmouse Microsoft Microsoft-SerialMouse"
+
+DEVICE="`ls -l /dev/mouse 2>/dev/null | awk '{print $NF}'`"
+
+DEFAULT=""
+[ -n "$DEVICE" ] && DEFAULT="${DEVICE} ${DEVICE}"
+
+rm -f "$TMP"
+$DIALOG --clear --title "$TITLE0" --menu "Default: ${DEVICE:-none}" 22 70 15 $DEFAULT $DEVICES 2>"$TMP"
+
+DEVICE="`cat $TMP`"
+[ -n "$DEVICE" ] || bailout 0
+rm -f /dev/mouse
+ln -s "$DEVICE" /dev/mouse
+
+DEFAULT=""
+[ -n "$XMOUSETYPE" -a -n "$FULLNAME" ] && DEFAULT="$XMOUSETYPE $XMOUSETYPE"
+
+rm -f "$TMP"
+$DIALOG --clear --title "$TITLE1" --menu "Default: ${DEFAULT:-none}" 22 70 15 $DEFAULT $PROTOCOLS 2>"$TMP"
+
+XMOUSETYPE="`cat $TMP`"
+if [ -n "$XMOUSETYPE" ]; then
+case "$XMOUSETYPE" in
+IMPS/2) MOUSETYPE="imps2"; ;;
+PS/2) MOUSETYPE="ps2"; ;;
+Microsoft) MOUSETYPE="ms"; ;;
+*) MOUSETYPE="$XMOUSETYPE"; ;;
+esac
+# Mouse for /etc/gpm.conf
+# Format:
+#device=/dev/mouse
+#responsiveness=
+#repeat_type=ms3
+#type=ps2
+#append=""
+cat >>/etc/gpm.conf <<EOF
+# /etc/gpm.conf
+device=/dev/mouse
+responsiveness=
+# repeat_type=ms3
+type="$MOUSETYPE"
+append=""
+EOF
+
+# XF86Config is only changed in /etc/init.d/knoppix-autoconfig
+
+echo "XMOUSETYPE=\"$XMOUSETYPE\"" >>/etc/sysconfig/mouse
+echo "MOUSETYPE=\"$MOUSETYPE\"" >>/etc/sysconfig/mouse
+echo "DEVICE=\"$DEVICE\"" >>/etc/sysconfig/mouse
+echo "MOUSE_XMOUSETYPE=\"$XMOUSETYPE\"" >>/etc/sysconfig/knoppix
+echo "MOUSE_MOUSETYPE=\"$XMOUSETYPE\"" >>/etc/sysconfig/knoppix
+echo "MOUSE_DEVICE=\"$DEVICE\"" >>/etc/sysconfig/knoppix
+fi
+
+bailout 0

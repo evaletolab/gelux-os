@@ -1,0 +1,8 @@
+# Try to find and load a drm module for this graphics card
+# ripped from Knopper's xsession
+
+. /morphix/include.sh
+
+if [ -e /etc/init.d/cupsys ]; then
+	/etc/init.d/cupsys start &
+fi

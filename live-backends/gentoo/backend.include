@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# Set up default environment for gentoo
+
+PKG_EXT="ebuild"
+PKG_CMD="emerge "
+
+G_BACKEND_FIRMWARE="/lib/firmware/"
+G_BACKEND_MODUTILS="/etc/modules.d"
+
+export G_BACKEND_FIRMWARE G_BACKEND_MODUTILS

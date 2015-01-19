@@ -1,0 +1,27 @@
+[General]
+XftHintStyle=hintmedium
+XftSubPixel=
+fixed=Bitstream Vera Sans Mono,9,-1,5,50,0,0,0,0,0
+font=Bitstream Vera Sans,9,-1,5,50,0,0,0,0,0
+menuFont=Bitstream Vera Sans,9,-1,5,50,0,0,0,0,0
+toolBarFont=Bitstream Vera Sans,8,-1,5,50,0,0,0,0,0
+widgetStyle=plastik
+
+[KDE]
+EffectAnimateCombo=false
+EffectAnimateMenu=false
+EffectAnimateTooltip=false
+EffectFadeMenu=false
+EffectFadeTooltip=false
+EffectNoTooltip=false
+EffectsEnabled=false
+InsertTearOffHandle=0
+ShowIconsOnPushButtons=false
+
+[Toolbar style]
+Highlighting=true
+IconText=IconOnly
+TransparentMoving=true
+
+[WM]
+activeFont=Bitstream Vera Sans,10,-1,5,50,0,0,0,0,0

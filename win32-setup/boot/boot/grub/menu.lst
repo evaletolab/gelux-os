@@ -1,0 +1,19 @@
+# Sample boot menu configuration file
+#
+
+# Boot automatically after a minute.
+timeout 6
+
+# By default, boot the second entry.
+default 0
+
+# Fallback to the first entry.
+fallback 0
+
+# For booting Linux
+# do not modifiy 'root' options, use the setup-boot.exe instead!
+title  GeluX for Windows 2000/XP
+root (hd0,1)
+kernel /boot/vmlinuz  null fromdirectory=Pelux hostname=gelux username=demo quiet splash=silent gdm dma alsa acpi=off noapic  home=scan lang=sf ramdisk_size=100000 init=/etc/init apm=power-off vga=791 minifo=on initrd=miniroot.gz  BOOT_IMAGE=morphix
+initrd /boot/miniroot.gz
+

@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# Set up default config
+
+. /etc/gelux.d/functions.sh
+
+LOCALCONF=/usr/share/gelux/geluxmainconf
+
+
+if ! grep -q -e "^passwd" $LOCALCONF ;then
+  einfo "config main module : default root passwd "
+  echo root:demo|chpasswd 
+  echo "passwd" >>$LOCALCONF
+fi
+

@@ -1,0 +1,146 @@
+gelux-main-init (3.0-20) unstable; urgency=low
+
+  * FIX order of truck
+
+ -- root <root@evaleto>  Mon, 21 Nov 2005 12:14:01 +0000
+
+gelux-main-init (3.0-19) unstable; urgency=low
+
+  * start ifplugd in background
+
+ -- root <root@evaleto>  Sun, 20 Nov 2005 21:37:16 +0000
+
+gelux-main-init (3.0-18) unstable; urgency=low
+
+  * add security
+
+ -- root <root@evaleto>  Sun, 20 Nov 2005 15:01:35 +0000
+
+gelux-main-init (3.0-17) unstable; urgency=low
+
+  * ADD network auto plug (ifplugd), fix nis
+
+ -- root <root@evaleto>  Sun, 20 Nov 2005 14:12:25 +0000
+
+gelux-main-init (3.0-16) unstable; urgency=low
+
+  * ADD gelux daemon init
+
+ -- root <root@evaleto>  Thu, 17 Nov 2005 18:37:12 +0000
+
+gelux-main-init (3.0-15) unstable; urgency=low
+
+  * FIXES...
+
+ -- root <root@evaleto>  Thu, 17 Nov 2005 17:16:06 +0000
+
+gelux-main-init (3.0-14) unstable; urgency=low
+
+  * ADD color script
+
+ -- root <root@evaleto>  Thu, 17 Nov 2005 16:37:32 +0000
+
+gelux-main-init (3.0-13) unstable; urgency=low
+
+  *  * ADD new start/stop scripts
+
+ -- root <root@evaleto>  Fri,  7 Oct 2005 14:23:48 +0000
+
+gelux-main-init (3.0-12) unstable; urgency=low
+
+  *  * FIX missing file main_module
+
+ -- root <root@evaleto>  Fri,  7 Oct 2005 14:11:29 +0000
+
+gelux-main-init (3.0-11) unstable; urgency=low
+
+  *  * ADD fam
+
+ -- root <root@evaleto>  Thu,  6 Oct 2005 11:05:49 +0000
+
+gelux-main-init (3.0-10) unstable; urgency=low
+
+  * FIX nis server detection
+
+ -- root <root@evaleto>  Thu, 23 Jun 2005 14:59:18 +0000
+
+gelux-main-init (3.0-7) unstable; urgency=low
+
+  * FIX do not start nis while ypwhich is false
+
+ -- root <root@evaleto>  Wed, 22 Jun 2005 16:01:38 +0000
+
+gelux-main-init (3.0-6) unstable; urgency=low
+
+  * FIX NIS init
+
+ -- root <root@evaleto>  Fri, 17 Jun 2005 10:40:53 +0000
+
+gelux-main-init (3.0-5) unstable; urgency=low
+
+  * FIX postinstall script
+
+ -- root <root@evaleto>  Wed, 15 Jun 2005 13:08:01 +0000
+
+gelux-main-init (3.0-4) unstable; urgency=low
+
+  * REM the exit shell (user must type halt)
+
+ -- root <root@evaleto>  Fri, 27 May 2005 12:35:54 +0000
+
+gelux-main-init (3.0-3) unstable; urgency=low
+
+  * ADD wait and reboot for the server
+
+ -- root <root@evaleto>  Thu, 26 May 2005 16:33:18 +0000
+
+gelux-main-init (3.0-2) unstable; urgency=low
+
+  * create a server boot script
+
+ -- Evalet Olivier <evaleto@programmers.ch>  Thu, 24 Feb 2005 17:47:06 +0100
+
+gelux-main-init (2.0-8) unstable; urgency=low
+
+  * fix hald start [2]
+
+ -- Evalet Olivier <evaleto@programmers.ch>  Thu, 24 Feb 2005 17:47:06 +0100
+
+gelux-main-init (2.0-6) unstable; urgency=low
+
+  * fix hald start
+
+ -- Evalet Olivier <evaleto@programmers.ch>  Thu, 24 Feb 2005 17:47:06 +0100
+
+gelux-main-init (2.0-5) unstable; urgency=low
+
+  * udev started from the base.
+
+ -- Evalet Olivier <evaleto@programmers.ch>  Sun,  1 Jan 2005 02:12:47 +0200
+
+gelux-main-init (2.0-4) unstable; urgency=low
+
+  * start gdm at faster to get a speed setup.
+
+ -- Evalet Olivier <evaleto@programmers.ch>  Sun,  1 Jan 2005 02:12:47 +0200
+
+gelux-main-init (2.0-3) unstable; urgency=low
+
+  * add hotplug.
+  * make lnk
+
+ -- Evalet Olivier <evaleto@programmers.ch>  Sun,  1 Jan 2005 02:12:47 +0200
+
+gelux-main-init (2.0-2) unstable; urgency=low
+
+  * add include.
+  * make lnk
+
+ -- Evalet Olivier <evaleto@programmers.ch>  Sun,  1 Jan 2005 02:12:47 +0200
+
+gelux-main-init (2.0-1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Evalet Olivier <evaleto@programmers.ch>  Sun,  1 Jan 2005 02:12:47 +0200
+

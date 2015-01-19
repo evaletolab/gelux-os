@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Thunderbird Profile Manager
+Comment=Select or Edit your profiles
+Exec=mozilla-thunderbird -P
+Terminal=false
+MultipleArgs=false
+Type=Application
+Icon=mozilla-thunderbird-pm-menu.xpm
+Categories=Application;Settings;Network

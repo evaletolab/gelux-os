@@ -1,0 +1,54 @@
+#!/bin/sh
+
+# Set up default config
+
+. /etc/gelux.d/functions.sh
+import_env /etc/sysconfig/i18n
+import_env /etc/sysconfig/gelux
+
+LOCALCONF=/usr/share/gelux/geluxmainconf
+
+set_var(){
+  if ! sed_variable "$1"     "$2" $3;then
+    echo "$1=$2" >> $3
+  fi
+}
+
+
+if ! grep -q -e "^locales2$" $LOCALCONF ;then
+  einfo "config main module : generate locales for $LANGUAGE"
+
+  echo "#gelux environment settings"              >   /etc/environment
+  echo "LANG=$LANG"                               >>  /etc/environment
+  echo "LANGUAGE=$LANG"                           >> /etc/environment
+  echo "LC_ALL=$LANG"                             >> /etc/environment
+  echo "LC_CTYPES=$LANG"                          >> /etc/environment
+  echo "LC_MESSAGES=$LANG"                        >> /etc/environment
+  echo "export LANGUAGE LANG LC_ALL LC_CTYPES LC_MESSAGES" >> /etc/environment
+  cat /etc/environment                            >> /etc/profile
+  
+  echo "$LANG UTF-8" 		> /etc/locale.gen
+  echo "$LANG ISO-8859-1" 	>> /etc/locale.gen
+  
+  set_var "SCREEN_FONT"     "$CONSOLEFONT" /etc/console-tools/config
+  set_var "APP_CHARSET_MAP" "$CHARSET_MAP" /etc/console-tools/config
+  set_var "CONSOLE_MAP"     "8859-15_to_uni" /etc/console-tools/config
+   
+# APP_CHARSET_MAP_vc1=iso15
+# APP_CHARSET_MAP_vc2=iso15
+# APP_CHARSET_MAP_vc3=iso15
+# APP_CHARSET_MAP_vc4=iso15
+# APP_CHARSET_MAP_vc5=iso15
+# APP_CHARSET_MAP_vc6=iso15
+
+  nice -n 12 locale-gen &>/dev/null &
+
+  # Add configuration file of keymap distribution for the after of the
+  # instalation, this is loaded in the boot of the system and set the
+  # keymap for the console, US users don't look any diference without
+  # this file
+
+  [ -n "$KEYTABLEFILE" ] && cp /usr/share/keymaps/$KEYTABLEFILE /etc/console/boottime.kmap.gz 
+  echo "locales2" >>$LOCALCONF
+fi
+

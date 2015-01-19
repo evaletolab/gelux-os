@@ -1,0 +1,12 @@
+/etc/qt3/qtrc
+/etc/qt3/kstylerc
+/etc/kde3/kdeglobals
+/etc/gelux.d/02passwd.default
+/etc/gelux.d/06javajni.default
+/etc/gelux.d/01shadow.default
+/etc/gelux.d/04gdm-key.default
+/etc/gelux.d/05pam_nullok.default
+/etc/gelux.d/07splashrc.default
+/etc/gelux.d/03gdm.default
+/etc/gelux.d/00locales.default
+/etc/gelux.d/05pam_nis.default

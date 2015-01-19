@@ -1,0 +1,12 @@
+Package: gelux-nis-init
+Version: 3.0-20
+Section: misc
+Priority: optional
+Architecture: all
+Depends: gelux-main-init
+Installed-Size: 8
+Maintainer: Olivier Evalet <evaleto@programmers.ch>
+Source: gelux-main-init
+Description: Gelux mainmod nis start scripts
+ This package contains the default boot scripts for a NIS Server
+ in mainmodule.

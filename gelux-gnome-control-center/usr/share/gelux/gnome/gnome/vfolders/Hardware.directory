@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Matériel
+Name[fr]=Matériel
+Comment=Preferences that affect the hardware
+Comment[fr]=Configuration du matériel
+Icon=gedit-plugin-manager.png
+Type=Directory

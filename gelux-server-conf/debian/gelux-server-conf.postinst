@@ -1,0 +1,59 @@
+#!/bin/sh
+
+# Moves the existing init structure out of the way, and sets up
+# the loading of morphix-conf for the base module
+
+# This probably violates every debian policy in existance, but we don't care right now...
+# No, you shouldn't run this on your existing machine...
+
+echo "Backing up rc?.d files to /etc/init.backup"
+
+mkdir /etc/init.backup
+mv /etc/rc?.d /etc/init.backup/
+
+echo "Creating morphixbase-specific init files"
+
+mkdir /etc/rcS.d
+ln -s /etc/init.d/knoppix-autoconfig /etc/rcS.d/S00knoppix-autoconfig
+ln -s knoppix-halt /etc/init.d/knoppix-reboot
+
+mkdir /etc/rc1.d
+
+mkdir /etc/rc2.d
+ln -s /etc/init.d/morphix-start /etc/rc2.d/S01morphix-start
+
+mkdir /etc/rc3.d
+mkdir /etc/rc4.d
+mkdir /etc/rc5.d
+
+mkdir /etc/rc6.d
+ln -s /etc/init.d/knoppix-reboot /etc/rc6.d/S90knoppix-reboot
+
+mkdir /etc/rc0.d
+ln -s /etc/init.d/knoppix-halt /etc/rc0.d/S90knoppix-halt
+
+echo "Backing up certain files in /etc/ to .backup"
+
+mv -f /etc/adjtime /etc/adjtime.backup
+mv -f /etc/adjtime.morphix /etc/adjtime
+
+mv -f /etc/hosts /etc/hosts.backup
+mv -f /etc/hosts.morphix /etc/hosts
+
+mv -f /etc/inittab /etc/inittab.backup
+mv -f /etc/inittab.morphix /etc/inittab
+
+mv -f /etc/locale.gen /etc/locale.gen.backup
+mv -f /etc/locale.gen.morphix /etc/locale.gen
+
+mv -f /etc/modules.conf /etc/modules.conf.backup
+mv -f /etc/modules.conf.morphix /etc/modules.conf
+
+mv -f /etc/modules /etc/modules.backup
+mv -f /etc/modules.morphix /etc/modules
+
+mv -f /etc/passwd /etc/passwd.backup
+mv -f /etc/passwd.morphix /etc/passwd
+
+mv -f /etc/profile /etc/profile.backup
+mv -f /etc/profile.morphix /etc/profile

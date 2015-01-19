@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE wallpapers SYSTEM "gnome-wp-list.dtd">
+<wallpapers>
+  <wallpaper>
+    <name>gelux</name>
+    <filename>/usr/share/backgrounds/gelux-gnome.jpg</filename>
+    <options>stretched</options>
+    <pcolor>#404760</pcolor>
+    <shade_type>solid</shade_type>
+  </wallpaper>
+
+</wallpapers>

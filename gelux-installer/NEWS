@@ -1,0 +1,945 @@
+2.5.4  (to be released 10 January 2005)
+- New Classes/Interfaces
+	org.gnu.glib.JGException
+	org.gnu.glib.ParmFlags
+	org.gnu.glib.PropertyNotificationListener
+	org.gnu.atk.Hyperlink
+	org.gnu.atk.ObjectFactory
+	org.gnu.atk.Registry
+	org.gnu.atk.StateSet
+	org.gnu.pango.EllipsizeMode
+	org.gnu.gtk.AboutDialogActivateLinkMethod
+	org.gnu.gtk.KeySnoopMethod
+	org.gnu.gtk.MenuToolButton
+	org.gnu.gdk.PixbufError
+	org.gnu.gdk.PixbufFormat
+	org.gnu.gdk.PixbufRotation
+	org.gnu.gtk.TreeViewRowSeparatorMethod
+- Updated Classes/Interfaces
+	org.gnu.glib.GObject - added the following methods
+		GObject( Type )
+		setProperty, 
+		set{Int,String,Boolean,Float,Long,Double,Pixbuf,JavaObject}Property
+		getProperty, 
+		get{Int,String,Boolean,Float,Long,Double,Pixbuf,JavaObject}Property
+		hasProperty
+		addListener, removeListener
+		freezeNotify, notify, thawNotify
+		getGObjectFromHandle
+		getNullHandle
+	org.gnu.atk.AtkObject - added the following methods
+		getLayer
+		getMDIZorder
+		getIndexInParent
+		getRoleName
+		getRoleForName
+		addRelationship
+		removeRelationship
+		getLocalizedRoleName
+	org.gnu.atk.Layer - added WINDOW members to enum
+	org.gnu.atk.Relation - added the following methods
+		Relation(AtkObject[], RelationType) constructor
+		static registerType
+		static getRelationType
+		static getRelationTypeForName
+		getRelationType
+		getTargets
+		addTarget
+	org.gnu.atk.RelationSet - added the following methods
+		add(RelationType, AtkObject)
+		getNumRelations
+		getRelation
+		getRelationByType
+	org.gnu.atk.RelationType - 	added the following members to the enum
+		FLOWS_TO, FLOWS_FROM, SUBWINDOW_OF, EMBEDS, EMBEDDED_BY,
+		POPUP_FOR, PARENT_WINDOW_OF
+	org.gnu.atk.Role - added the following members to the enum
+		HEADER, FOOTER, PARAGRAPH, RULER, APPLICATION, AUTOCOMPLETE,
+		EDITBAR, EMBEDDED
+	org.gnu.atk.State - added the following methods
+		static getTypeName
+		static getTypeForName
+	org.gnu.atk.StateType - added the following members to the enum
+		MANAGES_DESCENDANTS, INDETERMINATE, TRUNCATED
+	org.gnu.pango.AttrIterator - added the following methods
+		AttrIterator(AttrIterator)
+		getRangeStart
+		getRangeEnd
+		get
+	org.gnu.pango.AttrList - added new constructor AttrList(AttrList)
+	org.gnu.pango.AttrType - Added missing elements to enum
+	org.gnu.pango.Color - added new constructor Color(Color)
+	org.gnu.pango.Context - added listFamilies method
+	org.gnu.pango.Coverage - added new constructor Coverage(Coverage)
+	org.gnu.pango.FontDescription - added the following methods
+		FontDescription(FontDescription)
+		hash
+		equal
+		unsetFields
+		betterMatch
+		toFilename
+	org.gnu.pango.FontFamily - added the listFaces method
+	org.gnu.pango.FontMetrics - added the following methods
+		getAscent
+		getDescent
+		getApproximateCharWidth
+		getApproximateDigitWidth
+	org.gnu.pango.GlyphString - added setSize method and two new constuctors
+	org.gnu.pango.Layout - added the following methods
+		Layout(Layout)
+		getContext
+		contextChanged
+		getTabs
+		indexToPos
+		getStrongCursorPosition
+		getWeakCursorPosition
+		getHeight
+		getPixelWidth
+		getPixelHeight
+	org.gnu.pango.TabArray - added TabArray(TabArray) and positionInPixels methods
+	org.gnu.pango.Underline - added missing elements to enum
+	org.gnu.pango.WrapMode - added WORD_CHAR mode.
+	org.gnu.gdk.Color - added parse method
+	org.gnu.gdk.Colormap - added the following methods
+		getScreen
+		allocateColors
+		freeColors
+		queryColor
+	org.gnu.gdk.Display - added the following methods
+		getEvent
+		peekEvent
+		putEvent
+		getPointerLocation
+		getPointerScreen
+		getMaxCursorWidth
+		getMaxCursorHeight
+		getDefaultGroup
+	org.gnu.gdk.Drawable - added the following methods
+		getDisplay
+		getScreen
+		drawPoint
+		drawLine
+		drawPixbuf
+		drawRectangle
+		drawArc
+	org.gnu.gdk.Event - added the following methods
+		Event(EventType)
+		Event(Event)
+		eventsPending
+		peek
+		get
+		getGraphicsExpose
+		put
+		getTime
+	org.gnu.gdk.EventAny - added the getWindow method
+	org.gnu.gdk.EventButton - added the getWindow and getDevice methods
+	org.gnu.gdk.EventKey - added the following methods
+		getWindow
+		getModifierKey
+	org.gnu.gdk.EventMask - fixed value for ALL_EVENTS_MASK
+	org.gnu.gdk.GC - added getScreen method
+	org.gnu.gdk.Geometry - added the following methods
+		getMinHeight getMaxHeight
+		getMinWidth getMaxHeight
+		getBaseWidth getBaseHeight
+		getWidthIncrement getHeightIncrement
+		getMinAspect getMaxAspect
+		getWindowGravity
+	org.gnu.gdk.Pixbuf - added the following methods
+		Pixbuf(String, int, int)
+		Pixbuf(Colorspace, boolean, int, int, int)
+		Pixbuf(byte[)
+		Pixbuf(byte[, boolean)
+		Pixbuf(Pixbuf, int, int, int, int)
+		static checkFileExists
+		getFileInformation
+		getColorspace
+		getNumChannels
+		hasAlpha
+		getBitsPerSample
+		getPixels
+		getRowstride
+		getOption
+		copy
+		scale(Pixbuf, int, int, int, int, double, double, double, double, InterpType)
+		composite(int, int, InterpType, int, int, int, int)
+		composite(Pixbuf, int, int, int, int, double, double, double, double, InterpType, int)
+		composite(Pixbuf, int, int, int, int, double, double, double, double, InterpType, int, int, int, int, int, int)
+		rotate
+		flip
+		save
+		saveToBuffer
+		copyArea
+		addAlpha
+		fill
+		saturateAndPixelate
+	org.gnu.gdk.PixbufAnimation - added the following methods
+		getIter
+		isStaticImage
+		getStaticImage
+	org.gnu.gdk.PixbufAnimationIter - added the following methods
+		advance
+		getDelayTime
+		onCurrentlyLoadingFrame
+		getPixbuf
+	org.gnu.gdk.Pixmap - added three new constructors
+	org.gnu.gdk.Point - added missing javadocs
+	org.gnu.gdk.Rectangle - added implementations for the following methods
+		intersect
+		union
+	org.gnu.gdk.Region - added the following methods
+		Region()
+		Region(Point[], FillRule)
+		Region(Region)
+		Region(Rectangle)
+		getClipbox
+		getRectangles
+		isEmpty
+		isEqual
+		containsPoint
+		containsRectangle
+		offset
+		shrink
+		unionWithRect
+		intersect
+		union
+		subtract
+		xor
+	org.gnu.gdk.Segment - added the following methods
+		getX1, setX1,
+		getX2, setX2,
+		getY1, setY1,
+		getY2, setY2
+	org.gnu.gdk.Span - added the following methods
+		getX
+		setX
+		getY
+		setY
+		getWidth
+		setWidth
+	org.gnu.gdk.Visual - added the following methods
+		getDepth
+		getByteOrder
+		getColormapSize
+		getBitsPerRGB
+		getRedMask getRedShift getRedPrec
+		getGreenMask getGreenShift getGreenPrec
+		getBlueMask getBlueShift getBluePrec
+		getScreen
+	org.gnu.gdk.Window - added the following methods
+		mergeChildShapes
+		setStaticGravities
+		setModalHint
+		setGeometryHints
+		beginPaintRectangle
+		beginPaintRegion
+		endPaint
+		setTitle
+		setRole
+		setTransientOf
+		setBackground(Color)
+		setBackground(Pixmap, boolean)
+		setCursor
+		getPosition
+		getOrigin
+		getRootOrigin
+		getFrameExtents
+		getParent
+		getToplevel
+		getChildren
+		setIconList
+		setIcon
+		setIconName
+		iconify deiconify
+		stick unstick
+		maximize unmaximize
+	org.gnu.gtk.AboutDialog - added the following methods
+		setEmailHook
+		setURLHook
+	org.gnu.gtk.BindingSet - added the following methods
+		activateEvent
+		removeEvent
+	org.gnu.gtk.ComboBox - added the following methods
+		setRowSeparatorMethod
+		getRowSeparatorMethod
+        org.gnu.gtk.Entry - added the following methods
+                setAlignment, getAlignment,
+                layoutIndexToTextIndex,
+                TextIndexToLayoutIndex
+	org.gnu.gtk.FileChooser - added the following methods
+		setShowHidden, getShowHidden
+	org.gnu.gtk.FileChooserDialog - added the following methods
+		setShowHidden, getShowHidden
+	org.gnu.gtk.FileChooserWidget - added the following methods
+		setShowHidden, getShowHidden
+	org.gnu.gtk.FileSelection - added the following methods
+		getSelections,
+		setSelectMultiple,
+		getSelectMultiple
+	org.gnu.gtk.IconName - added the following methods
+		getIconName
+		setIconName
+	org.gnu.gtk.IconTheme - added the method getIconSizes
+	org.gnu.gtk.Gtk - added the following methods
+		getTrue, getFalse,
+		mainIterationDo
+		setKeySnoopMethod
+		removeKeySnoopMethod
+		propagateEvent
+	org.gnu.gtk.GtkObject - added the sink method.
+	org.gnu.gtk.Label - added the following methods
+		setEllipsize
+		getEllipsize
+	org.gnu.gtk.Menu - added the getAttachedMenus method
+	org.gnu.gtk.MenuShell - added the following method
+		selectFirst,
+		cancel
+	org.gnu.gtk.MessageDialog - added the followign methods
+		setSecondaryText
+		setSecondaryMarkup
+	org.gnu.gtk.ProgressBar - added the following methods
+		setEllipsize
+		getEllipsize
+	org.gnu.gtk.Scale - added the following methods
+		getLayout
+		getLayoutOffsetX, getLayoutOffsetY,
+		getDrawValue
+	org.gnu.gtk.SelectionData - added the targetsIncludeImage method
+	org.gnu.gtk.TextBuffer - added the backspace method
+	org.gnu.gtk.ToolItem - added the rebuildMenu method
+	org.gnu.gtk.TreeView - added the following methods
+		setRowSeparatorMethod
+		getRowSeparatorMethod
+		getHAdjustment
+		getVAdjustment
+- Other
+        Some JavaDoc generation cleanups.
+
+2.5.3
+- New Classes/Interfaces
+	org.gnu.gdk.EventOwnerChange
+	org.gnu.gtk.AboutDialog
+	org.gnu.gtk.CellRendererCombo
+	org.gnu.gtk.CellRendererProgress
+	org.gnu.gtk.CellView
+	org.gnu.gtk.FileChooserButton
+	org.gnu.gtk.IconView
+	org.gnu.gtk.event.IconViewEvent;
+	org.gnu.gtk.event.IconViewListener;
+- Updated Classes/Interfaces
+	org.gnu.gdk.Display - added the following methods
+		supportsSelectionNotification
+		requestSelectionNotification
+		supportsClipboardPersistence
+		storeClipboard
+	org.gnu.gdk.EventType - added OWNER_CHANGE member
+	org.gnu.gdk.KeySymbol - added two new symbols
+	org.gnu.gtk.Action - added the following methods
+		getAcceleratorPath
+		setSensitive
+		setVisible
+	org.gnu.gtk.ActionGroup - added translateString method
+	org.gnu.gtk.Button - added the following methods
+		setAlignment
+		getXAlignment
+		getYAlignment
+		setImage
+		getImage
+	org.gnu.gtk.Clipboard - added the following methods
+		setImage
+		getImage
+		setCanStore
+		store
+		isImageAvailable
+	org.gnu.gtk.ComboBox - added the following methods
+		getWrapWidth
+		getRowSpanColumn
+		getColumnSpanColumn
+		getAddTearoffs
+		setAddTearoffs
+		getFocusOnClick
+		setFocusOnClick
+		getActiveText
+		getPopupAccessible
+	org.gnu.gtk.GtkStockItems - added new items
+		GTK_STOCK_ABOUT
+		GTK_STOCK_CONNECT
+		GTK_STOCK_DIRECTORY
+		GTK_STOCK_DISCONNECT
+		GTK_STOCK_EDIT
+		GTK_STOCK_FILE
+		GTK_STOCK_MEDIA_FORWARD
+		GTK_STOCK_MEDIA_NEXT
+		GTK_STOCK_MEDIA_PAUSE
+		GTK_STOCK_MEDIA_PLAY
+		GTK_STOCK_MEDIA_PREVIOUS
+		GTK_STOCK_MEDIA_RECORD
+		GTK_STOCK_MEDIA_REWIND
+		GTK_STOCK_MEDIA_STOP
+	org.gnu.gtk.Image - added the following methods
+		Image(String iconName, IconSize size)
+		set(String iconName, IconSize size)
+		setPixelSize
+		getPixelSize
+		getIconName
+	org.gnu.gtk.ImageType - added ICON_NAME to enum
+	org.gnu.gtk.Label - added the following methods
+		setWidthChars,
+		getWidthChars, 
+		setMaxWidthChars,
+		getMaxWidthChars, 
+		setAngle, 
+		getAngle,
+		setSingleLineMode, 
+		getSingleLineMode:
+	org.gnu.gtk.Requisition - added the following methods
+		getHeight, setHeight
+		getWidth, setWidth
+	org.gnu.gtk.SelectionData - added the following methods
+		setPixbuf
+		getPixbuf
+		setUris
+		getUris
+	org.gnu.gtk.TreeView - added the following methods
+		setFixedHeightMode
+		getFixedHeightMode
+		setHoverSelection
+		getHoverSelection
+		setHoverExpand
+		getHoverExpand	
+	org.gnu.gtk.Window - added the following methods
+		setFocusOnMap
+		getFocusOnMap
+		setIconName
+		getIconName
+		setDefaultIconName
+- Deprecated Classes/Interfaces
+	None
+- Other
+	Support for 64-bit platforms
+
+	
+
+2.5.2
+- Added setImage and getImage methods to ImageMenuItem [Jeffrey Morgan]
+- Added getHeight and getWidth methods to Requisition  [Jeffrey Morgan]
+- Added remove(String) method to SimpleList - Nicholas Rahn's patch
+- Changed gdk.Pixbuf to throw FileNotFoundException if file not found  [Jeffrey Morgan]
+- Many bug fixes ported from 2.8 branch (see ChangeLog for full details)
+
+2.5.1
+- Increased gtk dependency from 2.4 to 2.5
+
+2.4.6
+- Fixed actiongroup patch error
+- Fixed #! lines
+- Bug 156712: Tree expand events is never sent
+  Fixed. Thanks to Laurent Martelli
+- Bug 156807: Bad doc for CheckMenuItem.addListener
+  Fixed.  [Jeffrey Morgan]
+- Bug 156752: TextBuffer.setText(null) crashes JVM
+  Fixed. Replacing null with empty string in TextBuffer and Label. [Jeffrey Morgan]
+- Bug 156897: RadioMenuItem crash [Laurent Martelli]
+- Bug 156923: Container.getChildren broken
+  Fixed.  Thanks to Laurent Martelli
+- Fixed TreeView.getPathAtPos method.
+
+
+2.4.5 (24 October 2004)
+- Improved runExample.sh script [Luca De Rugeriis]
+- Applied patch to correct JNI mapping errors, preventing Windows builds. Thanks
+  to Jerry Haltom, Bug 155422
+- Generate gtk2-java.pc.buildplace to aid all-in-one java-gnome compiles [Mark
+  Howard]
+- Applied patch to fix crash using instances of ActionEntry [bug #155083]
+- Fixed ListStore.setSortColumn [Mark Howard]
+- Bug 156079: TreePath.getIndices gives NullPointerException
+  Thanks to Laurent Martelli for the patch
+- Bug 155124: Message Logging - Replaced printf statements with the
+  appropriate calls to g_warning and g_critical for GObject and 
+  ActionGroup  [Jeffrey Morgan]
+- Bug 155014: Entry.setText segv on null - Checking for null and setting
+  Entry widget text to blank on null.  [Jeffrey Morgan]
+- Bug 156115: Should print stack trace if exception is caught in event handler
+  Now prints stack trace [Mark Howard]
+- Bug 156222: UnsatisfiedLinkError: org.gnu.glib.GObject.removeEventHandler
+  Fixed name typo [Mark Howard]
+- Bug 156233: GObject contructor should use setHandle
+  Fixed [Mark Howard] Thanks to Laurent Martelli for many recent reports
+
+2.4.4 (16 September 2004)
+Updated Classes:
+	Expander - added constructor so it would work with glade [Jeffrey Morgan]
+	Range - standardized method to add event handling  [Jeffrey Morgan]
+
+2.4.3 (19 July 2004)
+Updated Classes:
+	gdk.Color - fixed WHITE constant  [Jeffrey Morgan]
+
+2.7.2 (07 June 2004)
+New Classes:
+	gtkhtml.DomDocumentType  [Mark Davidson]
+	gnomevfs.GnomeVfs - GnomeVfs initialization stuff [Luca De Rugeriis] 
+Updated Classes:
+	gtkhtml.DomNode - Added dom_Node_get_doctype() [Mark Davidson]
+	gtkhtml.DomNodeList - Added public API and C-side bindings [Mark Davidson]
+	gtkhtml.DomNamedNodeMap - Added wrapper classes [Mark Davidson]
+	gtkhtml.DomDocumentType - Added public API [Mark Davidson]
+	gtkthml.* - Fixed bad package name that prevented library from loading [Mark Davidson]
+	gnome.Canvas - added the following methods:  [Jeffrey Morgan]
+		new constructor
+		getCenterScrollRegion
+		setCenterScrollRegion
+		requestRedraw
+		windowToWorldX
+		windowToWorldY
+		worldToWindowX
+		worldToWindowY
+	gnome.CanvasBpath - added new constructor  [Jeffrey Morgan]
+	gnome.CanvasEllipse - added new constructor  [Jeffrey Morgan]
+	gnome.CanvasGroup - added getItems method  [Jeffrey Morgan]
+	gnome.CanvasLine - added new constructor  [Jeffrey Morgan]
+	gnome.CanvasPixbuf - added new constructor  [Jeffrey Morgan]
+	gnome.CanvasPolygon - added new constructor  [Jeffrey Morgan]
+	gnome.CanvasRect - added new constructor  [Jeffrey Morgan]
+	gnome.CanvasRichText - added new constructor  [Jeffrey Morgan]
+	gnome.CanvasText - added new constructor  [Jeffrey Morgan]
+	gnome.CanvasWidget - added the following methods:  [Jeffrey Morgan]
+		new constructor
+		getWidget
+		setWidget
+		getHeight
+		setHeight
+		getWidth
+		setWidth
+		getAnchorType
+		setAnchorType
+Other:
+	added code generated from idl for bonobo.  [Jeffrey Morgan]
+	added ability to dynamically insert proper native library version in vte  [Michael Stepanov]
+
+2.7.1 (10 May 2004)
+Updated Classes:
+	gconf.ConfEntry added the following methods:  [Jeffrey Morgan]
+		setValue
+		stealValue
+		setSchemaName
+		isDefault
+		setIsDefault
+	gnome.IconList - added selectAll method  [Jeffrey Morgan]
+	gdk.EventExpose, gdk.EventMotion, gdk.EventNoExpose, gdk.Window, 
+		and	gtk.Widget - Fixed Expose, NoExpose and Motion events  [Jonas Berlin]
+Other:
+	implemented lazy event registration [Jeffrey Morgan]
+	build improvements to allow gconf and gtkhtml to have
+		independent versions [Jeffrey Morgan]	
+
+2.6.0 (13 April 2004)
+- Continued fix for proper object creation and event registration [Jeffrey Morgan]
+- Fixed glade event calling for superclasses [Mark Howard]
+- Updated documentation
+
+2.5.7 (2.6 Beta2) (29 March 2004)
+Updated Classes:
+	glib.CustomEvents - Reverted implementation to original implementation plus a
+		fix for the update bug. (far better performance when adding events) [Mark Howard]
+	glib.Boxed & glib.GObject - implemented hashCode & equals methods  [Jonas Berlin]
+	glib.Enum & glib.Flags - Fixed memory leak in equals method  [Jonas Berlin]
+	gdk.Color - Fixed handle allocation bug  [Jonas Berlin]
+	gdk.Drawable - added the following methods:  [Jeffrey Morgan]
+		drawRGBImage
+		drawRGBImageDitherAlign
+		drawRGB32Image
+		drawRGB32ImageDitherAlign
+		drawGrayImage
+		drawIndexedImage
+		drawPolygon
+		drawDrawable
+		drawImage
+		drawPoints
+		drawSegments
+		drawLines
+		drawGlyphs
+		drawLayoutLine
+		drawLayout
+		drawLayoutLineWithColors
+		drawLayoutWithColors
+	gtk.ComboBox - fixed problem with no-op constructor so it now uses
+		simpler API when not supplying model  [Jeffrey Morgan]
+	gtk.ComboBoxEntry - fixed problem with no-op constructor so it now uses
+		simpler API when not supplying model  [Jeffrey Morgan]
+	gtk.Expander - fixed signature of native set_expanded method  [Jeffrey Morgan]
+	gtk.FileChooserDialog - updated API due to gtk change  [Jeffrey Morgan]
+	gtk.FileChooserWidget - updated API due to gtk change  [Jeffrey Morgan]
+	gtk.Item - fixed bug with no-op constructor setting up events prior
+		object creation  [Jeffrey Morgan]
+	gtk.TextBuffer - fixed selectRange method [Mark Howard]
+	gtk.TextView 
+		- fixed set/get acceptsTab/overwrite [Mark Howard]
+		- Fixed problem when creating TreeView via glade  [Jeffrey Morgan]
+	gtk.ToolButton - fixed bug when handling null Icons in object creation.  [Jeffrey Morgan]
+	gtk.ToolItem - fixed bug that caused failure in creating subclasses Fixes #917565 [Jeffrey Morgan]
+	gtk.TreeIter - Fixed bug in TreeIter object construction. Fixes: #914500 [Mark Howard]
+	gtk.UIManager 
+		- fixed object creation bug  [Jeffrey Morgan]
+		- enabled event handling  [Jeffrey Morgan] 
+	glib.Value - Fixed Pixbuf handling [Mark Howard]
+Updated Interfaces:
+	gtk.FileChooser - updated API due to gtk change  [Jeffrey Morgan]
+Other:
+	- Added dynamic loading of gconf and gtkhtml libraries.  [Jeffrey Morgan]
+	- fixed gnome api doc linkoffline setting		
+	- Updated example applications to use new widgets.
+	- Removed all empty generated JNI/C files.  [Jeffrey Morgan]
+	- Added tutorial examples to eclipse classpath  [Jeffrey Morgan]
+	- Updated the tutorial to reflect new API  [Jeffrey Morgan]
+	- Fixed native widget to multiple java object mapping problems (and hence
+	  memory leak)
+	- Fixed memory leak with Strings in signals [Mark Howard]
+	- Fixed event intialisation [Mark Howard]
+	- Added shell script to help run example apps [Mark Howard]
+  
+   
+2.5.6 (aka 2.6 Beta1)  (3 March 2004)
+- New Classes:
+	gtk.event.CellEditableEvent  [Jeffrey Morgan]
+	gtk.event.ColorSelectionEvent  [Jeffrey Morgan]
+	gtk.event.ExpanderEvent  [Jeffrey Morgan]
+	gtk.event.TreeModelEvent  [Jeffrey Morgan]
+	gtk.event.UIManagerEvent  [Jeffrey Morgan]
+-New Interfaces:
+	gtk.event.CellEditableListener  [Jeffrey Morgan]
+	gtk.event.ColorSelectionListener  [Jeffrey Morgan]
+	gtk.event.ExpanderListener  [Jeffrey Morgan]
+	gtk.event.TreeModelListener  [Jeffrey Morgan]
+	gtk.event.TreeViewListener  [Jeffrey Morgan]
+	gtk.event.UIManagerListener  [Jeffrey Morgan]
+- Updated Classes:
+	gdk.Pixmap - Changed constructor to take a Drawable instead of a Window  [Jeffrey Morgan]
+	gtk.AccelMap - added API:  [Jeffrey Morgan]
+		added lockPath and unlockPath methods
+  		added getAccelMap method
+  	gtk.ActionGroup - fixed bug when adding RadioActionEntrys to ActionGroup  [Jeffrey Morgan=
+  	gtk.Adjustment - added changed event  [Jeffrey Morgan]
+   	gtk.CellEditable - added missing methods and events  [Jeffrey Morgan]
+  	gtk.CellRenderer - changed from abstract to concrete class  [Jeffrey Morgan]
+  	gtk.Clipboard - added API: [Luca De Rugeriis]
+  		added get method
+  		added getForDisplay method
+  		added getDisplay method
+  		added getContents method
+  		added isTextAvailable method
+  	gtk.ColorSelection - added color_changed event  [Jeffrey Morgan]
+	gtk.ComboBox - added popup and popdown methods  [Jeffrey Morgan]
+	gtk.Expander - added activate event  [Jeffrey Morgan]
+	gtk.ListStore - updated native layer and added missing methods  [Jeffrey Morgan]
+	gtk.RadioButton - fixed problems with constructors  [Jeffrey Morgan]
+	gtk.RadioMenuItem - added two new constructors to create from existing widgets.  [Jeffrey Morgan]
+	gtk.SelectionData - added missing methods and access to properties  [Jeffrey Morgan]
+	gtk.TreeModel - updated native layer and added events.  [Jeffrey Morgan]
+	gtk.TreePath - added appendIndex, prependIndex, and getIndices methods  [Jeffrey Morgan]
+	gtk.TreeSelection - added missing methods  [Jeffrey Morgan]
+	gtk.TreeStore - updated native layer and added several missing methods  [Jeffrey Morgan]
+	gtk.TreeView - updated native layer, added many method, added events  [Jeffrey Morgan]
+  	gtk.TreeViewColumn - added missing methods  [Jeffrey Morgan]
+	gtk.TreeViewEvent - added support for TreeView events.
+	gtk.UIManager - added API:  [Jefffrey Morgan]
+		added getToplevels method
+		added all event handling
+	gtk.Window - added API:  [Jeffrey Morgan]
+		added get/setDefaultIconList methods
+		added listToplevelWindows method
+		added setDefaultIcon method
+		added get/setAcceptFocus methods
+	gtk.event.Adjustment = added CHANGED event Type  [Jeffrey Morgan]
+	gtk.TreeIter - Added reference to treeModel; moved some methods from
+    	TreeModel to TreeIter [Mark Howard]
+	gtk.TreeViewColumn:  [Mark Howard]  
+		changed setSortColumnID(int) to setSortColumn(DataColumn)
+		removed int getSortColumnID()
+		added API for focusCell(CellRenderer)
+	gtk.SimpleList:  [Mark Howard]
+		added String[] getSelected()
+		added String[] getEntries()
+	gtk.event.LifeCycleListener  [Mark Howard]
+		added boolean lifeCycleQuery(LifeCycleEvent) to handle delete and
+		destroy events. Modified gtk.Widget to use this.
+- Renamed DataBlock* classes to DataColumn*  [Jeffrey Morgan]
+- Other
+	Added fallback brute force locate for gcj.jar if usual locations fail [Mark Howard]
+
+
+2.5.5  (16 February 2004)
+- New Classes:
+	gnome.IconEntryEvent  [Jeffrey Morgan]
+	gtk.IconInfo  [Jeffrey Morgan]
+	gtk.IconLookupFlags  [Jeffrey Morgan]
+	gtk.IconTheme [Jeffrey Morgan]
+	gtk.event.ItemEvent  [Jeffrey Morgan]
+- New Interfaces;
+	gnome.IconEntryListener  [Jeffrey Morgan]
+	gtk.TreeViewColumnDrop [Mark Howard]
+	gtk.event.ItemListener  [Jeffrey Morgan]
+- Updated Classes:
+	gconf.ConfClient - fixed problem setting lists  [Jeffrey Morgan]
+	gconf.ConfValue - fixed problem setting and getting lists [Jeffrey Morgan]
+	gnome.IconEntry - added changed and browse events and setMaxSaved method [Jeffrey Morgan]
+	gnome.IconTextItem - added getEditable method  [Jeffrey Morgan]
+	gtk.Action - updated API to match latest GTK  [Jeffrey Morgan]
+	gtk.ActionGroup - updated API to match latest GTK  [Jeffrey Morgan]
+	gtk.Editable - reimplemented Editable as an Interface with helper delegate  [Jeffrey Morgan]
+	gtk.Entry - change to extend Widget and implement Editable and added toggle_overwrite event [Jeffrey Morgan]
+	gtk.EventBox - added set/getWindowVisible and set/getAboveChild methods  [Jeffrey Morgan]
+	gtk.IMContext - completed public interface  [Jeffrey Morgan]
+	gtk.Invisible - add constructor that takes Screen and get/setScreen methods  [Jeffrey Morgan]
+	gtk.Item - added event handling  [Jeffrey Morgan]
+	gtk.Paned - added geChild1/2 methods  [Jeffrey Morgan]
+	gtk.RadioAction - updated API to match latest GTK  [Jeffrey Morgan]
+	gtk.RadioMenuItem - fixed constructors and added additional methods  [Jeffrey Morgan]
+	gtk.Rc - added public interface  [Jeffrey Morgan]
+	gtk.RcStyle - added getFontDescription and getName methods  [Jeffrey Morgan]
+	gtk.Style - added API:  [Jeffrey Morgan]
+		attach
+		detach
+		setBackground
+		applyDefaultBackground
+		lookupIconSet
+	gtk.TearoffMenuItem - add getTornOff method  [Jeffrey Morgan]
+	gtk.ToggleAction - updated API to match latest GTK  [Jeffrey Morgan]
+	gtk.ToolTips - added getData method  [Jeffrey Morgan]
+	gtk.ToolTipsData - added numerous methods [Jeffrey Morgan]
+	gtk.TreeView: Added API: [Mark Howard]
+		autoSizeColumns
+		getColumns
+		setCursor
+		expandToPath
+		setColumnDragChecker
+	gtk.ListStore and gtk.TreeStore Added API [Mark Howard]
+		swapRows
+		moveRowToEnd
+		moveRowAfter
+		moveRowToStart
+		moveRowBefore
+	gtk.TreeViewColumn Added API: [Mark Howard]
+		get/set Expand
+- Other:
+	Build script now finds db2html or docbook2html in the users path  [Jeffrey Morgan]
+	Build script not finds the libgcj jar file correctly  [Jeffrey Morgan]
+	Stripping installed shared objects  [Jeffrey Morgan]
+	Install targets work for docs  [Jeffrey Morgan]
+			
+
+2.5.4 (3 February 2004)
+- New Classes:
+	gdk.Display  [Jeffrey Morgan]
+	gdk.Screen  [Jeffrey Morgan]
+	gtk.FileChooserDialog  [Jeffrey Morgan]
+	gtk.FileChooserWidget  [Jeffrey Morgan]
+	gtk.FileChooserException  [Jeffrey Morgan]
+	gtk.FileChooserHelper  [Jeffrey Morgan]
+	gtk.FileFilter  [Jeffrey Morgan]
+	gtk.FileFilterFlags  [Jeffrey Morgan]
+	gtk.OptionMenuDelegate  [Jeff Long]
+	gtk.RadioToolButton  [Jeffrey Morgan]
+	gtk.SeparatorToolItem  [Jeffrey Morgan]
+	gtk.ToolButton  [Jeffrey Morgan]
+	gtk.ToggleToolButton  [Jeffrey Morgan]
+	gtk.event.HandleBoxEvent  [Jeffrey Morgan]
+	gtk.event.StatusBarEvent  [Jeffrey Morgan]
+	gtk.event.ToolButtonEvent  [Jeffrey Morgan]
+	gtk.event.ToggleToolButtonEvent  [Jeffrey Morgan]
+- New Interfaces:
+	gtk.FileChooser  [Jeffrey Morgan]
+	gtk.TreeSortable [Mark Howard]
+	gtk.TreeIterComparison [Mark Howard]
+	gtk.TreeDragSource [Mark Howard]
+	gtk.TreeDragSourceListener [Mark Howard]
+	gtk.TreeDragDest [Mark Howard]
+	gtk.TreeDragDestListener [Mark Howard]
+	gtk.event.HandleBoxListener  [Jeffrey Morgan]
+	gtk.event.StatusBarListener  [Jeffrey Morgan]
+	gtk.event.ToolButtonListener  [Jeffrey Morgan]
+	gtk.event.ToggleToolButtonListener  [Jeffrey Morgan]
+- Updated Classes:
+	gnome.App - deprecated message, flash, error and warning methods  [Jeffrey Morgan]
+	gtk.Alignment - added getTop/Bottom/Left/RightPadding methods  [Jeffrey Morgan]
+	gtk.ButtonBox - added getChildSecondary method  [Jeffrey Morgan]
+	gtk.Button - added setFocusOnClick and getFocusOnClick methods  [Jeffrey Morgan]
+	gtk.Calendar - added next_month and prev_month events.  [Jeffrey Morgan]
+	gtk.Calendar - added getDisplayOptions method  [Jeffrey Morgan]
+	gtk.CheckMenuItem - added toggled event  [Jeffrey Morgan]
+	gtk.CheckMenuItem - added set/getDrawAsRadio methods  [Jeffrey Morgan]
+	gtk.Container - added getChildren method.  [Jeffrey Morgan]
+	gtk.HandleBox - added child_attached and child_detached events [Jeffrey Morgan]
+	gtk.ListenerDelegate - added support for OptionMenu [Jeff Long]
+	gtk.Menu - added set_screen, menu_attach, and set_monitor native methods  [Jeffrey Morgan]
+	gtk.MessageDialog - add markup option for constructor and setMarkup methods  [Jeffrey Morgan]
+	gtk.Notebook - added getNumPages method.  [Jeffrey Morgan]
+	gtk.RadioButton - added get/setGroup methods  [Jeffrey Morgan]
+	gtk.StatusBar - added text_pushed and text_popped events  [Jeffrey Morgan]
+	gtk.TreeStore, gtk.ListStore - Implement TreeSortable and TreeDrag* [Mark Howard]
+	gtk.Widget - added canActivateAccel, getScreen, hasScreen, getDisplay and 
+			getRootWindow methods [Jeffrey Morgan]
+	gtk.Window - added set/getSkipTaskbarHint methods  [Jeffrey Morgan]
+	gtk.Window - added set/getPagerHint methods  [Jeffrey Morgan]
+	gtk.Window - added set/getScreen methods  [Jeffrey Morgan]
+	gtk.Window - added isActive and hasToplevelFocus methods  [Jeffrey Morgan]
+	gtk.Window  - added setIconFromFile and setDefaultIconFromFile methods  [Jeffrey Morgan]
+	gtk.Window - added setAutoStartupNotification, fullscreen, unfullscreen setKeepAbove 
+				and setKeepBelow methods  [Jeffrey Morgan]
+- Deprecated Classes:
+	gnome.PopupMenu  [Jeffrey Morgan]
+- New Examples:
+	EntryCompletionExample  [Jeffrey Morgan]
+	FileChooserExample  [Jeffrey Morgan]
+
+
+2.5.3 (19 January 2004)
+- Known Issues
+	ActionGroup.addRadioActions causes application to crash.
+- New Classes:	
+	FontButton  [Jeffrey Morgan]
+	FontButtonEvent  [Jeffrey Morgan]
+	ToolItem [Jeffrey Morgan, Luca De Rugeriis]
+	ToolBarEvent  [Jeffrey Morgan]
+	ActionEntry  [Jeffrey Morgan]
+	ToggleAction  [Jeffrey Morgan]
+	ToggleActionEntry  [Jeffrey Morgan]
+	RadioAction [Jeffrey Morgan]
+	RadioActionEntry [Jeffrey Morgan]
+	DataBlockStockItem [Mark Howard]
+	DataBlockIconSize [Mark Howard]
+- New Interfaces:
+	FontButtonListener  [Jeffrey Morgan]
+	ToolBarListener  [Jeffrey Morgan]
+	ActionEntryListener  [Jeffrey Morgan]
+	ToggleActionEntryListener  [Jeffrey Morgan]
+	RadioActionEntryListener  [Jeffrey Morgan]
+- Updated Classes
+	Action - Added public interface & docs [Luca De Rugeriis]
+	ActionGroup - Added public interface   [Jeffrey Morgan]
+	Alignment - Added setPadding method. [Mark Howard]
+	BindingSet - Amended activateBinding methods to use gdk KeySymbol [Luca De Rugeriis] 
+	Expander - Added public interface & docs [Luca De Rugeriis]
+	GtkTextView get/set acceptsTab/overwrite (public API & docs) [Mark Howard]
+	TextBuffer selectRange (public API & docs) [Mark Howard]
+	ToolBar - Deprecated 8 methods and added 9 new methods and proper event handling.  [Jeffrey Morgan]
+	ConfClient - Cleaned up JNI code [Joe Marcus Clarke]
+	UIManager - Added public interface  [Jeffrey Morgan]
+	ListStore, TreeStore - Added setValue methods for new DataBlock types
+- Deprecated Classes/Interfaces:
+	FontPicker  [Jeffrey Morgan]
+	FontPickerEvent  [Jeffrey Morgan]
+	FontPickerListener  [Jeffrey Morgan]
+	ToolBarChildType  [Jeffrey Morgan]
+	ToolBarSpaceStyle  [Jeffrey Morgan]
+	OptionMenu  [Mark Howard]
+	ItemFactory  [Mark Howard]
+	ItemFactoryEntry  [Mark Howard]
+- Fixed creation of symlinks in build scripts [Mark Howard]
+- Fixed gconf tarball configure script [Mark Howard]
+- Only include class files in Jar archive. [Mark Howard]
+
+2.5.2 (5 January 2004)
+- New Classes:
+	Action (glue code and JNI)  [Jeffrey Morgan]
+	ActionGroup (glue code and JNI)  [Jeffrey Morgan]
+	Expander (glue code and JNI)  [Jeffrey Morgan]
+	UIManager(glue code and JNI)  [Jeffrey Morgan]
+	ComboBoxEvent  [Jeffrey Morgan]
+	ColorButtonEvent  [Jeffrey Morgan]
+	EntryCompletionEvent  [Jeffrey Morgan]
+	UIManagerItemType  [Jeffrey Morgan]
+- New Interfaces:
+	ComboBoxListener  [Jeffrey Morgan]
+	ColorButtonListener  [Jeffrey Morgan]
+	EntryCompletionListener  [Jeffrey Morgan]
+- Updated Classes
+	BindingSet - Added public interface [Luca De Rugeriis]		
+- Deprecated the following Classes/Interfaces:
+	ColorPickerEvent  [Jeffrey Morgan]
+	ColorPickerListener  [Jeffrey Morgan]
+- Added Event Handling for the following Classes:
+	ComboBox  [Jeffrey Morgan]
+	ColorButton  [Jeffrey Morgan]
+	EntryCompletion  [Jeffrey Morgan]
+- Tree and Text Widgets updated 
+- Fixed problem with wrong version of gtkjava library being loaded.
+- Various build system improvements and fixes
+
+
+2.5.1 (22 December 2003)
+- Initial GTK 2.3 / GNOME 2.5 support
+- Joined the GNOME Bindings release
+- Added New classes from GTK 2.3:
+	ColorButton  [Jeffrey Morgan]
+	ComboBox  [Jeffrey Morgan]
+	ComboBoxEntry  [Jeffrey Morgan]
+	EntryCompletion  [Jeffrey Morgan]
+	FileChooserAction (needed for FileChooser)  [Jeffrey Morgan]
+	FileChooserError (needed for FileChooser)  [Jeffrey Morgan]
+	BindingSet  [Jeffrey Morgan]
+- Added two new methods to Entry to utilize the EntryCompletion class.  [Jeffrey Morgan]
+- Deprecated classes:
+	gtk.Combo (replaced by ComboBox)  [Jeffrey Morgan]
+	gnome.Entry  [Jeffrey Morgan]
+	gnome.ColorPicker (replaced by ColorButton)  [Jeffrey Morgan]
+
+0.8.2 (18 December 2003)
+ - Initial support for gconf and libgtkhtml added  [Jeffrey Morgan]
+ - Event handling for gtk Entry widget added  [Jeffrey Morgan]
+ - Event handling of many gtk Widgets fixed  [Jeffrey Morgan]
+ - Various other big fixes
+ - Restructured source tree, separation of libraries into separate
+   tarballs (one for each major gnome library, where possible; plus an
+   all-in-one tarball containing everything)
+
+0.8.1 (6 November 2003)
+- Bug Fix release
+
+0.8.0 (6 July 2003)
+- First release supporting gtk/gnome 2
+- New development technique - we modify the output of the code generator, fixing
+  errors and adding a good public API, rather than trying to make the code
+  generator perfect.
+
+
+0.7.1
+- stability greatly enhanced
+- better support for low-level GDK drawing
+- several new widgets/classes
+
+0.7
+- support for gcj native compilation
+- limited support for ZvtTerm widget
+
+0.5
+With release 0.5 the Java-GNOME is proud to announce the revival of the 
+project.  This release contains many enhancement, among them are:
+- numerous fixes and enhancements to the generator
+- support for many new GTK and GNOME widgets
+- the ability to make a GTK only binding
+- a FAQ
+- a Tutorial
+- a document describing the parser
+- hosting on sourceforge which gives you the ability to report bugs,
+  submit patches, and subscribe to the Java-GNOME mailing lists
+
+0.4.1 snapshot
+- many fixes to the generator (esp. default args)
+- fix in the parser code to better handle pre/post code
+- autoconf !
+- some doc for the generator
+
+This one really is the "Jean Van Wyk" release who contributed many
+improvements, including the doc and all the autoconf code !
+
+Second development snapshot
+- Preliminary Gnome support
+- In the current version, you can add a (java-code "pre" "call" post) description. "pre" "call" and "post" are C code that will be directly included in the .c file
+
+First public development snapshot
+- Gnome/GTK functions returning an object won't work (except for constructors)
+- Gnome APIs are not supported yet
+- GDK APIs are not supported yet
+- ...

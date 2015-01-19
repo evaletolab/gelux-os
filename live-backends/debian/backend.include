@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# Set up default environment for debian
+
+PKG_EXT="deb"
+PKG_CMD="dpkg -i --force-all"
+
+G_BACKEND_FIRMWARE="/usr/lib/hotplug/firmware/"
+G_BACKEND_MODUTILS="/etc/modutils"
+
+export G_BACKEND_FIRMWARE G_BACKEND_MODUTILS

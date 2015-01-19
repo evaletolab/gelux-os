@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# Set up default config
+
+LOCALCONF=/usr/share/gelux/geluxmainconf
+
+if ! grep -q -e "^gdm$" $LOCALCONF ;then
+  echo "config main module : gdm"
+  sed -i -e "s|^#Greeter=.*|Greeter=/usr/bin/gdmgreeter|g" 		/etc/gdm/gdm.conf
+  sed -i -e "s|^#RemoteGreeter=.*|RemoteGreeter=/usr/bin/gdmgreeter|g" 	/etc/gdm/gdm.conf
+  sed -i -e "s|^AllowRoot=.*|AllowRoot=true|g" 				/etc/gdm/gdm.conf
+  sed -i -e "s|^AllowRemoteRoot=.*|AllowRemoteRoot=true|g" 		/etc/gdm/gdm.conf
+  sed -i -e "s|^DisallowTCP=.*|DisallowTCP=false|g" 			/etc/gdm/gdm.conf
+  sed -i -e "s|^Enable=.*|Enable=true|g" 					/etc/gdm/gdm.conf
+  sed -i -e "s|^#GtkTheme=Default|GtkTheme=sakura|g" 			/etc/gdm/gdm.conf
+  sed -i -e "s|^SecureSystemMenu=.*|SecureSystemMenu=false|g" 		/etc/gdm/gdm.conf
+  sed -i -e "s|^#Use24Clock=false|Use24Clock=true|g" 			/etc/gdm/gdm.conf
+  sed -i -e "s|^.*GraphicalTheme=.*$|GraphicalTheme=gelux|g" 		/etc/gdm/gdm.conf
+  sed -i -e "s|^#Welcome=Welcome|Welcome=Bienvenue sur geLux|g" 		/etc/gdm/gdm.conf
+  sed -i -e "s|^#RemoteWelcome=Welcome to %n|RemoteWelcome=Bienvenue sur geLux|g" 	/etc/gdm/gdm.conf
+  echo "gdm" >>$LOCALCONF
+fi
+

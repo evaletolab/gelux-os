@@ -1,0 +1,9 @@
+# ifplugd
+
+if [ -e /etc/init.d/ifplugd ]; then
+	/etc/init.d/ifplugd start &>/dev/null &
+	exit $?
+fi
+
+
+

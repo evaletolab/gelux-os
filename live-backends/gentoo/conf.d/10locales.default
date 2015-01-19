@@ -1,0 +1,51 @@
+#!/bin/sh
+
+# Set up default config
+
+. /etc/gelux.d/functions.sh
+import_env /etc/sysconfig/i18n
+import_env /etc/sysconfig/gelux
+
+LOCALCONF=/usr/share/gelux/geluxmainconf
+
+set_var(){
+  if ! sed_variable "$1"     "$2" $3;then
+    echo "$1=$2" >> $3
+  fi
+}
+
+
+if ! grep -q -e "^locales2$" $LOCALCONF ;then
+  einfo "config main module : generate locales for $LANGUAGE"
+
+  echo "#gelux environment settings"              >   /etc/env.d/02locale
+  echo "LANG=$LANG"                               >>  /etc/env.d/02locale
+  echo "LANGUAGE=$LANG"                           >> /etc/env.d/02locale
+  echo "LC_ALL=$LANG"                             >> /etc/env.d/02locale
+  echo "LC_CTYPES=$LANG"                          >> /etc/env.d/02locale
+  echo "LC_MESSAGES=$LANG"                        >> /etc/env.d/02locale
+  echo "export LANGUAGE LANG LC_ALL LC_CTYPES LC_MESSAGES" >> /etc/env.d/02locale
+  
+  env-update 2>/dev/null
+  . /etc/profile
+  
+# gentoo build locales on glib installation ...
+  
+#  echo "$LANG UTF-8" 		>  /etc/locales.build
+#  echo "$LANG ISO-8859-1" 	>> /etc/locales.build
+#  nice -n 12 locale-gen &>/dev/null &
+
+  set_var "KEYMAP" 	"$KEYTABLE"	/etc/conf.d/keymaps
+  set_var "CONSOLEFONT"	"$CONSOLEFONT"	/etc/conf.d/consolefont
+   
+# APP_CHARSET_MAP_vc1=iso15
+# APP_CHARSET_MAP_vc2=iso15
+# APP_CHARSET_MAP_vc3=iso15
+# APP_CHARSET_MAP_vc4=iso15
+# APP_CHARSET_MAP_vc5=iso15
+# APP_CHARSET_MAP_vc6=iso15
+
+
+  echo "locales2" >>$LOCALCONF
+fi
+

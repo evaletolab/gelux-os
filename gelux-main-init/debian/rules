@@ -1,0 +1,93 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# Sample debian/rules that uses debhelper.
+# GNU copyright 1997 to 1999 by Joey Hess.
+#dpkg-buildpackage -d -rfakeroot
+#sed -i "s/THEDATE/`date -R`/g" debian/changelog
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+
+
+
+CFLAGS = -Wall -g
+
+ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+	CFLAGS += -O0
+else
+	CFLAGS += -O2
+endif
+ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
+	INSTALL_PROGRAM += -s
+endif
+
+configure: configure-stamp
+configure-stamp:
+	dh_testdir
+	# Add here commands to configure the package.
+	sh ./make_symlinks.sh
+	touch configure-stamp
+
+install: configure
+	dh_testdir
+	dh_testroot
+	dh_clean -k 
+	dh_installdirs
+
+	# Add here commands to install the package into debian/light.
+	mkdir -p $(CURDIR)/debian/gelux-main-init/morphix
+	cp -a main_module init.d init.sh include.sh loadmod.sh make_worstation_symlinks.sh strip-apt $(CURDIR)/debian/gelux-main-init/morphix
+	cd $(CURDIR)/debian/gelux-main-init/morphix && sh make_worstation_symlinks.sh
+	rm $(CURDIR)/debian/gelux-main-init/morphix/make_worstation_symlinks.sh
+	cd $(CURDIR)
+
+	mkdir -p $(CURDIR)/debian/gelux-server-init/morphix
+	cp -a main_module init.d init.sh include.sh loadmod.sh make_server_symlinks.sh strip-apt $(CURDIR)/debian/gelux-server-init/morphix
+	cd $(CURDIR)/debian/gelux-server-init/morphix && sh make_server_symlinks.sh
+	rm $(CURDIR)/debian/gelux-server-init/morphix/make_server_symlinks.sh
+	cd $(CURDIR)
+
+	mkdir -p  $(CURDIR)/debian/gelux-nis-init/morphix
+	mkdir -p  $(CURDIR)/debian/gelux-nis-init/morphix/init.d
+	mkdir -p  $(CURDIR)/debian/gelux-nis-init/morphix/rc.m
+	cd $(CURDIR)/debian/gelux-nis-init/morphix && ln -s ../init.d/nis rc.m/S04nis
+	cd $(CURDIR)
+
+# Build architecture-independent files here.
+binary-indep: build install
+# We have nothing to do by default.
+
+# Build architecture-dependent files here.
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs 
+	dh_installdocs
+	dh_installexamples
+#	dh_install
+#	dh_installmenu
+#	dh_installdebconf	
+#	dh_installlogrotate
+#	dh_installemacsen
+#	dh_installpam
+#	dh_installmime
+#	dh_installinit
+#	dh_installcron
+#	dh_installinfo
+	dh_installman
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+#	dh_perl
+#	dh_python
+#	dh_makeshlibs
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install configure

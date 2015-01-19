@@ -1,0 +1,11 @@
+[3.3]
+libraryPath=/mnt/.hidden_base/mnt/main_ro/usr/lib/kde3/plugins/:/root/.kde/lib/kde3/plugins/:/usr/lib/kde3/plugins/
+
+[General]
+GUIEffects=general^e
+font=Bitstream Vera Sans,9,-1,5,50,0,0,0,0,0
+style=plastik
+
+[KDE]
+kdeAddedLibraryPaths=/mnt/.hidden_base/mnt/main_ro/usr/lib/kde3/plugins/^e/root/.kde/lib/kde3/plugins/^e/usr/lib/kde3/plugins/^e
+

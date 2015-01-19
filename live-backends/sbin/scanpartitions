@@ -1,0 +1,91 @@
+#!/bin/bash
+# (C) Klaus Knopper Nov 2002
+# Reads /proc/partitions, returns table of the form
+# basename(devicefile) mountpoint filesystemtype
+# Useful for automatic generation of /etc/fstab entries (you
+# still may have to add noauto 0 0).
+#
+# $Id: scanpartitions,v 1.1.1.1 2006/05/13 10:50:10 evaleto Exp $
+#
+
+[ ! -e /proc/partitions ] && { echo "$0: /proc not mounted, exiting" >&2; exit 1; }
+
+fstype(){
+[ -n "$1" ] || return 1
+
+# Check if partition is already mounted
+while read device mountpoint filesystem relax; do
+case "$device" in *$1*) echo "$filesystem"; return 0;; esac
+done <<EOT
+$(cat /proc/mounts)
+EOT
+
+# Check if a device/medium is present at all
+dd if="$1" count=1 bs=1024 >/dev/null 2>&1 || return 2
+FILE="$(LANG=C LC_ALL=C LC_MESSAGES=C file -Ls "$1")"
+[ "$?" = "0" ] || return 2
+
+# File systems to try first
+FILESYSTEMS=""
+case "$FILE" in
+*[Ff][Aa][Tt]*|*[Xx]86*) FILESYSTEMS="vfat msdos ntfs";;
+*[Rr][Ee][Ii][Ss][Ee][Rr]*)  echo "reiserfs"; return 0;;
+*[Xx][Ff][Ss]*)  echo "xfs"; return 0;;
+*[Ee][Xx][Tt]3*) echo "ext3"; return 0;;
+*[Ee][Xx][Tt]2*) echo "ext2"; return 0;;
+*[Ss][Ww][Aa][Pp]*) echo "swap"; return 0;;
+esac
+# It seems that only reliable way to identify the filesystem is to attempt a mount
+TMPDIR="/tmp/autmount.${1##*/}.$$.dir"
+mkdir -p "$TMPDIR" || return 3
+FS=""
+# Don't clobber console while attemting a mount
+read LOGLEVEL relax < /proc/sys/kernel/printk
+echo "0" >/proc/sys/kernel/printk
+for f in $FILESYSTEMS $(</etc/filesystems); do
+mount -r -t "$f" "$1" "$TMPDIR" >/dev/null 2>&1 && { umount "$TMPDIR"; FS="$f"; break; }
+umount -f "$TMPDIR" >/dev/null 2>&1
+done
+echo "$LOGLEVEL" >/proc/sys/kernel/printk
+rmdir "$TMPDIR"
+[ -n "$FS" ] && echo "$FS" || return 4
+}
+
+###
+
+if [ -z "$1" ]; then
+partitions=""
+disks=""
+pold="none"
+while read major minor blocks partition relax; do
+partition="${partition##*/}"
+[ -z "$partition" -o ! -e "/dev/$partition" ] && continue
+[ "$blocks" -lt 2 ] && continue
+case "$partition" in
+[hs]d?) disks="$disks $partition";;
+*loop*) continue;;
+*) partitions="$partitions /dev/$partition";;
+esac
+done <<EOT
+$(awk 'BEGIN{old="__start"}{if($0==old){exit}else{old=$0;if($4&&$4!="name"){print $0}}}' /proc/partitions)
+EOT
+
+# Add disks without partition table (probably ZIP drives)
+for d in $disks; do
+case "$partitions" in */dev/$d*) continue;; esac
+partitions="$partitions /dev/$d"
+done
+else
+partitions="$*"
+fi
+
+for p in $partitions; do
+fs="auto"
+scanfs="$(fstype $p)"
+[ -n "$scanfs" ] && fs="$scanfs"
+mountpoint="/mnt/${p##*/}-$fs"
+[ "$fs" = "swap" ] && mountpoint="none"
+echo "${p}" "${mountpoint}" "${fs}"
+done
+
+exit 0

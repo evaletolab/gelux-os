@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Multisync
+Comment=Synchronization program for personal information such as calendars, addressbooks etc.
+Comment[de]=Synchronisation von Organizern, PIMs und Mobiltelefonen
+Exec=/usr/bin/multisync
+Terminal=false
+Type=Application
+Icon=/usr/share/multisync/pixmaps/multisync.png
+StartupWMClass=multisync
+X-Desktop-File-Install-Version=0.3
+Categories=Application;Hardware;System;Settings;

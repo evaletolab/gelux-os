@@ -1,0 +1,9 @@
+2005-01-19 Olivier Evalet <evaleto at programmers.ch>
+	* separate boot and image installation
+	* create a new gelux-grub.iss to update grub on windows XP
+	* add a new panel to configure grub's options: hostname, UserName, Lang, ACPI
+	* restore the boot.ini when uninstalling
+	
+2004-12-21 Olivier Evalet <evaleto at programmers.ch>
+	* initial import
+

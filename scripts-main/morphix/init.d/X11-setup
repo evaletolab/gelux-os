@@ -1,0 +1,32 @@
+#!/bin/sh
+# Prepare and start X11 
+# $Id: X11-setup,v 1.1.1.1 2004/09/24 15:27:16 mkalbere Exp $
+. /morphix/include.sh
+
+echo "allowed_users=anybody" > /etc/X11/Xwrapper.config
+echo "nice_value=-10" >> /etc/X11/Xwrapper.config
+
+echo "xsetbg -fullscreen $BGIMAGE && idesk &" >> /etc/X11/xinit/xinitrc
+echo "xsetbg -fullscreen $BGIMAGE && idesk &" >> /home/$USER/.xinitrc
+#echo "xsetbg -fullscreen $BGIMAGE && idesk &" >> /home/$USER/.xsession
+         
+
+
+# Mount local harddrives
+#cat /etc/fstab |grep mnt | perl -pe 's/[\s]*#.*$//g'  |perl -pe 's/^\s*$//g' |perl -pe 's/^.*(\/mnt\/[^\s]*).*$/mount \1/' >> /home/$USER/.xinitrc
+#cat /etc/fstab |grep mnt | perl -pe 's/[\s]*#.*$//g'  |perl -pe 's/^\s*$//g' |perl -pe 's/^.*(\/mnt\/[^\s]*).*$/mount \1/' >> /home/$USER/.xsession
+
+
+
+
+                                                                                       
+echo "exec $WINDOWMANAGER" >> /etc/X11/xinit/xinitrc
+echo "exec $WINDOWMANAGER" >> /home/$USER/.xinitrc
+#echo "exec $WINDOWMANAGER" >> /home/$USER/.xsession
+
+#If not done, the future newly created user wont have WINDOWMANAGER started nor the correct backgroud
+#Specialy important when used with winbind 
+echo "Update skeleton with background && starter"
+cp /home/$USER/.xinitrc /etc/skel/
+cp /home/$USER/.xsession /etc/skel/
+

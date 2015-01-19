@@ -1,0 +1,110 @@
+gelux-main-conf (0.4-14) unstable; urgency=low
+
+  *  * deprecated ...
+
+ -- root <root@evaleto>  Wed, 28 Dec 2005 13:05:03 +0000
+
+gelux-main-conf (0.4-13) unstable; urgency=low
+
+  * add ifplugd config
+
+ -- root <root@evaleto>  Sun, 20 Nov 2005 16:10:40 +0000
+
+gelux-main-conf (0.4-12) unstable; urgency=low
+
+  * add gelux security
+
+ -- root <root@evaleto>  Sun, 20 Nov 2005 15:02:20 +0000
+
+gelux-main-conf (0.4-11) unstable; urgency=low
+
+  *  * ADD kde & qt default config
+
+ -- root <root@evaleto>  Thu,  6 Oct 2005 11:13:28 +0000
+
+gelux-main-conf (0.4-10) unstable; urgency=low
+
+  * ADD default theme to qt3
+
+ -- root <root@evaleto>  Fri, 26 Aug 2005 17:02:46 +0000
+
+gelux-main-conf (0.4-9) unstable; urgency=low
+
+  * ADD prelink and kde config
+
+ -- root <root@evaleto>  Fri, 26 Aug 2005 16:19:42 +0000
+
+gelux-main-conf (0.4-8) unstable; urgency=low
+
+  * ADD apt-auto
+
+ -- root <root@evaleto>  Thu, 11 Aug 2005 09:14:21 +0000
+
+gelux-main-conf (0.4-7) unstable; urgency=low
+
+  * REMOVE pam mount
+
+ -- root <root@evaleto>  Wed, 22 Jun 2005 14:25:42 +0000
+
+gelux-main-conf (0.4-6) unstable; urgency=low
+
+  * ADD pam mkhome, group and mount
+
+ -- root <root@evaleto>  Wed, 22 Jun 2005 10:44:17 +0000
+
+gelux-main-conf (0.4-5) unstable; urgency=low
+
+  * FIX NIS configuration
+
+ -- root <root@evaleto>  Fri, 17 Jun 2005 10:41:59 +0000
+
+gelux-main-conf (0.4-4) unstable; urgency=low
+
+  * ADD NIS configuration
+
+ -- root <root@evaleto>  Thu, 16 Jun 2005 15:33:12 +0000
+
+gelux-main-conf (0.4-3) unstable; urgency=low
+
+  * Add /etc/gelux.d
+  * Add gelux-server-conf
+
+ -- Olivier Evalet <evaleto@programmers.ch>  Wed, 25 May 2005 17:12:37 +0200
+
+gelux-main-conf (0.3-1) unstable; urgency=low
+
+  * Add rcsplash /etc/init.d
+
+ -- Olivier Evalet <evaleto@programmers.ch>  Wed, 27 Apr 2005 14:42:15 +0200
+
+gelux-main-conf (0.2-4) unstable; urgency=low
+
+  * Add jni path on ldconfig
+
+ -- Olivier Evalet <evaleto@programmers.ch>  Thu, 07 Apr 2005 01:49:49 +0200
+
+gelux-main-conf (0.2-3) unstable; urgency=low
+
+  * Add pam common auth "nullok" for empty password on login 
+
+ -- Olivier Evalet <evaleto@programmers.ch>  Fri, 25 Feb 2005 11:01:42 +0100
+
+gelux-main-conf (0.2-2) unstable; urgency=low
+
+  * Add gdm keyboard configuration
+
+ -- Olivier Evalet <evaleto@programmers.ch>  Thu, 24 Feb 2005 12:22:35 +0100
+
+gelux-main-conf (0.2-1) unstable; urgency=low
+
+  * Add passwd, shadow, gdm, locale configuration
+  * Add /usr/share/gelux/geluxmainconf which lock/unlock the item configuration
+
+ -- Olivier Evalet <evaleto@programmers.ch>  Thu, 24 Feb 2005 11:29:35 +0100
+
+gelux-main-conf (0.1-1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Olivier Evalet <evaleto@programmers.ch>  Mon, 1 Jan 2005 17:10:19 +0100
+

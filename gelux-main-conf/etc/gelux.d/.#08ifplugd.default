@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# Set up default config
+
+LOCALCONF=/usr/share/gelux/geluxmainconf
+
+
+if ! grep -q -e "^ifplugd$" $LOCALCONF && test -e /etc/default/ifplugd ;then
+  echo "config ifplugd"
+  sed -i -e "s/INTERFACES=.*/INTERFACES=auto/g" /etc/default/ifplugd
+  echo "ifplugd" >>$LOCALCONF
+fi

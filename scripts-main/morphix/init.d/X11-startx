@@ -1,0 +1,8 @@
+#!/bin/sh
+# Prepare and start X11 
+# $Id: X11-startx,v 1.1.1.1 2004/09/24 15:27:16 mkalbere Exp $
+
+. /morphix/include.sh
+
+echo "starting x11"                                                                                                
+su -c "exec /usr/bin/X11/startx" - $USER

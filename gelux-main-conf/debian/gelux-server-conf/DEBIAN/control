@@ -1,0 +1,11 @@
+Package: gelux-server-conf
+Version: 0.4-14
+Section: misc
+Priority: optional
+Architecture: all
+Depends: nis
+Installed-Size: 12
+Maintainer: Olivier Evalet <evaleto@programmers.ch>
+Source: gelux-main-conf
+Description: mainmodule configuration
+ set and update files after mmaker. This configuration is done once by subject

@@ -1,0 +1,10 @@
+Package: gelux-main-init
+Version: 3.0-20
+Section: misc
+Priority: optional
+Architecture: all
+Installed-Size: 125
+Maintainer: Olivier Evalet <evaleto@programmers.ch>
+Description: Gelux mainmod workstation boot scripts
+ This package contains the default boot scripts for a Gelux
+ mainmodule.

@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# Set up default config
+
+LOCALCONF=/usr/share/gelux/geluxmainconf
+
+if ! grep -q -e "^locales$" $LOCALCONF ;then
+  echo "config main module : generate locales fr_CH,it_CH,de_CH,us_GB"
+  echo "fr_CH UTF-8" 	> /etc/locale.gen
+  echo "de_CH UTF-8" 	>> /etc/locale.gen
+  echo "it_CH UTF-8" 	>> /etc/locale.gen
+  echo "en_GB UTF-8" 	>> /etc/locale.gen
+  locale-gen
+  echo "locales" >>$LOCALCONF
+fi
+

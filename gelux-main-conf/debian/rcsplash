@@ -1,0 +1,23 @@
+# Modified:	Gorka Olaizola 09-Jun-2003 <gorka@escomposlinux.org>
+#               Add rc_splash and calculate script numbers for bootsplash
+#
+
+function rc_splash()
+{
+max=$2
+
+[ "$runlevel" = "S" ] && runlevel=-1
+
+[ $runlevel -ne 0 ] && [ $runlevel -ne 6 ] && \
+[ -x /sbin/progress -a -x /sbin/fbtruetype ] && /sbin/progress 0 1 1023 56 0 && \
+/sbin/fbtruetype -S -a 75 -t FFFFFF -x 10 -y 10 "$1"
+
+increment=$(( 150 / $max ))
+
+progress=$(( $progress + $increment ))
+
+[ $progress -gt 100 ] && progress=100
+
+echo "show $(( 65534 * $progress / 100 ))" > /proc/splash
+}
+

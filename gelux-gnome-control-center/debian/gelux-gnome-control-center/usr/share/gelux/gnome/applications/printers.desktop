@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Name=Printers
+Comment=Foomatic-GUI printer configuration tool
+Icon=gnome-dev-printer
+Exec=gnome-cups-manager
+Terminal=false
+Categories=Application;Hardware;System;Settings;

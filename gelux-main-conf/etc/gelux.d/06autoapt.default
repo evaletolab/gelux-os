@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# Set up default config
+
+LOCALCONF=/usr/share/gelux/geluxmainconf
+
+
+
+if ! grep -q -e "^auto_apt$" $LOCALCONF ;then
+  echo "config main module : auto-apt config"
+
+  echo "auto_apt" >>$LOCALCONF
+fi
+  auto-apt update
+  auto-apt updatedb && auto-apt update-local

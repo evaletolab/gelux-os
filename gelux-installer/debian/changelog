@@ -1,0 +1,84 @@
+gelux-node-installer (0.4-9) unstable; urgency=low
+
+  *  * use a smaller root size 1,5Gb
+
+ -- root <root@evaleto>  Sat,  3 Dec 2005 17:56:19 +0000
+
+gelux-node-installer (0.4-8) unstable; urgency=low
+
+  *  * ADD post install script, some others fix
+
+ -- root <root@evaleto>  Wed,  5 Oct 2005 12:47:42 +0000
+
+gelux-node-installer (0.4-7) unstable; urgency=low
+
+  * FIX missing glade file
+
+ -- root <root@evaleto>  Fri, 15 Jul 2005 17:34:19 +0000
+
+gelux-node-installer (0.4-6) unstable; urgency=low
+
+  * FIX user,root password, grub menu, home mount
+
+ -- root <root@evaleto>  Fri,  8 Jul 2005 15:12:11 +0000
+
+gelux-node-installer (0.4-5) unstable; urgency=low
+
+  * FIX umount, clean and cp -apf on try..catch
+
+ -- root <root@evaleto>  Wed, 22 Jun 2005 14:08:58 +0000
+
+gelux-node-installer (0.4-4) unstable; urgency=low
+
+  * FIX partition detection
+
+ -- root <root@evaleto>  Fri, 27 May 2005 14:09:08 +0000
+
+gelux-node-installer (0.4-3) unstable; urgency=low
+
+  * FIX null partitions info
+
+ -- root <root@evaleto>  Thu, 26 May 2005 16:28:08 +0000
+
+gelux-node-installer (0.4-2) unstable; urgency=low
+
+  * ADD partitionmorpher, gengrubmenu2 install dependencies
+  * FIX main hdd mininum size
+  * ADD domain to glade and GRUB install
+  * ADD autoconf automake and libtoolize 
+
+ -- Olivier Evalet <evaleto@programmers.ch>  Wed, 25 May 2005 13:59:06 +0200
+
+gelux-node-installer (0.3-1) unstable; urgency=low
+
+  * FIX main start (Yes it was in comment ;) ) 
+  * ADD domain to glade and GRUB install
+  * FIX default name to anonymous (users and clone)
+
+ -- Olivier Evalet <evaleto@programmers.ch>  Thu, 05 Mai 2005 13:58:01 +0000
+
+gelux-node-installer (0.2-4) unstable; urgency=low
+
+  * FIX exec partition tools
+
+ -- Olivier Evalet <evaleto@programmers.ch>  Thu, 22 Apr 2005 12:08:41 +0000
+
+gelux-node-installer (0.2-3) unstable; urgency=low
+
+  * FIX gengrubmenu
+
+ -- Olivier Evalet <evaleto@programmers.ch>  Thu, 21 Apr 2005 17:01:41 +0000
+
+gelux-node-installer (0.2-2) unstable; urgency=low
+
+  * ADD node/clone and group
+  * FIX gengrubmenu
+
+ -- Olivier Evalet <evaleto@programmers.ch>  Thu, 07 Apr 2005 12:01:41 +0000
+
+gelux-node-installer (0.1-4) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Olivier Evalet <evaleto@programmers.ch>  Wed, 06 Apr 2005 13:21:59 +0200
+

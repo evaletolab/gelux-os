@@ -1,0 +1,13 @@
+#!/bin/sh
+# Setting up our handy-dandy console-shells, thanks to popular demand...
+# ripped from Knopper's knoppix-autoconfig
+# $Id: console,v 1.1.1.1 2005/01/19 16:56:15 evaleto Exp $
+
+. /morphix/include.sh >/dev/null 2>&1
+
+while true; do /bin/bash >/dev/tty2 2>&1 </dev/tty2; done &
+while true; do /bin/bash >/dev/tty3 2>&1 </dev/tty3; done &
+while true; do /bin/bash >/dev/tty4 2>&1 </dev/tty4; done &
+while true; do /bin/bash >/dev/tty5 2>&1 </dev/tty5; done &
+while true; do /bin/bash >/dev/tty6 2>&1 </dev/tty6; done &
+

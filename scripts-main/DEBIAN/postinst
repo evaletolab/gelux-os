@@ -1,0 +1,4 @@
+#!/bin/sh
+cd /morphix
+sh make_symlinks.sh
+

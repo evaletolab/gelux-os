@@ -1,0 +1,131 @@
+<VFolderInfo>
+  <!-- Write changes here, instead of to the original files -->
+  <WriteDir>/etc/gnome-vfs-2.0/vfolders/preferences-all-users/</WriteDir>
+
+  <!-- Capplet location for our prefix -->
+  <ItemDir>/usr/share/control-center-2.0/capplets/</ItemDir>
+  <ItemDir>/usr/share/applications/</ItemDir>
+  <!-- Merge dirs optional -->
+  <MergeDir>/usr/share/gnome/apps/Settings</MergeDir>
+  <MergeDir>/usr/share/gnome/capplets</MergeDir>
+
+  <DesktopDir>/usr/share/gnome/vfolders</DesktopDir>
+
+  <!-- Settings -->
+  <Folder>
+    <Name>Preferences</Name>
+    <Desktop>Settings.directory</Desktop>
+    <Query>
+      <And>
+	<Keyword>Settings</Keyword>
+	<Not>
+	  <Or>
+	    <Keyword>Network</Keyword>
+	    <Keyword>Hardware</Keyword>
+	    <Keyword>Accessibility</Keyword>
+	    <Keyword>AdvancedSettings</Keyword>
+	    <Keyword>Sawfish</Keyword>
+	    <Keyword>X-GNOME-Sawfish</Keyword>
+	    <Keyword>System</Keyword>
+	    <Keyword>Merged</Keyword>
+	  </Or>
+	</Not>
+      </And>
+    </Query>
+    
+    <Exclude>gnomecc.desktop</Exclude>
+    
+    <Folder>
+      <Name>Advanced</Name>
+      <Desktop>Advanced.directory</Desktop>
+      <Query>
+	<Or>
+	  <And>
+	    <Keyword>Settings</Keyword>
+	    <Keyword>Merged</Keyword>
+	  </And>
+	  <And>
+	    <Keyword>Settings</Keyword>
+	    <Keyword>AdvancedSettings</Keyword>
+	    <Not>
+	      <Or>
+	        <Keyword>Sawfish</Keyword>
+	        <Keyword>X-GNOME-Sawfish</Keyword>
+	      </Or>
+	    </Not>
+	  </And>
+	</Or>
+      </Query>
+      <DontShowIfEmpty/>
+
+      <Folder>
+	<Name>Sawfish</Name>
+	<Desktop>Sawfish.directory</Desktop>
+	<Query>
+	  <And>
+	    <Or>
+	      <Keyword>Sawfish</Keyword>
+	      <Keyword>X-GNOME-Sawfish</Keyword>
+	    </Or>
+	    <Keyword>Settings</Keyword>
+	  </And>
+	</Query>
+	<DontShowIfEmpty/>
+      </Folder>
+    </Folder>
+
+    <Folder>
+      <Name>Accessibility</Name>
+      <Desktop>Accessibility.directory</Desktop>
+      <Query>
+	<And>
+	  <Keyword>Settings</Keyword>
+	  <Keyword>Accessibility</Keyword>
+	</And>
+      </Query>
+      <DontShowIfEmpty/>
+    </Folder>
+    <Folder>
+      <Name>System</Name>
+      <Desktop>System.directory</Desktop>
+      <Query>
+	<And>
+	  <Not>
+	    <Or>
+            <Keyword>Utility</Keyword>
+            <Keyword>GNOME</Keyword>
+            <Keyword>Hardware</Keyword>
+	    </Or>
+	  </Not>
+	  <Keyword>System</Keyword>
+	</And>
+      </Query>
+      <DontShowIfEmpty/>
+    </Folder>
+    <Folder>
+      <Name>Hardware</Name>
+      <Desktop>Hardware.directory</Desktop>
+      <Query>
+	<And>
+	  <Keyword>Hardware</Keyword>
+	</And>
+      </Query>
+      <DontShowIfEmpty/>
+    </Folder>
+    <Folder>
+      <Name>Network</Name>
+      <Desktop>Network.directory</Desktop>
+      <Query>
+	<And>
+	  <Keyword>Settings</Keyword>
+	  <Keyword>Network</Keyword>
+	</And>
+      </Query>
+      <DontShowIfEmpty/>
+    </Folder>
+
+  </Folder>
+
+</VFolderInfo>
+
+
