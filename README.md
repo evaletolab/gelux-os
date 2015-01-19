@@ -1,5 +1,5 @@
 # gelux-os
-This project was a private initative to develop a simple and fully customisable GNU/Linux distribution. I did this work in 2004 with the great and strong help of Marc Kalberer, Bjorn Arvidson and Stephane Hernandez. Here the usual screenshots,
+This project was a private initative to develop a simple and fully customisable GNU/Linux distribution that have the hability to boot from an external USB flash and also from a [Windows NTFS parition](/win32-setup/gelux.iss). I did this work in 2004 with the great and strong support of Marc Kalberer, Bjorn Arvidsson and Stephane Hernandez. Here the usual screenshots,
 
 ## Booting
 This is the result of these files [linuxrc](/gelux-live/linuxrc) [includes](/gelux-live/etc). By studying thos files you can have a good idea on what is doing an OS on boot.
